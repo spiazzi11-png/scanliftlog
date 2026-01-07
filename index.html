@@ -223,39 +223,221 @@
 
   // ---------- UI State ----------
   const userId = getOrCreateUserId();
-  const machineId = (getQueryParam('machine') || 'SHPR-001').trim();
+  const machineId = (getQueryParam('machine') || 'SHPR-001')
+  .trim()
+  .toUpperCase();
 
-  const machineNameMap = {
-  // Shoulder / Chest
-  'SHPR-001': 'Shoulder Press – Machine 1',
-  'CHPR-001': 'Chest Press – Machine 1',
-  'PECK-001': 'Pec Deck – Machine 1',
-  'INCBP-001': 'Incline Bench Press',
-  'DECL-001': 'Decline Chest Press – Machine 1',
 
-  // Legs
-  'LEGPR-002': 'Leg Press – Machine 2',
-  'LEGEXT-001': 'Leg Extension – Machine 1',
-  'SQUAT-001': 'Squat Machine – Machine 1',
+  const MACHINE_MAP = {
+    // ---- Chest ----
+    "CHPR-001": "Flat Chest Press — Machine 1",
+    "CHPR-002": "Flat Chest Press — Machine 2",
+    "CHPR-003": "Flat Chest Press — Machine 3",
 
-  // Back
-  'LATPD-001': 'Lat Pulldown – Machine 1',
-  'BKEXT-001': 'Back Extension – Machine 1',
+    "INCHPR-001": "Incline Chest Press — Machine 1",
+    "INCHPR-002": "Incline Chest Press — Machine 2",
+    "INCHPR-003": "Incline Chest Press — Machine 3",
 
-  // Arms
-  'DIP-001': 'Dip Machine – Machine 1',
-  'PRCUR-001': 'Preacher Curl Machine – Machine 1',
+    "DECHPR-001": "Decline Chest Press — Machine 1",
+    "DECHPR-002": "Decline Chest Press — Machine 2",
+    "DECHPR-003": "Decline Chest Press — Machine 3",
 
-  // Cable / Free Weight Areas
-  'CABLE-001': 'Cable Station – Machine 1',
-  'DBRACK-001': 'Dumbbell Rack – Main Floor',
+    "PECDK-001": "Pec Deck / Chest Fly — Machine 1",
+    "PECDK-002": "Pec Deck / Chest Fly — Machine 2",
+    "PECDK-003": "Pec Deck / Chest Fly — Machine 3",
 
-  // Smith Machines
-  'SMITH-001': 'Smith Machine – Machine 1',
-  'SMITH-002': 'Smith Machine – Machine 2',
-  'SMITH-003': 'Smith Machine – Machine 3'
-};
-  const machineName = machineNameMap[machineId] || `Machine (${machineId})`;
+    "CABFLY-001": "Cable Fly (Chest) — Station 1",
+    "CABFLY-002": "Cable Fly (Chest) — Station 2",
+    "CABFLY-003": "Cable Fly (Chest) — Station 3",
+
+    "SMTH-001": "Smith Machine — Rack 1",
+    "SMTH-002": "Smith Machine — Rack 2",
+    "SMTH-003": "Smith Machine — Rack 3",
+
+    // ---- Shoulders ----
+    "SHPR-001": "Shoulder Press — Machine 1",
+    "SHPR-002": "Shoulder Press — Machine 2",
+    "SHPR-003": "Shoulder Press — Machine 3",
+
+    "LATRL-001": "Lateral Raise — Machine 1",
+    "LATRL-002": "Lateral Raise — Machine 2",
+    "LATRL-003": "Lateral Raise — Machine 3",
+
+    "RDLT-001": "Rear Delt Fly — Machine 1",
+    "RDLT-002": "Rear Delt Fly — Machine 2",
+    "RDLT-003": "Rear Delt Fly — Machine 3",
+
+    "UPROW-001": "Upright Row — Machine 1",
+    "UPROW-002": "Upright Row — Machine 2",
+    "UPROW-003": "Upright Row — Machine 3",
+
+    // ---- Back ----
+    "LATPD-001": "Lat Pulldown — Station 1",
+    "LATPD-002": "Lat Pulldown — Station 2",
+    "LATPD-003": "Lat Pulldown — Station 3",
+
+    "SETRW-001": "Seated Row — Machine 1",
+    "SETRW-002": "Seated Row — Machine 2",
+    "SETRW-003": "Seated Row — Machine 3",
+
+    "HIRW-001": "High Row — Machine 1",
+    "HIRW-002": "High Row — Machine 2",
+    "HIRW-003": "High Row — Machine 3",
+
+    "ASSTPD-001": "Assisted Pull-Up / Dip — Station 1",
+    "ASSTPD-002": "Assisted Pull-Up / Dip — Station 2",
+    "ASSTPD-003": "Assisted Pull-Up / Dip — Station 3",
+
+    "STRPD-001": "Straight-Arm Pulldown — Station 1",
+    "STRPD-002": "Straight-Arm Pulldown — Station 2",
+    "STRPD-003": "Straight-Arm Pulldown — Station 3",
+
+    "BKEXT-001": "Back Extension — Station 1",
+    "BKEXT-002": "Back Extension — Station 2",
+    "BKEXT-003": "Back Extension — Station 3",
+
+    // ---- Legs ----
+    "LEGPR-001": "Leg Press — Machine 1",
+    "LEGPR-002": "Leg Press — Machine 2",
+    "LEGPR-003": "Leg Press — Machine 3",
+
+    "HKSQ-001": "Hack Squat — Machine 1",
+    "HKSQ-002": "Hack Squat — Machine 2",
+    "HKSQ-003": "Hack Squat — Machine 3",
+
+    "SQMT-001": "Squat Machine — Machine 1",
+    "SQMT-002": "Squat Machine — Machine 2",
+    "SQMT-003": "Squat Machine — Machine 3",
+
+    "LEGEX-001": "Leg Extension — Machine 1",
+    "LEGEX-002": "Leg Extension — Machine 2",
+    "LEGEX-003": "Leg Extension — Machine 3",
+
+    "SLCUR-001": "Seated Leg Curl — Machine 1",
+    "SLCUR-002": "Seated Leg Curl — Machine 2",
+    "SLCUR-003": "Seated Leg Curl — Machine 3",
+
+    "LLCUR-001": "Lying Leg Curl — Machine 1",
+    "LLCUR-002": "Lying Leg Curl — Machine 2",
+    "LLCUR-003": "Lying Leg Curl — Machine 3",
+
+    "STCUR-001": "Standing Leg Curl — Machine 1",
+    "STCUR-002": "Standing Leg Curl — Machine 2",
+    "STCUR-003": "Standing Leg Curl — Machine 3",
+
+    "HIPAB-001": "Hip Abductor — Machine 1",
+    "HIPAB-002": "Hip Abductor — Machine 2",
+    "HIPAB-003": "Hip Abductor — Machine 3",
+
+    "HIPAD-001": "Hip Adductor — Machine 1",
+    "HIPAD-002": "Hip Adductor — Machine 2",
+    "HIPAD-003": "Hip Adductor — Machine 3",
+
+    "GLUTKB-001": "Glute Kickback — Machine 1",
+    "GLUTKB-002": "Glute Kickback — Machine 2",
+    "GLUTKB-003": "Glute Kickback — Machine 3",
+
+    "SCALF-001": "Seated Calf Raise — Machine 1",
+    "SCALF-002": "Seated Calf Raise — Machine 2",
+    "SCALF-003": "Seated Calf Raise — Machine 3",
+
+    "STCALF-001": "Standing Calf Raise — Machine 1",
+    "STCALF-002": "Standing Calf Raise — Machine 2",
+    "STCALF-003": "Standing Calf Raise — Machine 3",
+
+    // ---- Arms ----
+    "PRCUR-001": "Preacher Curl — Machine 1",
+    "PRCUR-002": "Preacher Curl — Machine 2",
+    "PRCUR-003": "Preacher Curl — Machine 3",
+
+    "BICUR-001": "Biceps Curl — Machine 1",
+    "BICUR-002": "Biceps Curl — Machine 2",
+    "BICUR-003": "Biceps Curl — Machine 3",
+
+    "CABCRL-001": "Cable Curl — Station 1",
+    "CABCRL-002": "Cable Curl — Station 2",
+    "CABCRL-003": "Cable Curl — Station 3",
+
+    "TRIEX-001": "Triceps Extension — Machine 1",
+    "TRIEX-002": "Triceps Extension — Machine 2",
+    "TRIEX-003": "Triceps Extension — Machine 3",
+
+    "DIPMT-001": "Dip Machine — Machine 1",
+    "DIPMT-002": "Dip Machine — Machine 2",
+    "DIPMT-003": "Dip Machine — Machine 3",
+
+    "CABPD-001": "Cable Pushdown — Station 1",
+    "CABPD-002": "Cable Pushdown — Station 2",
+    "CABPD-003": "Cable Pushdown — Station 3",
+
+    // ---- Core / Abs ----
+    "ABCR-001": "Ab Crunch — Machine 1",
+    "ABCR-002": "Ab Crunch — Machine 2",
+    "ABCR-003": "Ab Crunch — Machine 3",
+
+    "RTTOR-001": "Rotary Torso — Machine 1",
+    "RTTOR-002": "Rotary Torso — Machine 2",
+    "RTTOR-003": "Rotary Torso — Machine 3",
+
+    "CAPCH-001": "Captain’s Chair — Station 1",
+    "CAPCH-002": "Captain’s Chair — Station 2",
+    "CAPCH-003": "Captain’s Chair — Station 3",
+
+    "DABEN-001": "Decline Ab Bench — Bench 1",
+    "DABEN-002": "Decline Ab Bench — Bench 2",
+    "DABEN-003": "Decline Ab Bench — Bench 3",
+
+    "CABAB-001": "Cable Crunch — Station 1",
+    "CABAB-002": "Cable Crunch — Station 2",
+    "CABAB-003": "Cable Crunch — Station 3",
+
+    // ---- Free Weights / Racks / Benches ----
+    "FBEN-001": "Flat Bench — Bench 1",
+    "FBEN-002": "Flat Bench — Bench 2",
+    "FBEN-003": "Flat Bench — Bench 3",
+
+    "IBEN-001": "Incline Bench — Bench 1",
+    "IBEN-002": "Incline Bench — Bench 2",
+    "IBEN-003": "Incline Bench — Bench 3",
+
+    "DBEN-001": "Decline Bench — Bench 1",
+    "DBEN-002": "Decline Bench — Bench 2",
+    "DBEN-003": "Decline Bench — Bench 3",
+
+    "SQRK-001": "Squat Rack — Rack 1",
+    "SQRK-002": "Squat Rack — Rack 2",
+    "SQRK-003": "Squat Rack — Rack 3",
+
+    "PWRK-001": "Power Rack — Rack 1",
+    "PWRK-002": "Power Rack — Rack 2",
+    "PWRK-003": "Power Rack — Rack 3",
+
+    "DBRCK-001": "Dumbbell Rack — Area 1",
+    "DBRCK-002": "Dumbbell Rack — Area 2",
+    "DBRCK-003": "Dumbbell Rack — Area 3",
+
+    // ---- Cardio (optional) ----
+    "TRED-001": "Treadmill — Unit 1",
+    "TRED-002": "Treadmill — Unit 2",
+    "TRED-003": "Treadmill — Unit 3",
+
+    "ELIP-001": "Elliptical — Unit 1",
+    "ELIP-002": "Elliptical — Unit 2",
+    "ELIP-003": "Elliptical — Unit 3",
+
+    "STAIR-001": "Stair Climber — Unit 1",
+    "STAIR-002": "Stair Climber — Unit 2",
+    "STAIR-003": "Stair Climber — Unit 3",
+
+    "BIKE-001": "Stationary Bike — Unit 1",
+    "BIKE-002": "Stationary Bike — Unit 2",
+    "BIKE-003": "Stationary Bike — Unit 3",
+
+    "ROW-001": "Rower — Unit 1",
+    "ROW-002": "Rower — Unit 2",
+    "ROW-003": "Rower — Unit 3"
+  };
+  const machineName = MACHINE_MAP[machineId] || `Machine (${machineId})`;
 
   document.getElementById('machinePill').textContent = machineName;
   document.getElementById('userPill').textContent = `User: ${userId.slice(0,8)}…`;
