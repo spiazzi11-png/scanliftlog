@@ -226,10 +226,35 @@
   const machineId = (getQueryParam('machine') || 'SHPR-001').trim();
 
   const machineNameMap = {
-    'SHPR-001': 'Shoulder Press – Machine 1',
-    'LEGPR-002': 'Leg Press – Machine 1',
-    'CHPR-003': 'Chest Press – Machine 1'
-  };
+  // Shoulder / Chest
+  'SHPR-001': 'Shoulder Press – Machine 1',
+  'CHPR-003': 'Chest Press – Machine 1',
+  'PECK-001': 'Pec Deck – Machine 1',
+  'INCBP-001': 'Incline Bench Press',
+  'DECL-001': 'Decline Chest Press – Machine 1',
+
+  // Legs
+  'LEGPR-002': 'Leg Press – Machine 2',
+  'LEGEXT-001': 'Leg Extension – Machine 1',
+  'SQUAT-001': 'Squat Machine – Machine 1',
+
+  // Back
+  'LATPD-001': 'Lat Pulldown – Machine 1',
+  'BKEXT-001': 'Back Extension – Machine 1',
+
+  // Arms
+  'DIP-001': 'Dip Machine – Machine 1',
+  'PRCUR-001': 'Preacher Curl Machine – Machine 1',
+
+  // Cable / Free Weight Areas
+  'CABLE-001': 'Cable Station – Machine 1',
+  'DBRACK-001': 'Dumbbell Rack – Main Floor',
+
+  // Smith Machines
+  'SMITH-001': 'Smith Machine – Machine 1',
+  'SMITH-002': 'Smith Machine – Machine 2',
+  'SMITH-003': 'Smith Machine – Machine 3'
+};
   const machineName = machineNameMap[machineId] || `Machine (${machineId})`;
 
   document.getElementById('machinePill').textContent = machineName;
