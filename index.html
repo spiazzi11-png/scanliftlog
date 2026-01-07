@@ -2,648 +2,861 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ScanLiftLog</title>
   <style>
-    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    body { margin: 0; background:#f6f7f8; color:#111; }
-    header { padding: 18px 18px 10px; background: #fff; border-bottom: 1px solid #e6e6e6; }
-    .wrap { max-width: 860px; margin: 0 auto; }
-    h1 { font-size: 20px; margin: 0 0 8px; }
-    .sub { font-size: 13px; color: #444; }
-    main { padding: 18px; }
-    .grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 14px; }
-    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
-
-    .card { background:#fff; border:1px solid #e6e6e6; border-radius: 14px; padding: 14px; box-shadow: 0 1px 0 rgba(0,0,0,0.02); }
-    .row { display:flex; gap: 10px; align-items:center; flex-wrap: wrap; }
-    label { font-size: 12px; color:#333; }
-    input, select, textarea {
-      width: 100%;
-      padding: 10px 10px;
-      border: 1px solid #d8d8d8;
-      border-radius: 10px;
-      font-size: 14px;
-      background: #fff;
-      box-sizing: border-box;
-    }
-    textarea { min-height: 80px; resize: vertical; }
-
-    .btn {
-      appearance: none;
-      border: 1px solid #0b5;
-      background: #0b5;
-      color: #fff;
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-    }
-    .btn.secondary { border-color:#d8d8d8; background:#fff; color:#111; }
-    .btn.danger { border-color:#d33; background:#d33; color:#fff; }
-    .btn:disabled { opacity: .55; cursor: not-allowed; }
-
-    .pill { display:inline-flex; padding: 4px 9px; border-radius: 999px; font-size: 12px; border:1px solid #e0e0e0; background:#fafafa; color:#333; }
-    .muted { color:#666; font-size: 13px; }
-    .kpi { display:flex; gap:10px; flex-wrap: wrap; margin-top: 10px; }
-    .kpi .pill strong { margin-left: 6px; }
-
-    .history { margin-top: 10px; }
-    .hist-item {
-      border: 1px solid #ededed;
-      border-radius: 12px;
-      padding: 10px;
-      margin-top: 8px;
-      background:#fcfcfc;
-    }
-    .hist-top { display:flex; justify-content: space-between; gap: 10px; }
-    .hist-date { font-weight: 700; font-size: 13px; }
-    .hist-summary { font-size: 13px; color:#333; margin-top: 6px; white-space: pre-wrap; }
-    .small { font-size: 12px; color:#666; }
-
-    .setrow { display:grid; grid-template-columns: 1fr 1fr 54px; gap: 10px; align-items:end; }
-    .setrow .btn { justify-content:center; padding: 10px 10px; }
-    .divider { height:1px; background:#ededed; margin: 12px 0; }
-
-    .toast {
-      position: fixed; left: 50%; transform: translateX(-50%);
-      bottom: 16px;
-      background: #111; color:#fff;
-      padding: 10px 12px;
-      border-radius: 12px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s ease;
-      max-width: calc(100vw - 24px);
-      font-size: 13px;
-    }
-    .toast.show { opacity: 0.92; }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; }
+    :root { --b:#111; --g:#666; --l:#e7e7e7; --bg:#fafafa; --card:#fff; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:var(--bg); color:var(--b); }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 18px; }
+    .top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    h1 { margin:0; font-size: 20px; letter-spacing: .2px; }
+    .sub { margin:6px 0 0; color:var(--g); font-size: 13px; }
+    .pills { display:flex; gap:8px; flex-wrap:wrap; }
+    .pill { font-size:12px; padding:8px 10px; border:1px solid var(--l); background:#fff; border-radius:999px; }
+    .card { margin-top:14px; background:var(--card); border:1px solid var(--l); border-radius:14px; padding:14px; }
+    .row { display:flex; gap:12px; flex-wrap:wrap; }
+    .col { flex:1; min-width: 220px; }
+    label { display:block; font-size: 12px; color:var(--g); margin: 0 0 6px; }
+    input, select { width: 100%; box-sizing:border-box; padding:10px 12px; border:1px solid #ddd; border-radius:12px; font-size:14px; background:#fff; }
+    button { padding:10px 12px; border-radius:12px; border:1px solid #ddd; background:#fff; cursor:pointer; font-weight:700; }
+    button.primary { border:0; background:#111; color:#fff; }
+    .btnrow { display:flex; gap:10px; flex-wrap:wrap; }
+    .muted { color:var(--g); font-size:12px; }
+    .hr { height:1px; background:var(--l); margin:14px 0; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { text-align:left; padding:10px 8px; border-bottom:1px solid var(--l); font-size: 13px; vertical-align:top; }
+    th { color:var(--g); font-weight:700; font-size:12px; }
+    .smalllink { border:0; background:transparent; text-decoration:underline; cursor:pointer; font-size:12px; opacity:0.75; padding:0; }
+    .badge { display:inline-block; font-size:11px; padding:4px 8px; border:1px solid var(--l); border-radius:999px; background:#fff; color:var(--g); }
+    .notice { padding:10px 12px; border:1px solid var(--l); background:#fff; border-radius:12px; }
+    .hidden { display:none !important; }
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <h1>ScanLiftLog</h1>
-      <div class="sub">
-        QR → Machine Page → Log Sets/Reps/Weight → View Your History (no login). Identity is stored on this device via <code>localStorage</code>.
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>ScanLiftLog</h1>
+        <div class="sub">Scan a machine QR code to view and log your workout history.</div>
+      </div>
+
+      <div class="pills">
+        <div class="pill" id="machinePill">Loading…</div>
+        <div class="pill" id="userPill">User: …</div>
+        <div class="pill"><button class="smalllink" id="resetUserBtn" type="button">Reset User ID</button></div>
       </div>
     </div>
-  </header>
 
-  <main class="wrap">
-    <div class="grid">
-      <section class="card">
-        <div class="row" style="justify-content: space-between;">
-          <div>
-            <div class="pill" id="machinePill">Machine</div>
-            <div class="pill" id="userPill" title="Anonymous per-device ID">User</div>
-          </div>
-          <div class="row">
-            <button class="btn secondary" id="resetUserBtn" title="Creates a new anonymous user on this device">Reset User</button>
-          </div>
+    <!-- QR Assignment Panel -->
+    <div class="card hidden" id="qrAssignPanel">
+      <div style="font-weight:800; margin-bottom:6px;">Label this QR code</div>
+      <div class="muted" id="qrIdLine" style="margin-bottom:12px;"></div>
+
+      <div class="row">
+        <div class="col">
+          <label>Select machine type</label>
+          <select id="machineSelect"></select>
         </div>
-
-        <div class="divider"></div>
-
-        <h2 style="margin:0 0 8px; font-size:16px;">Your last workout on this machine</h2>
-        <div class="muted" id="lastWorkoutText">None yet. Log your first session below.</div>
-
-        <div class="kpi" id="kpis" style="display:none;">
-          <span class="pill">Last Weight <strong id="kpiWeight"></strong></span>
-          <span class="pill">Last Volume <strong id="kpiVolume"></strong></span>
-          <span class="pill">Workouts Logged <strong id="kpiCount"></strong></span>
+        <div class="col">
+          <label>Optional machine # (1–3)</label>
+          <select id="machineNum">
+            <option value="">(none)</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
         </div>
+      </div>
 
-        <div class="divider"></div>
+      <div class="btnrow" style="margin-top:12px;">
+        <button class="primary" id="saveQrLabelBtn" type="button">Save Label</button>
+        <button id="cancelQrLabelBtn" type="button">Not now</button>
+      </div>
 
-        <h2 style="margin:0 0 8px; font-size:16px;">Log today’s workout</h2>
-
-        <div id="sets"></div>
-
-        <div class="row" style="margin-top:10px;">
-          <button class="btn secondary" id="addSetBtn">+ Add Set</button>
-          <button class="btn" id="saveBtn">Save Workout</button>
-          <button class="btn danger" id="clearMachineBtn" title="Deletes history for this machine for this user only">Clear This Machine History</button>
-        </div>
-
-        <div style="margin-top:10px;">
-          <label for="notes">Notes (optional)</label>
-          <textarea id="notes" placeholder="e.g., felt strong, slow tempo, drop set on last set"></textarea>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="small">
-          Tip: to simulate scanning different machines, add <code>?machine=LEGPR-002</code> or <code>?machine=SHPR-001</code> to the URL.
-        </div>
-      </section>
-
-      <aside class="card">
-        <h2 style="margin:0 0 8px; font-size:16px;">History (this machine)</h2>
-        <div class="muted" id="histHint">Your saved sessions appear here for this machine.</div>
-        <div class="history" id="history"></div>
-
-        <div class="divider"></div>
-
-        <h2 style="margin:0 0 8px; font-size:16px;">How the “unique user” works</h2>
-        <div class="small">
-          On first load, the page generates an anonymous ID and stores it on this device:
-          <ul>
-            <li><code>anon_user_id</code> in <code>localStorage</code></li>
-            <li>Every log is saved under <code>(user_id, machine_id)</code></li>
-          </ul>
-          If you open this page in a different browser/device, it becomes a different “user” unless you later add account signup.
-        </div>
-      </aside>
+      <div class="muted" style="margin-top:10px;">
+        Note: This label is saved on <b>your phone only</b> (no account / no server).
+      </div>
     </div>
-  </main>
 
-  <div class="toast" id="toast"></div>
+    <div class="card hidden" id="relabelWrap">
+      <div class="row" style="align-items:center;">
+        <div class="col">
+          <div class="muted">Need to fix the label for this QR on your phone?</div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button id="relabelBtn" type="button">Change machine label</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logging UI -->
+    <div class="card" id="logCard">
+      <div class="row" style="align-items:flex-end;">
+        <div class="col">
+          <label>Exercise (multi-use equipment only)</label>
+          <select id="exerciseSelect"></select>
+          <input id="exerciseCustom" class="hidden" placeholder="Type your exercise (e.g., DB Incline Press)" style="margin-top:10px;" />
+          <div class="muted" id="exerciseHint" style="margin-top:8px;"></div>
+        </div>
+
+        <div class="col">
+          <label>Date</label>
+          <input id="dateInput" type="date" />
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px;">
+        <div class="col">
+          <label>Weight</label>
+          <input id="weightInput" inputmode="decimal" placeholder="e.g., 180" />
+        </div>
+        <div class="col">
+          <label>Sets</label>
+          <input id="setsInput" inputmode="numeric" placeholder="e.g., 4" />
+        </div>
+        <div class="col">
+          <label>Reps</label>
+          <input id="repsInput" inputmode="numeric" placeholder="e.g., 10" />
+        </div>
+      </div>
+
+      <div class="btnrow" style="margin-top:12px;">
+        <button class="primary" id="saveSetBtn" type="button">Save Entry</button>
+        <button id="clearHistoryBtn" type="button">Clear History (this exercise)</button>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="row" style="align-items:center; justify-content:space-between;">
+        <div style="font-weight:800;">History</div>
+        <div class="badge" id="historyScopeBadge">Scope: …</div>
+      </div>
+
+      <div style="margin-top:10px; overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th style="min-width:105px;">Date</th>
+              <th>Exercise</th>
+              <th style="min-width:85px;">Weight</th>
+              <th style="min-width:70px;">Sets</th>
+              <th style="min-width:70px;">Reps</th>
+              <th style="min-width:120px;">Saved</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody">
+            <tr><td colspan="6" class="muted">No entries yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="muted">
+        Tip: If you want “blank QR stickers,” use links like:
+        <span class="badge">?qr=ABC123</span>
+        (the first scan labels it on that phone).
+      </div>
+    </div>
+  </div>
 
 <script>
-(function(){
-  // ---------- Helpers ----------
-  function uuidv4() {
-    // RFC4122-ish, good enough for demo (use crypto UUID in production)
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
+/* ---------------- Utilities ---------------- */
+function getQueryParam(name) {
+  const url = new URL(window.location.href);
+  return url.searchParams.get(name);
+}
+function todayISO() {
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+function nowReadable() {
+  const d = new Date();
+  return d.toLocaleString();
+}
+function safeJSONParse(s, fallback) {
+  try { return JSON.parse(s); } catch { return fallback; }
+}
+
+/* ---------------- User ID (device-local) ---------------- */
+const USER_KEY = 'scanliftlog_user_v1';
+function getOrCreateUserId() {
+  let id = localStorage.getItem(USER_KEY);
+  if (!id) {
+    // lightweight pseudo-UUID
+    id = 'u_' + Math.random().toString(16).slice(2) + Date.now().toString(16);
+    localStorage.setItem(USER_KEY, id);
+  }
+  return id;
+}
+function resetUser() {
+  localStorage.removeItem(USER_KEY);
+  location.reload();
+}
+
+/* ---------------- Machine Map ---------------- */
+const MACHINE_MAP = {
+  // ---- Chest ----
+  "CHPR-001": "Flat Chest Press — Machine 1",
+  "CHPR-002": "Flat Chest Press — Machine 2",
+  "CHPR-003": "Flat Chest Press — Machine 3",
+
+  "INCHPR-001": "Incline Chest Press — Machine 1",
+  "INCHPR-002": "Incline Chest Press — Machine 2",
+  "INCHPR-003": "Incline Chest Press — Machine 3",
+
+  "DECHPR-001": "Decline Chest Press — Machine 1",
+  "DECHPR-002": "Decline Chest Press — Machine 2",
+  "DECHPR-003": "Decline Chest Press — Machine 3",
+
+  "PECDK-001": "Pec Deck / Chest Fly — Machine 1",
+  "PECDK-002": "Pec Deck / Chest Fly — Machine 2",
+  "PECDK-003": "Pec Deck / Chest Fly — Machine 3",
+
+  "CABFLY-001": "Cable Fly (Chest) — Station 1",
+  "CABFLY-002": "Cable Fly (Chest) — Station 2",
+  "CABFLY-003": "Cable Fly (Chest) — Station 3",
+
+  "SMTH-001": "Smith Machine — Rack 1",
+  "SMTH-002": "Smith Machine — Rack 2",
+  "SMTH-003": "Smith Machine — Rack 3",
+
+  // ---- Shoulders ----
+  "SHPR-001": "Shoulder Press — Machine 1",
+  "SHPR-002": "Shoulder Press — Machine 2",
+  "SHPR-003": "Shoulder Press — Machine 3",
+
+  "LATRL-001": "Lateral Raise — Machine 1",
+  "LATRL-002": "Lateral Raise — Machine 2",
+  "LATRL-003": "Lateral Raise — Machine 3",
+
+  "RDLT-001": "Rear Delt Fly — Machine 1",
+  "RDLT-002": "Rear Delt Fly — Machine 2",
+  "RDLT-003": "Rear Delt Fly — Machine 3",
+
+  "UPROW-001": "Upright Row — Machine 1",
+  "UPROW-002": "Upright Row — Machine 2",
+  "UPROW-003": "Upright Row — Machine 3",
+
+  // ---- Back ----
+  "LATPD-001": "Lat Pulldown — Station 1",
+  "LATPD-002": "Lat Pulldown — Station 2",
+  "LATPD-003": "Lat Pulldown — Station 3",
+
+  "SETRW-001": "Seated Row — Machine 1",
+  "SETRW-002": "Seated Row — Machine 2",
+  "SETRW-003": "Seated Row — Machine 3",
+
+  "HIRW-001": "High Row — Machine 1",
+  "HIRW-002": "High Row — Machine 2",
+  "HIRW-003": "High Row — Machine 3",
+
+  "ASSTPD-001": "Assisted Pull-Up / Dip — Station 1",
+  "ASSTPD-002": "Assisted Pull-Up / Dip — Station 2",
+  "ASSTPD-003": "Assisted Pull-Up / Dip — Station 3",
+
+  "STRPD-001": "Straight-Arm Pulldown — Station 1",
+  "STRPD-002": "Straight-Arm Pulldown — Station 2",
+  "STRPD-003": "Straight-Arm Pulldown — Station 3",
+
+  "BKEXT-001": "Back Extension — Station 1",
+  "BKEXT-002": "Back Extension — Station 2",
+  "BKEXT-003": "Back Extension — Station 3",
+
+  // ---- Legs ----
+  "LEGPR-001": "Leg Press — Machine 1",
+  "LEGPR-002": "Leg Press — Machine 2",
+  "LEGPR-003": "Leg Press — Machine 3",
+
+  "HKSQ-001": "Hack Squat — Machine 1",
+  "HKSQ-002": "Hack Squat — Machine 2",
+  "HKSQ-003": "Hack Squat — Machine 3",
+
+  "SQMT-001": "Squat Machine — Machine 1",
+  "SQMT-002": "Squat Machine — Machine 2",
+  "SQMT-003": "Squat Machine — Machine 3",
+
+  "LEGEX-001": "Leg Extension — Machine 1",
+  "LEGEX-002": "Leg Extension — Machine 2",
+  "LEGEX-003": "Leg Extension — Machine 3",
+
+  "SLCUR-001": "Seated Leg Curl — Machine 1",
+  "SLCUR-002": "Seated Leg Curl — Machine 2",
+  "SLCUR-003": "Seated Leg Curl — Machine 3",
+
+  "LLCUR-001": "Lying Leg Curl — Machine 1",
+  "LLCUR-002": "Lying Leg Curl — Machine 2",
+  "LLCUR-003": "Lying Leg Curl — Machine 3",
+
+  "STCUR-001": "Standing Leg Curl — Machine 1",
+  "STCUR-002": "Standing Leg Curl — Machine 2",
+  "STCUR-003": "Standing Leg Curl — Machine 3",
+
+  "HIPAB-001": "Hip Abductor — Machine 1",
+  "HIPAB-002": "Hip Abductor — Machine 2",
+  "HIPAB-003": "Hip Abductor — Machine 3",
+
+  "HIPAD-001": "Hip Adductor — Machine 1",
+  "HIPAD-002": "Hip Adductor — Machine 2",
+  "HIPAD-003": "Hip Adductor — Machine 3",
+
+  "GLUTKB-001": "Glute Kickback — Machine 1",
+  "GLUTKB-002": "Glute Kickback — Machine 2",
+  "GLUTKB-003": "Glute Kickback — Machine 3",
+
+  "SCALF-001": "Seated Calf Raise — Machine 1",
+  "SCALF-002": "Seated Calf Raise — Machine 2",
+  "SCALF-003": "Seated Calf Raise — Machine 3",
+
+  "STCALF-001": "Standing Calf Raise — Machine 1",
+  "STCALF-002": "Standing Calf Raise — Machine 2",
+  "STCALF-003": "Standing Calf Raise — Machine 3",
+
+  // ---- Arms ----
+  "PRCUR-001": "Preacher Curl — Machine 1",
+  "PRCUR-002": "Preacher Curl — Machine 2",
+  "PRCUR-003": "Preacher Curl — Machine 3",
+
+  "BICUR-001": "Biceps Curl — Machine 1",
+  "BICUR-002": "Biceps Curl — Machine 2",
+  "BICUR-003": "Biceps Curl — Machine 3",
+
+  "CABCRL-001": "Cable Curl — Station 1",
+  "CABCRL-002": "Cable Curl — Station 2",
+  "CABCRL-003": "Cable Curl — Station 3",
+
+  "TRIEX-001": "Triceps Extension — Machine 1",
+  "TRIEX-002": "Triceps Extension — Machine 2",
+  "TRIEX-003": "Triceps Extension — Machine 3",
+
+  "DIPMT-001": "Dip Machine — Machine 1",
+  "DIPMT-002": "Dip Machine — Machine 2",
+  "DIPMT-003": "Dip Machine — Machine 3",
+
+  "CABPD-001": "Cable Pushdown — Station 1",
+  "CABPD-002": "Cable Pushdown — Station 2",
+  "CABPD-003": "Cable Pushdown — Station 3",
+
+  // ---- Core / Abs ----
+  "ABCR-001": "Ab Crunch — Machine 1",
+  "ABCR-002": "Ab Crunch — Machine 2",
+  "ABCR-003": "Ab Crunch — Machine 3",
+
+  "RTTOR-001": "Rotary Torso — Machine 1",
+  "RTTOR-002": "Rotary Torso — Machine 2",
+  "RTTOR-003": "Rotary Torso — Machine 3",
+
+  "CAPCH-001": "Captain’s Chair — Station 1",
+  "CAPCH-002": "Captain’s Chair — Station 2",
+  "CAPCH-003": "Captain’s Chair — Station 3",
+
+  "DABEN-001": "Decline Ab Bench — Bench 1",
+  "DABEN-002": "Decline Ab Bench — Bench 2",
+  "DABEN-003": "Decline Ab Bench — Bench 3",
+
+  "CABAB-001": "Cable Crunch — Station 1",
+  "CABAB-002": "Cable Crunch — Station 2",
+  "CABAB-003": "Cable Crunch — Station 3",
+
+  // ---- Free Weights / Racks / Benches ----
+  "FBEN-001": "Flat Bench — Bench 1",
+  "FBEN-002": "Flat Bench — Bench 2",
+  "FBEN-003": "Flat Bench — Bench 3",
+
+  "IBEN-001": "Incline Bench — Bench 1",
+  "IBEN-002": "Incline Bench — Bench 2",
+  "IBEN-003": "Incline Bench — Bench 3",
+
+  "DBEN-001": "Decline Bench — Bench 1",
+  "DBEN-002": "Decline Bench — Bench 2",
+  "DBEN-003": "Decline Bench — Bench 3",
+
+  "SQRK-001": "Squat Rack — Rack 1",
+  "SQRK-002": "Squat Rack — Rack 2",
+  "SQRK-003": "Squat Rack — Rack 3",
+
+  "PWRK-001": "Power Rack — Rack 1",
+  "PWRK-002": "Power Rack — Rack 2",
+  "PWRK-003": "Power Rack — Rack 3",
+
+  "DBRCK-001": "Dumbbell Rack — Area 1",
+  "DBRCK-002": "Dumbbell Rack — Area 2",
+  "DBRCK-003": "Dumbbell Rack — Area 3",
+
+  // ---- Cardio ----
+  "TRED-001": "Treadmill — Unit 1",
+  "TRED-002": "Treadmill — Unit 2",
+  "TRED-003": "Treadmill — Unit 3",
+
+  "ELIP-001": "Elliptical — Unit 1",
+  "ELIP-002": "Elliptical — Unit 2",
+  "ELIP-003": "Elliptical — Unit 3",
+
+  "STAIR-001": "Stair Climber — Unit 1",
+  "STAIR-002": "Stair Climber — Unit 2",
+  "STAIR-003": "Stair Climber — Unit 3",
+
+  "BIKE-001": "Stationary Bike — Unit 1",
+  "BIKE-002": "Stationary Bike — Unit 2",
+  "BIKE-003": "Stationary Bike — Unit 3",
+
+  "ROW-001": "Rower — Unit 1",
+  "ROW-002": "Rower — Unit 2",
+  "ROW-003": "Rower — Unit 3"
+};
+
+/* ---------------- Multi-use equipment rules ----------------
+   You said: Benches and Squat Rack are multi-use.
+   We'll treat these prefixes as multi-use:
+*/
+const MULTI_USE_PREFIXES = [
+  "DBRCK", // dumbbell area
+  "SMTH",  // smith machine
+  "SQRK",  // squat rack
+  "PWRK",  // power rack
+  "FBEN", "IBEN", "DBEN", // benches
+  "CAB",   // cable stations (CABFLY/CABCRL/CABPD/CABAB)
+];
+
+/* Suggested exercise lists by family */
+const EXERCISE_SUGGESTIONS = {
+  DUMBBELL: [
+    "DB Bench Press", "DB Incline Press", "DB Shoulder Press", "DB Row",
+    "DB Curl", "Hammer Curl", "Lateral Raise", "RDL (Dumbbells)",
+    "Goblet Squat", "Walking Lunge", "Shrugs", "Calf Raise (DB)"
+  ],
+  SMITH: [
+    "Smith Squat", "Smith Bench Press", "Smith Incline Press", "Smith Shoulder Press",
+    "Smith RDL", "Smith Lunge", "Smith Calf Raise", "Hip Thrust (Smith)"
+  ],
+  RACK: [
+    "Back Squat", "Front Squat", "Overhead Press", "Bench Press",
+    "Good Morning", "Rack Pull", "Barbell Row", "Lunge"
+  ],
+  BENCH: [
+    "Bench Press", "Incline Press", "Decline Press", "DB Bench Press",
+    "Skull Crushers", "Chest Supported Row", "Step-Ups", "Hip Thrust"
+  ],
+  CABLE: [
+    "Triceps Pushdown", "Cable Curl", "Face Pull", "Lat Pulldown",
+    "Seated Cable Row", "Cable Fly", "Cable Lateral Raise", "Pull-Through",
+    "Pallof Press", "Cable Crunch"
+  ],
+  DEFAULT: ["Custom…"]
+};
+
+function isMultiUseMachineCode(machineCode) {
+  if (!machineCode) return false;
+  const prefix = String(machineCode).split("-")[0].toUpperCase();
+  return MULTI_USE_PREFIXES.includes(prefix) || MULTI_USE_PREFIXES.some(p => prefix.startsWith(p));
+}
+
+function machineFamilyFromCode(machineCode) {
+  const prefix = String(machineCode || "").split("-")[0].toUpperCase();
+  if (prefix === "DBRCK") return "DUMBBELL";
+  if (prefix === "SMTH") return "SMITH";
+  if (prefix === "SQRK" || prefix === "PWRK") return "RACK";
+  if (prefix === "FBEN" || prefix === "IBEN" || prefix === "DBEN") return "BENCH";
+  if (prefix.startsWith("CAB")) return "CABLE";
+  return "DEFAULT";
+}
+
+/* ---------------- QR mapping (device-local) ---------------- */
+const QR_MAP_KEY = 'scanliftlog_qrmap_v2'; // v2 because we now store machineCode too
+function loadQrMap() {
+  return safeJSONParse(localStorage.getItem(QR_MAP_KEY) || "{}", {});
+}
+function saveQrMap(obj) {
+  localStorage.setItem(QR_MAP_KEY, JSON.stringify(obj));
+}
+
+/* ---------------- Exercise last-used per machine (device-local) ---------------- */
+function lastExerciseKey(userId, machineKey) {
+  return `scanliftlog_last_ex_v1:${userId}:${machineKey}`;
+}
+function setLastExercise(userId, machineKey, exName) {
+  localStorage.setItem(lastExerciseKey(userId, machineKey), exName);
+}
+function getLastExercise(userId, machineKey) {
+  return localStorage.getItem(lastExerciseKey(userId, machineKey)) || "";
+}
+
+/* ---------------- Workout logs storage ----------------
+   Stored per: userId + machineKey + exerciseKey
+*/
+function logsStorageKey(userId, machineKey, exerciseKey) {
+  return `scanliftlog_logs_v1:${userId}:${machineKey}:${exerciseKey}`;
+}
+function loadLogs(userId, machineKey, exerciseKey) {
+  return safeJSONParse(localStorage.getItem(logsStorageKey(userId, machineKey, exerciseKey)) || "[]", []);
+}
+function saveLogs(userId, machineKey, exerciseKey, arr) {
+  localStorage.setItem(logsStorageKey(userId, machineKey, exerciseKey), JSON.stringify(arr));
+}
+
+/* ---------------- Build machine dropdown (for QR labeling) ---------------- */
+function buildMachineSelect() {
+  const sel = document.getElementById('machineSelect');
+  sel.innerHTML = "";
+
+  const placeholder = document.createElement('option');
+  placeholder.value = "";
+  placeholder.textContent = "Choose a machine…";
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  sel.appendChild(placeholder);
+
+  // Sort by display name
+  const codes = Object.keys(MACHINE_MAP).sort((a,b) => {
+    const A = MACHINE_MAP[a], B = MACHINE_MAP[b];
+    return A.localeCompare(B);
+  });
+
+  for (const code of codes) {
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = MACHINE_MAP[code];
+    sel.appendChild(opt);
+  }
+}
+
+/* ---------------- Exercise selector UI ---------------- */
+function buildExerciseSelect(isMultiUse, family, lastUsed) {
+  const sel = document.getElementById('exerciseSelect');
+  const customInput = document.getElementById('exerciseCustom');
+  const hint = document.getElementById('exerciseHint');
+
+  sel.innerHTML = "";
+
+  if (!isMultiUse) {
+    // Hide exercise selection, use MAIN bucket
+    sel.classList.add('hidden');
+    customInput.classList.add('hidden');
+    hint.textContent = "This machine is single-use. Exercise selection is not required.";
+    return;
   }
 
-  function toast(msg){
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'), 1800);
+  sel.classList.remove('hidden');
+
+  // Build options: last used (if any) first, then suggestions, then Custom…
+  const suggestions = (EXERCISE_SUGGESTIONS[family] || EXERCISE_SUGGESTIONS.DEFAULT).slice();
+  if (!suggestions.includes("Custom…")) suggestions.push("Custom…");
+
+  const unique = [];
+  if (lastUsed && !unique.includes(lastUsed)) unique.push(lastUsed);
+  for (const s of suggestions) if (!unique.includes(s)) unique.push(s);
+
+  const placeholder = document.createElement('option');
+  placeholder.value = "";
+  placeholder.textContent = "Choose an exercise…";
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  sel.appendChild(placeholder);
+
+  for (const ex of unique) {
+    const opt = document.createElement('option');
+    opt.value = ex;
+    opt.textContent = ex;
+    sel.appendChild(opt);
   }
 
-  function getQueryParam(key){
-    const params = new URLSearchParams(window.location.search);
-    return params.get(key);
-  }
-
-  // ---------- Identity ----------
-  function getOrCreateUserId(){
-    let id = localStorage.getItem('anon_user_id');
-    if(!id){
-      id = uuidv4();
-      localStorage.setItem('anon_user_id', id);
-    }
-    return id;
-  }
-
-  function resetUser(){
-    localStorage.removeItem('anon_user_id');
-    window.location.reload();
-  }
-
-  // ---------- Storage ----------
-  function storageKey(userId, machineId){
-    return `logs:${userId}:${machineId}`;
-  }
-
-  function loadLogs(userId, machineId){
-    const raw = localStorage.getItem(storageKey(userId, machineId));
-    if(!raw) return [];
-    try { return JSON.parse(raw); } catch(e){ return []; }
-  }
-
-  function saveLogs(userId, machineId, logs){
-    localStorage.setItem(storageKey(userId, machineId), JSON.stringify(logs));
-  }
-
-  function clearMachineHistory(userId, machineId){
-    localStorage.removeItem(storageKey(userId, machineId));
-  }
-
-  // ---------- UI State ----------
-  const userId = getOrCreateUserId();
-  const machineId = (getQueryParam('machine') || 'SHPR-001')
-  .trim()
-  .toUpperCase();
-
-
-  const MACHINE_MAP = {
-    // ---- Chest ----
-    "CHPR-001": "Flat Chest Press — Machine 1",
-    "CHPR-002": "Flat Chest Press — Machine 2",
-    "CHPR-003": "Flat Chest Press — Machine 3",
-
-    "INCHPR-001": "Incline Chest Press — Machine 1",
-    "INCHPR-002": "Incline Chest Press — Machine 2",
-    "INCHPR-003": "Incline Chest Press — Machine 3",
-
-    "DECHPR-001": "Decline Chest Press — Machine 1",
-    "DECHPR-002": "Decline Chest Press — Machine 2",
-    "DECHPR-003": "Decline Chest Press — Machine 3",
-
-    "PECDK-001": "Pec Deck / Chest Fly — Machine 1",
-    "PECDK-002": "Pec Deck / Chest Fly — Machine 2",
-    "PECDK-003": "Pec Deck / Chest Fly — Machine 3",
-
-    "CABFLY-001": "Cable Fly (Chest) — Station 1",
-    "CABFLY-002": "Cable Fly (Chest) — Station 2",
-    "CABFLY-003": "Cable Fly (Chest) — Station 3",
-
-    "SMTH-001": "Smith Machine — Rack 1",
-    "SMTH-002": "Smith Machine — Rack 2",
-    "SMTH-003": "Smith Machine — Rack 3",
-
-    // ---- Shoulders ----
-    "SHPR-001": "Shoulder Press — Machine 1",
-    "SHPR-002": "Shoulder Press — Machine 2",
-    "SHPR-003": "Shoulder Press — Machine 3",
-
-    "LATRL-001": "Lateral Raise — Machine 1",
-    "LATRL-002": "Lateral Raise — Machine 2",
-    "LATRL-003": "Lateral Raise — Machine 3",
-
-    "RDLT-001": "Rear Delt Fly — Machine 1",
-    "RDLT-002": "Rear Delt Fly — Machine 2",
-    "RDLT-003": "Rear Delt Fly — Machine 3",
-
-    "UPROW-001": "Upright Row — Machine 1",
-    "UPROW-002": "Upright Row — Machine 2",
-    "UPROW-003": "Upright Row — Machine 3",
-
-    // ---- Back ----
-    "LATPD-001": "Lat Pulldown — Station 1",
-    "LATPD-002": "Lat Pulldown — Station 2",
-    "LATPD-003": "Lat Pulldown — Station 3",
-
-    "SETRW-001": "Seated Row — Machine 1",
-    "SETRW-002": "Seated Row — Machine 2",
-    "SETRW-003": "Seated Row — Machine 3",
-
-    "HIRW-001": "High Row — Machine 1",
-    "HIRW-002": "High Row — Machine 2",
-    "HIRW-003": "High Row — Machine 3",
-
-    "ASSTPD-001": "Assisted Pull-Up / Dip — Station 1",
-    "ASSTPD-002": "Assisted Pull-Up / Dip — Station 2",
-    "ASSTPD-003": "Assisted Pull-Up / Dip — Station 3",
-
-    "STRPD-001": "Straight-Arm Pulldown — Station 1",
-    "STRPD-002": "Straight-Arm Pulldown — Station 2",
-    "STRPD-003": "Straight-Arm Pulldown — Station 3",
-
-    "BKEXT-001": "Back Extension — Station 1",
-    "BKEXT-002": "Back Extension — Station 2",
-    "BKEXT-003": "Back Extension — Station 3",
-
-    // ---- Legs ----
-    "LEGPR-001": "Leg Press — Machine 1",
-    "LEGPR-002": "Leg Press — Machine 2",
-    "LEGPR-003": "Leg Press — Machine 3",
-
-    "HKSQ-001": "Hack Squat — Machine 1",
-    "HKSQ-002": "Hack Squat — Machine 2",
-    "HKSQ-003": "Hack Squat — Machine 3",
-
-    "SQMT-001": "Squat Machine — Machine 1",
-    "SQMT-002": "Squat Machine — Machine 2",
-    "SQMT-003": "Squat Machine — Machine 3",
-
-    "LEGEX-001": "Leg Extension — Machine 1",
-    "LEGEX-002": "Leg Extension — Machine 2",
-    "LEGEX-003": "Leg Extension — Machine 3",
-
-    "SLCUR-001": "Seated Leg Curl — Machine 1",
-    "SLCUR-002": "Seated Leg Curl — Machine 2",
-    "SLCUR-003": "Seated Leg Curl — Machine 3",
-
-    "LLCUR-001": "Lying Leg Curl — Machine 1",
-    "LLCUR-002": "Lying Leg Curl — Machine 2",
-    "LLCUR-003": "Lying Leg Curl — Machine 3",
-
-    "STCUR-001": "Standing Leg Curl — Machine 1",
-    "STCUR-002": "Standing Leg Curl — Machine 2",
-    "STCUR-003": "Standing Leg Curl — Machine 3",
-
-    "HIPAB-001": "Hip Abductor — Machine 1",
-    "HIPAB-002": "Hip Abductor — Machine 2",
-    "HIPAB-003": "Hip Abductor — Machine 3",
-
-    "HIPAD-001": "Hip Adductor — Machine 1",
-    "HIPAD-002": "Hip Adductor — Machine 2",
-    "HIPAD-003": "Hip Adductor — Machine 3",
-
-    "GLUTKB-001": "Glute Kickback — Machine 1",
-    "GLUTKB-002": "Glute Kickback — Machine 2",
-    "GLUTKB-003": "Glute Kickback — Machine 3",
-
-    "SCALF-001": "Seated Calf Raise — Machine 1",
-    "SCALF-002": "Seated Calf Raise — Machine 2",
-    "SCALF-003": "Seated Calf Raise — Machine 3",
-
-    "STCALF-001": "Standing Calf Raise — Machine 1",
-    "STCALF-002": "Standing Calf Raise — Machine 2",
-    "STCALF-003": "Standing Calf Raise — Machine 3",
-
-    // ---- Arms ----
-    "PRCUR-001": "Preacher Curl — Machine 1",
-    "PRCUR-002": "Preacher Curl — Machine 2",
-    "PRCUR-003": "Preacher Curl — Machine 3",
-
-    "BICUR-001": "Biceps Curl — Machine 1",
-    "BICUR-002": "Biceps Curl — Machine 2",
-    "BICUR-003": "Biceps Curl — Machine 3",
-
-    "CABCRL-001": "Cable Curl — Station 1",
-    "CABCRL-002": "Cable Curl — Station 2",
-    "CABCRL-003": "Cable Curl — Station 3",
-
-    "TRIEX-001": "Triceps Extension — Machine 1",
-    "TRIEX-002": "Triceps Extension — Machine 2",
-    "TRIEX-003": "Triceps Extension — Machine 3",
-
-    "DIPMT-001": "Dip Machine — Machine 1",
-    "DIPMT-002": "Dip Machine — Machine 2",
-    "DIPMT-003": "Dip Machine — Machine 3",
-
-    "CABPD-001": "Cable Pushdown — Station 1",
-    "CABPD-002": "Cable Pushdown — Station 2",
-    "CABPD-003": "Cable Pushdown — Station 3",
-
-    // ---- Core / Abs ----
-    "ABCR-001": "Ab Crunch — Machine 1",
-    "ABCR-002": "Ab Crunch — Machine 2",
-    "ABCR-003": "Ab Crunch — Machine 3",
-
-    "RTTOR-001": "Rotary Torso — Machine 1",
-    "RTTOR-002": "Rotary Torso — Machine 2",
-    "RTTOR-003": "Rotary Torso — Machine 3",
-
-    "CAPCH-001": "Captain’s Chair — Station 1",
-    "CAPCH-002": "Captain’s Chair — Station 2",
-    "CAPCH-003": "Captain’s Chair — Station 3",
-
-    "DABEN-001": "Decline Ab Bench — Bench 1",
-    "DABEN-002": "Decline Ab Bench — Bench 2",
-    "DABEN-003": "Decline Ab Bench — Bench 3",
-
-    "CABAB-001": "Cable Crunch — Station 1",
-    "CABAB-002": "Cable Crunch — Station 2",
-    "CABAB-003": "Cable Crunch — Station 3",
-
-    // ---- Free Weights / Racks / Benches ----
-    "FBEN-001": "Flat Bench — Bench 1",
-    "FBEN-002": "Flat Bench — Bench 2",
-    "FBEN-003": "Flat Bench — Bench 3",
-
-    "IBEN-001": "Incline Bench — Bench 1",
-    "IBEN-002": "Incline Bench — Bench 2",
-    "IBEN-003": "Incline Bench — Bench 3",
-
-    "DBEN-001": "Decline Bench — Bench 1",
-    "DBEN-002": "Decline Bench — Bench 2",
-    "DBEN-003": "Decline Bench — Bench 3",
-
-    "SQRK-001": "Squat Rack — Rack 1",
-    "SQRK-002": "Squat Rack — Rack 2",
-    "SQRK-003": "Squat Rack — Rack 3",
-
-    "PWRK-001": "Power Rack — Rack 1",
-    "PWRK-002": "Power Rack — Rack 2",
-    "PWRK-003": "Power Rack — Rack 3",
-
-    "DBRCK-001": "Dumbbell Rack — Area 1",
-    "DBRCK-002": "Dumbbell Rack — Area 2",
-    "DBRCK-003": "Dumbbell Rack — Area 3",
-
-    // ---- Cardio (optional) ----
-    "TRED-001": "Treadmill — Unit 1",
-    "TRED-002": "Treadmill — Unit 2",
-    "TRED-003": "Treadmill — Unit 3",
-
-    "ELIP-001": "Elliptical — Unit 1",
-    "ELIP-002": "Elliptical — Unit 2",
-    "ELIP-003": "Elliptical — Unit 3",
-
-    "STAIR-001": "Stair Climber — Unit 1",
-    "STAIR-002": "Stair Climber — Unit 2",
-    "STAIR-003": "Stair Climber — Unit 3",
-
-    "BIKE-001": "Stationary Bike — Unit 1",
-    "BIKE-002": "Stationary Bike — Unit 2",
-    "BIKE-003": "Stationary Bike — Unit 3",
-
-    "ROW-001": "Rower — Unit 1",
-    "ROW-002": "Rower — Unit 2",
-    "ROW-003": "Rower — Unit 3"
-  };
-  const machineName = MACHINE_MAP[machineId] || `Machine (${machineId})`;
-
-  document.getElementById('machinePill').textContent = machineName;
-  document.getElementById('userPill').textContent = `User: ${userId.slice(0,8)}…`;
-
-  document.getElementById('resetUserBtn').addEventListener('click', resetUser);
-
-  // ---------- Sets UI ----------
-  const setsDiv = document.getElementById('sets');
-
-  function makeSetRow(setNumber, reps='', weight=''){
-    const row = document.createElement('div');
-    row.className = 'setrow';
-    row.style.marginTop = '10px';
-
-    const repsWrap = document.createElement('div');
-    const repsLab = document.createElement('label');
-    repsLab.textContent = `Set ${setNumber} – Reps`;
-    const repsInp = document.createElement('input');
-    repsInp.type = 'number';
-    repsInp.min = '0';
-    repsInp.placeholder = 'e.g., 10';
-    repsInp.value = reps;
-    repsWrap.appendChild(repsLab);
-    repsWrap.appendChild(repsInp);
-
-    const wtWrap = document.createElement('div');
-    const wtLab = document.createElement('label');
-    wtLab.textContent = `Set ${setNumber} – Weight (lb)`;
-    const wtInp = document.createElement('input');
-    wtInp.type = 'number';
-    wtInp.min = '0';
-    wtInp.step = '0.5';
-    wtInp.placeholder = 'e.g., 135';
-    wtInp.value = weight;
-    wtWrap.appendChild(wtLab);
-    wtWrap.appendChild(wtInp);
-
-    const delBtn = document.createElement('button');
-    delBtn.className = 'btn secondary';
-    delBtn.type = 'button';
-    delBtn.textContent = '✕';
-    delBtn.title = 'Remove set';
-    delBtn.addEventListener('click', () => {
-      row.remove();
-      renumberSets();
-    });
-
-    row.appendChild(repsWrap);
-    row.appendChild(wtWrap);
-    row.appendChild(delBtn);
-
-    return row;
-  }
-
-  function renumberSets(){
-    const rows = [...setsDiv.querySelectorAll('.setrow')];
-    rows.forEach((row, idx) => {
-      const setNum = idx + 1;
-      const labels = row.querySelectorAll('label');
-      labels[0].textContent = `Set ${setNum} – Reps`;
-      labels[1].textContent = `Set ${setNum} – Weight (lb)`;
-    });
-  }
-
-  function addSet(reps='', weight=''){
-    const current = setsDiv.querySelectorAll('.setrow').length;
-    setsDiv.appendChild(makeSetRow(current + 1, reps, weight));
-  }
-
-  document.getElementById('addSetBtn').addEventListener('click', () => addSet());
-
-  // default sets
-  addSet();
-  addSet();
-  addSet();
-
-  // ---------- History Rendering ----------
-  function calcVolume(sets){
-    // volume = sum(reps * weight)
-    return sets.reduce((sum, s) => sum + (Number(s.reps)||0) * (Number(s.weight)||0), 0);
-  }
-
-  function formatSummary(log){
-    const lines = log.sets.map((s, i) => `Set ${i+1}: ${s.reps} reps @ ${s.weight} lb`);
-    if(log.notes && log.notes.trim()) lines.push(`Notes: ${log.notes.trim()}`);
-    return lines.join('\n');
-  }
-
-  function render(history){
-    const last = history[0];
-    const lastText = document.getElementById('lastWorkoutText');
-    const kpis = document.getElementById('kpis');
-
-    if(!last){
-      lastText.textContent = 'None yet. Log your first session below.';
-      kpis.style.display = 'none';
+  hint.textContent = "Multi-use equipment: choose what you did so your history stays organized.";
+
+  // Default select last-used if present
+  if (lastUsed) {
+    sel.value = lastUsed;
+    if (lastUsed === "Custom…") {
+      customInput.classList.remove('hidden');
     } else {
-      lastText.textContent = `${new Date(last.ts).toLocaleString()} — ${last.sets.length} set(s)`;
-      kpis.style.display = 'flex';
-      const lastWeight = last.sets.length ? Math.max(...last.sets.map(s => Number(s.weight)||0)) : 0;
-      document.getElementById('kpiWeight').textContent = `${lastWeight} lb`;
-      document.getElementById('kpiVolume').textContent = `${calcVolume(last.sets).toLocaleString()} lb·reps`;
-      document.getElementById('kpiCount').textContent = `${history.length}`;
+      customInput.classList.add('hidden');
     }
-
-    const histDiv = document.getElementById('history');
-    histDiv.innerHTML = '';
-    if(history.length === 0){
-      document.getElementById('histHint').textContent = 'Your saved sessions appear here for this machine.';
-      return;
-    }
-    document.getElementById('histHint').textContent = '';
-
-    history.forEach((log, idx) => {
-      const item = document.createElement('div');
-      item.className = 'hist-item';
-
-      const top = document.createElement('div');
-      top.className = 'hist-top';
-
-      const date = document.createElement('div');
-      date.className = 'hist-date';
-      date.textContent = new Date(log.ts).toLocaleString();
-
-      const actions = document.createElement('div');
-      actions.className = 'small';
-      actions.innerHTML = `<button class="btn secondary" style="padding:6px 10px; border-radius:10px;" data-idx="${idx}">Load</button>`;
-
-      top.appendChild(date);
-      top.appendChild(actions);
-
-      const summary = document.createElement('div');
-      summary.className = 'hist-summary';
-      summary.textContent = formatSummary(log);
-
-      item.appendChild(top);
-      item.appendChild(summary);
-      histDiv.appendChild(item);
-    });
-
-    // bind load buttons
-    histDiv.querySelectorAll('button[data-idx]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const idx = Number(btn.getAttribute('data-idx'));
-        const log = history[idx];
-        // load sets into form
-        setsDiv.innerHTML = '';
-        log.sets.forEach(s => addSet(String(s.reps||''), String(s.weight||'')));
-        document.getElementById('notes').value = log.notes || '';
-        toast('Loaded workout into editor.');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    });
+  } else {
+    customInput.classList.add('hidden');
   }
 
-  function refresh(){
-    const history = loadLogs(userId, machineId);
-    render(history);
+  sel.onchange = () => {
+    const v = sel.value;
+    if (v === "Custom…") {
+      customInput.classList.remove('hidden');
+      customInput.focus();
+    } else {
+      customInput.classList.add('hidden');
+    }
+    // Re-render history when exercise changes
+    renderAll();
+  };
+
+  customInput.oninput = () => {
+    // Re-render history as they type (so it swaps buckets)
+    renderAll();
+  };
+}
+
+function getSelectedExerciseName(isMultiUse) {
+  if (!isMultiUse) return "MAIN";
+  const sel = document.getElementById('exerciseSelect');
+  const custom = document.getElementById('exerciseCustom');
+
+  const v = (sel.value || "").trim();
+  if (!v) return ""; // not selected yet
+
+  if (v === "Custom…") {
+    const typed = (custom.value || "").trim();
+    return typed ? typed : "";
+  }
+  return v;
+}
+
+function normalizeExerciseKey(exerciseName) {
+  return String(exerciseName).trim().toUpperCase().replace(/\s+/g,'_').replace(/[^A-Z0-9_]/g,'');
+}
+
+/* ---------------- Determine machine context (machine or qr) ---------------- */
+const userId = getOrCreateUserId();
+const qrId = (getQueryParam('qr') || '').trim();
+const machineParam = (getQueryParam('machine') || '').trim().toUpperCase();
+
+let machineKey = null;      // used for logs (QR:XXXX or MACHINECODE)
+let machineCode = null;     // used for multi-use detection and suggestions
+let machineLabel = null;    // displayed in UI
+
+function initMachineContext() {
+  // Case 1: Explicit machine param (original mode)
+  if (machineParam) {
+    machineKey = machineParam;
+    machineCode = machineParam;
+    machineLabel = MACHINE_MAP[machineParam] || `Machine (${machineParam})`;
+    return;
   }
 
-  // ---------- Save ----------
-  document.getElementById('saveBtn').addEventListener('click', () => {
-    const rows = [...setsDiv.querySelectorAll('.setrow')];
-    const sets = rows.map(row => {
-      const inputs = row.querySelectorAll('input');
-      return { reps: Number(inputs[0].value), weight: Number(inputs[1].value) };
-    }).filter(s => (s.reps && s.reps > 0) || (s.weight && s.weight > 0));
+  // Case 2: QR mode
+  if (qrId) {
+    const qrMap = loadQrMap();
 
-    if(sets.length === 0){
-      toast('Add at least one set (reps or weight).');
+    machineKey = `QR:${qrId}`;
+
+    if (qrMap[qrId] && qrMap[qrId].machineCode && qrMap[qrId].label) {
+      machineCode = qrMap[qrId].machineCode;
+      machineLabel = qrMap[qrId].label;
+      document.getElementById('relabelWrap').classList.remove('hidden');
       return;
     }
 
-    const notes = document.getElementById('notes').value || '';
-    const history = loadLogs(userId, machineId);
+    // Not labeled yet on this phone → show assignment panel
+    machineCode = null;
+    machineLabel = `Unlabeled QR (${qrId})`;
 
-    const log = { ts: Date.now(), sets, notes };
-    history.unshift(log);
-    saveLogs(userId, machineId, history);
+    const panel = document.getElementById('qrAssignPanel');
+    panel.classList.remove('hidden');
+    document.getElementById('qrIdLine').textContent = `QR ID: ${qrId}`;
 
-    toast('Workout saved.');
-    refresh();
+    buildMachineSelect();
+
+    document.getElementById('saveQrLabelBtn').onclick = () => {
+      const selectedCode = (document.getElementById('machineSelect').value || "").trim().toUpperCase();
+      const num = (document.getElementById('machineNum').value || "").trim();
+
+      if (!selectedCode) return;
+
+      // If they chose a number, rewrite suffix to 001/002/003 while preserving prefix
+      let finalCode = selectedCode;
+      if (num) {
+        const prefix = selectedCode.split("-")[0];
+        finalCode = `${prefix}-${String(num).padStart(3,'0')}`;
+      }
+
+      const finalLabel = MACHINE_MAP[finalCode] || MACHINE_MAP[selectedCode] || `Machine (${finalCode})`;
+
+      const updated = loadQrMap();
+      updated[qrId] = { machineCode: finalCode, label: finalLabel, updatedAt: new Date().toISOString() };
+      saveQrMap(updated);
+
+      machineCode = finalCode;
+      machineLabel = finalLabel;
+
+      panel.classList.add('hidden');
+      document.getElementById('relabelWrap').classList.remove('hidden');
+
+      renderAll();
+    };
+
+    document.getElementById('cancelQrLabelBtn').onclick = () => {
+      panel.classList.add('hidden');
+      // leave machine as "unlabeled"
+      renderAll();
+    };
+
+    document.getElementById('relabelBtn').onclick = () => {
+      const updated = loadQrMap();
+      delete updated[qrId];
+      saveQrMap(updated);
+      location.reload();
+    };
+
+    return;
+  }
+
+  // Case 3: No params (home)
+  machineKey = "HOME";
+  machineCode = null;
+  machineLabel = "Scan a QR code to begin";
+}
+
+/* ---------------- Render + Interactions ---------------- */
+document.getElementById('resetUserBtn').addEventListener('click', resetUser);
+document.getElementById('dateInput').value = todayISO();
+
+function renderPills() {
+  document.getElementById('machinePill').textContent = machineLabel;
+  document.getElementById('userPill').textContent = `User: ${userId.slice(0,8)}…`;
+}
+
+function currentIsMultiUse() {
+  // If machineCode is unknown (unlabeled QR), we treat as single-use until labeled.
+  return machineCode ? isMultiUseMachineCode(machineCode) : false;
+}
+
+function currentFamily() {
+  return machineCode ? machineFamilyFromCode(machineCode) : "DEFAULT";
+}
+
+function renderExerciseUI() {
+  const isMulti = currentIsMultiUse();
+  const fam = currentFamily();
+  const lastUsed = getLastExercise(userId, machineKey);
+
+  buildExerciseSelect(isMulti, fam, lastUsed);
+
+  // If not multi-use, ensure selector is hidden and history is under MAIN
+  if (!isMulti) {
+    document.getElementById('exerciseHint').textContent =
+      (machineKey === "HOME" || machineLabel.startsWith("Unlabeled QR"))
+        ? "Scan a machine QR code to begin."
+        : "This machine is single-use. Exercise selection is not required.";
+  }
+}
+
+function renderHistory() {
+  const tbody = document.getElementById('historyBody');
+  tbody.innerHTML = "";
+
+  const isMulti = currentIsMultiUse();
+
+  // Determine exercise bucket
+  let exName = isMulti ? getSelectedExerciseName(true) : "MAIN";
+
+  // If multi-use and no exercise selected, show helper row
+  if (isMulti && !exName) {
+    tbody.innerHTML = `<tr><td colspan="6" class="muted">Choose an exercise to view history.</td></tr>`;
+    document.getElementById('historyScopeBadge').textContent = `Scope: ${machineKey} / (select exercise)`;
+    return;
+  }
+
+  const exKey = isMulti ? normalizeExerciseKey(exName) : "MAIN";
+  const logs = loadLogs(userId, machineKey, exKey);
+
+  document.getElementById('historyScopeBadge').textContent = `Scope: ${machineKey} / ${isMulti ? exName : "MAIN"}`;
+
+  if (!logs.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="muted">No entries yet.</td></tr>`;
+    return;
+  }
+
+  // Newest first
+  const sorted = logs.slice().sort((a,b) => (b.ts||0) - (a.ts||0));
+
+  for (const entry of sorted) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${entry.date || ""}</td>
+      <td>${entry.exercise || (isMulti ? exName : "")}</td>
+      <td>${entry.weight ?? ""}</td>
+      <td>${entry.sets ?? ""}</td>
+      <td>${entry.reps ?? ""}</td>
+      <td class="muted">${entry.savedAt || ""}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+}
+
+function clearHistoryForCurrentExercise() {
+  const isMulti = currentIsMultiUse();
+  let exName = isMulti ? getSelectedExerciseName(true) : "MAIN";
+  if (isMulti && !exName) return;
+
+  const exKey = isMulti ? normalizeExerciseKey(exName) : "MAIN";
+  saveLogs(userId, machineKey, exKey, []);
+  renderHistory();
+}
+
+document.getElementById('clearHistoryBtn').addEventListener('click', clearHistoryForCurrentExercise);
+
+document.getElementById('saveSetBtn').addEventListener('click', () => {
+  // Prevent saving on HOME/unlabeled
+  if (machineKey === "HOME" || machineLabel.startsWith("Unlabeled QR")) return;
+
+  const date = (document.getElementById('dateInput').value || todayISO()).trim();
+  const weight = (document.getElementById('weightInput').value || "").trim();
+  const sets = (document.getElementById('setsInput').value || "").trim();
+  const reps = (document.getElementById('repsInput').value || "").trim();
+
+  const isMulti = currentIsMultiUse();
+  let exName = isMulti ? getSelectedExerciseName(true) : "MAIN";
+
+  if (isMulti && !exName) {
+    alert("Please choose an exercise (or select Custom and type one).");
+    return;
+  }
+
+  const exKey = isMulti ? normalizeExerciseKey(exName) : "MAIN";
+
+  const logs = loadLogs(userId, machineKey, exKey);
+  logs.push({
+    ts: Date.now(),
+    date,
+    exercise: isMulti ? exName : "",
+    weight,
+    sets,
+    reps,
+    savedAt: nowReadable()
   });
+  saveLogs(userId, machineKey, exKey, logs);
 
-  // ---------- Clear machine ----------
-  document.getElementById('clearMachineBtn').addEventListener('click', () => {
-    if(!confirm('Delete ALL history for this machine (for this user on this device)?')) return;
-    clearMachineHistory(userId, machineId);
-    toast('Machine history cleared.');
-    refresh();
-  });
+  // Remember last exercise on this machine
+  if (isMulti) setLastExercise(userId, machineKey, exName);
 
-  // initial render
-  refresh();
-})();
+  // Clear inputs for next entry (keep date)
+  document.getElementById('weightInput').value = "";
+  document.getElementById('setsInput').value = "";
+  document.getElementById('repsInput').value = "";
+
+  renderHistory();
+});
+
+function renderAll() {
+  renderPills();
+  renderExerciseUI();
+  renderHistory();
+
+  // Disable logging fields on HOME/unlabeled
+  const disabled = (machineKey === "HOME" || machineLabel.startsWith("Unlabeled QR"));
+  document.getElementById('saveSetBtn').disabled = disabled;
+  document.getElementById('clearHistoryBtn').disabled = disabled;
+
+  // If disabled, show gentle hint in history
+  if (disabled) {
+    const tbody = document.getElementById('historyBody');
+    tbody.innerHTML = `<tr><td colspan="6" class="muted">Scan a machine QR code (or label this QR) to start logging.</td></tr>`;
+    document.getElementById('historyScopeBadge').textContent = `Scope: ${machineKey}`;
+  }
+}
+
+/* ---------------- Init ---------------- */
+initMachineContext();
+renderAll();
 </script>
-  <footer style="
-  margin-top: 40px;
-  padding: 16px;
-  text-align: center;
-  font-size: 13px;
-  color: #666;
-  border-top: 1px solid #e5e5e5;
-">
-  © 2026 ScanLiftLog. All rights reserved.
-</footer>
-
 </body>
 </html>
