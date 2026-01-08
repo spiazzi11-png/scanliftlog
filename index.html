@@ -62,12 +62,6 @@
     </div>
 
     <!-- Logger -->
-    <div class="row" style="align-items:flex-end; margin-top:12px;">
-  <div class="col">
-    <label>Exercise (optional)</label>
-    <input id="exerciseInput" placeholder="e.g., Dumbbell Flys, DB Press, Incline DB Row" />
-  </div>
-</div>
     <div class="card">
       <div class="row" style="align-items:flex-end;">
         <div class="col">
@@ -77,6 +71,14 @@
         <div class="col">
           <label>Notes (optional)</label>
           <input id="notesInput" placeholder="e.g., controlled reps, last set to failure" />
+        </div>
+      </div>
+
+      <!-- Exercise field (moved inside card, under Notes) -->
+      <div class="row" style="align-items:flex-end; margin-top:12px;">
+        <div class="col">
+          <label>Exercise (optional)</label>
+          <input id="exerciseInput" placeholder="e.g., Dumbbell Flys, DB Press, Incline DB Row" />
         </div>
       </div>
 
@@ -183,14 +185,13 @@ function resetUser() {
 }
 
 /* ---------- UI State ---------- */
-const exerciseInput = document.getElementById('exerciseInput');
 const userId = getOrCreateUserId();
 const machineParam = getQueryParam('machine');
 const machineId = machineParam ? machineParam.trim().toUpperCase() : null;
 
-/* ---------- Full Machine Map ---------- */
+/* ---------- Machine Map (expanded) ---------- */
 const MACHINE_MAP = {
-  // Chest
+  // Your originals
   "CHPR": "Flat Chest Press",
   "INCHPR": "Incline Chest Press",
   "DECHPR": "Decline Chest Press",
@@ -198,13 +199,11 @@ const MACHINE_MAP = {
   "CABFLY": "Cable Fly (Chest)",
   "SMTH": "Smith Machine",
 
-  // Shoulders
   "SHPR": "Shoulder Press",
   "LATRL": "Lateral Raise",
   "RDLT": "Rear Delt Fly",
   "UPROW": "Upright Row",
 
-  // Back
   "LATPD": "Lat Pulldown",
   "SETRW": "Seated Row",
   "HIRW": "High Row",
@@ -212,7 +211,6 @@ const MACHINE_MAP = {
   "STRPD": "Straight-Arm Pulldown",
   "BKEXT": "Back Extension",
 
-  // Legs
   "LEGPR": "Leg Press",
   "HKSQ": "Hack Squat",
   "SQMT": "Squat Machine",
@@ -226,22 +224,19 @@ const MACHINE_MAP = {
   "SCALF": "Seated Calf Raise",
   "STCALF": "Standing Calf Raise",
 
-  // Arms
   "PRCUR": "Preacher Curl",
-  "BICUR": "Biceps Curl",
-  "CABCRL": "Cable Curl",
-  "TRIEX": "Triceps Extension",
+  "BICUR": "Biceps Curl Machine",
+  "CABCRL": "Cable Curl Station",
+  "TRIEX": "Triceps Extension Machine",
   "DIPMT": "Dip Machine",
-  "CABPD": "Cable Pushdown",
+  "CABPD": "Cable Pushdown Station",
 
-  // Core
-  "ABCR": "Ab Crunch",
+  "ABCR": "Ab Crunch Machine",
   "RTTOR": "Rotary Torso",
   "CAPCH": "Captain’s Chair",
   "DABEN": "Decline Ab Bench",
-  "CABAB": "Cable Crunch",
+  "CABAB": "Cable Crunch Station",
 
-  // Free weights
   "FBEN": "Flat Bench",
   "IBEN": "Incline Bench",
   "DBEN": "Decline Bench",
@@ -249,18 +244,76 @@ const MACHINE_MAP = {
   "PWRK": "Power Rack",
   "DBRCK": "Dumbbell Rack",
 
-  // Cardio (optional)
   "TRED": "Treadmill",
   "ELIP": "Elliptical",
   "STAIR": "Stair Climber",
   "BIKE": "Stationary Bike",
-  "ROW": "Rower"
+  "ROW": "Rower",
+
+  // 50+ additional common gym equipment types
+  "CROSS": "Cable Crossover / Functional Trainer",
+  "CABLE": "Cable Station (Single)",
+  "LATISO": "Iso-Lateral Lat Pulldown",
+  "LTRW": "Low Row Machine",
+  "TBRW": "T-Bar Row Station",
+  "CHSRW": "Chest-Supported Row",
+  "PLOVR": "Pullover Machine",
+  "FACEP": "Face Pull Station",
+  "PULUP": "Pull-Up Bar / Rig",
+  "CHINB": "Chin-Up Bar",
+  "INVRT": "Inverted Row Station",
+
+  "BPBEN": "Barbell Bench Press (Bench)",
+  "IBPBN": "Incline Barbell Bench Press (Bench)",
+  "DBBEN": "Dumbbell Bench Press (Bench)",
+  "IDBBN": "Incline Dumbbell Bench Press (Bench)",
+  "LANDM": "Landmine Station",
+  "JMPPR": "Jammer Press",
+  "DPPRS": "Dip Station",
+  "CHDIP": "Chest Dip Machine",
+  "OHPRS": "Overhead Press Station",
+  "SHRUG": "Shrug Machine",
+
+  "GLBRG": "Glute Bridge / Hip Thrust Bench",
+  "HIPTH": "Hip Thrust Machine",
+  "BLSQT": "Belt Squat Machine",
+  "VLEG": "Vertical Leg Press",
+  "PENDL": "Pendulum Squat",
+  "SISSY": "Sissy Squat Bench",
+  "GHR": "Glute-Ham Raise (GHD)",
+  "SLED": "Sled Push Track",
+  "LUNGE": "Lunge Station",
+  "SQTST": "Squat Stand / Platform",
+
+  "HAMMR": "Hammer Strength Curl (Iso)",
+  "TRIDP": "Triceps Dip/Press Machine",
+  "SKULL": "Skull Crushers Bench Area",
+  "CLOSEB": "Close-Grip Bench Area",
+  "EZBAR": "EZ Bar Rack",
+  "BBRCK": "Barbell Rack",
+  "PLTRK": "Plate Storage Rack",
+  "KBRCK": "Kettlebell Rack",
+  "MEDBL": "Medicine Ball Rack",
+  "BAND": "Bands / Accessories Station",
+  "TRX": "TRX / Suspension Trainer",
+  "BOXJM": "Plyo Box Area",
+
+  "PLANK": "Plank Station / Mat Area",
+  "HANGK": "Hanging Knee Raise Station",
+  "ABWHL": "Ab Wheel Area",
+  "PALLF": "Pallof Press Station",
+
+  "ASSLT": "Air Bike (Assault-Style)",
+  "SKIER": "SkiErg",
+  "CURVE": "Curved Manual Treadmill",
+  "STEP": "Step Mill / Stepper",
+  "SPIN": "Spin Bike",
+  "ARC": "Arc Trainer"
 };
 
 const machineName = machineId
   ? (MACHINE_MAP[machineId] || `Machine (${machineId})`)
   : "Scan a machine QR code to begin";
-
 
 /* Storage: workouts per user+machine */
 function storageKeyFor(mid) {
@@ -269,7 +322,6 @@ function storageKeyFor(mid) {
 function loadWorkouts() {
   if (!machineId) return [];
   return safeJSONParse(localStorage.getItem(storageKeyFor(machineId)) || "[]", []);
-}
 }
 function saveWorkouts(arr) {
   if (!machineId) return;
@@ -338,12 +390,7 @@ function clearCurrentSets() {
 }
 
 /* ---------- Save / History ---------- */
-if (!machineId) {
-  alert("Scan a machine QR code before saving a workout.");
-  return;
-}  
-  
-  function readCurrentSets() {
+function readCurrentSets() {
   const rows = Array.from(setsContainer.querySelectorAll('.setRow'));
   const sets = rows.map(row => {
     const inputs = row.querySelectorAll('input');
@@ -388,6 +435,7 @@ function renderHistory() {
       <td>
         <details>
           <summary>View sets</summary>
+          ${w.exercise ? `<div class="muted" style="margin-top:6px;">Exercise: ${escapeHtml(w.exercise)}</div>` : ""}
           ${w.notes ? `<div class="muted" style="margin-top:6px;">Notes: ${escapeHtml(w.notes)}</div>` : ""}
           <table class="setsMini">
             <thead><tr><th>Set</th><th>Weight</th><th>Reps</th></tr></thead>
