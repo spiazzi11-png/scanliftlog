@@ -480,7 +480,7 @@ try {
       "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
     }[m]));
   }
-  function normalizeSlug(v) {
+   function normalizeSlug(v) {
     return String(v || "")
       .trim()
       .toLowerCase()
@@ -488,7 +488,33 @@ try {
       .replace(/-+/g, "-")
       .replace(/^-|-$/g, "");
   }
+
+  /* ---------- Analytics (Cloudflare Worker) ---------- */
+  // Leave this as-is for now. It will do nothing until you replace it later.
+  const ANALYTICS_BASE = "https://YOUR-WORKER-DOMAIN";
+
+  function canLogAnalytics() {
+    return !!(gymId && machineId && ANALYTICS_BASE && !ANALYTICS_BASE.includes("YOUR-WORKER-DOMAIN"));
+  }
+
+  function logEvent(eventType) {
+    if (!canLogAnalytics()) return;
+
+    fetch(`${ANALYTICS_BASE}/api/event`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        gymId,
+        machineId,
+        eventType,          // "scan" | "save"
+        deviceHash: userId, // anonymous per-device id
+        ts: Date.now()
+      })
+    }).catch(() => {});
+  }
+
   function toNumberOrNull(v) {
+
     const n = parseFloat(String(v || "").replace(/[^0-9.\-]/g, ""));
     return Number.isFinite(n) ? n : null;
   }
@@ -553,11 +579,14 @@ try {
   }
 
   /* ---------- UI State ---------- */
-  const userId = getOrCreateUserId();
+    const userId = getOrCreateUserId();
   const ctx = parseContextFromUrl();
   const gymId = ctx.gymId;
   // Default to a demo machine so the name is always shown when testing.
   const machineId = ctx.machineId || "LEGPR";
+
+  // Log a scan when the page loads for a specific machine
+  logEvent("scan");
 
   /* ---------- Gym Map (optional display names) ---------- */
   const GYM_MAP = {
@@ -1293,7 +1322,8 @@ r.addEventListener("input", maybeTriggerRestOnReps);
         cardio: res.data,
         savedAt: nowReadable()
       });
-      saveWorkouts(workouts);
+          saveWorkouts(workouts);
+      logEvent("save");
 
       exerciseInput.value = "";
       notesInput.value = "";
@@ -1319,6 +1349,7 @@ r.addEventListener("input", maybeTriggerRestOnReps);
       savedAt: nowReadable()
     });
     saveWorkouts(workouts);
+    logEvent("save");
 
     exerciseInput.value = "";
     notesInput.value = "";
