@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ScanLiftLog Admin</title>
+  <style>
+    :root {
+      --bg:#0b0c10;
+      --panel:#121318;
+      --panel2:#0f1015;
+      --text:#e9e9ee;
+      --muted:#a9a9b6;
+      --line:rgba(255,255,255,.10);
+      --accent:#8b5cf6;
+      --accent2:#22c55e;
+      --shadow:0 10px 40px rgba(0,0,0,.35);
+      --radius:18px;
+      --radius2:26px;
+    }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:
+        radial-gradient(1000px 600px at 20% 0%, rgba(139,92,246,.22), transparent 60%),
+        radial-gradient(900px 600px at 90% 10%, rgba(34,197,94,.14), transparent 55%),
+        linear-gradient(180deg, #07080c 0%, #0b0c10 70%, #07080c 100%);
+      color:var(--text);
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:22px;}
+    .card{
+      margin-top:16px;
+      background: rgba(18,19,24,.72);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow: var(--shadow);
+    }
+    .headerCard{padding:18px;border-radius:var(--radius2);background: rgba(18,19,24,.82);}
+    .top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;}
+    h1{margin:0;font-size:22px;letter-spacing:.2px;}
+    .sub{margin-top:6px;color:var(--muted);font-size:13px;}
+    label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;}
+    input{
+      width:100%;
+      box-sizing:border-box;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      font-size:14px;
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+    }
+    input:focus{
+      outline:none;
+      border-color: rgba(139,92,246,.55);
+      box-shadow: 0 0 0 2px rgba(139,92,246,.22);
+    }
+    button{
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      cursor:pointer;
+      font-weight:900;
+    }
+    button.primary{
+      border-color: rgba(139,92,246,.55);
+      background: linear-gradient(135deg, rgba(139,92,246,.95), rgba(139,92,246,.55));
+      color:#fff;
+    }
+    .row{display:flex;gap:12px;flex-wrap:wrap;}
+    .col{flex:1;min-width:220px;}
+    .pill{
+      display:inline-block;
+      font-size:12px;
+      padding:8px 12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius:999px;
+      color:var(--muted);
+      font-weight:900;
+    }
+    .kpis{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+    .kpi{
+      flex:1;
+      min-width:220px;
+      padding:12px 14px;
+      border-radius:14px;
+      background: rgba(255,255,255,.03);
+      border:1px solid var(--line);
+    }
+    .kpiLabel{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--muted);font-weight:900;}
+    .kpiValue{margin-top:6px;font-size:24px;font-weight:1000;}
+    table{width:100%;border-collapse:collapse;margin-top:10px;}
+    th,td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top;}
+    th{color:var(--muted);font-weight:1000;font-size:12px;}
+    .muted{color:var(--muted);font-size:12px;}
+    .hr{height:1px;background:var(--line);margin:14px 0;}
+    .good{color:var(--accent2);font-weight:1000;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card headerCard">
+      <div class="top">
+        <div>
+          <h1>ScanLiftLog Admin</h1>
+          <div class="sub">Usage analytics (no accounts, no personal data). Add <span class="pill">?gym=</span> and <span class="pill">&token=</span> to view.</div>
+        </div>
+        <div class="pill" id="statusPill">Status: —</div>
+      </div>
+
+      <div class="row" style="margin-top:12px;">
+        <div class="col">
+          <label>Analytics API Base</label>
+          <input id="apiBase" placeholder="https://YOUR-WORKER-DOMAIN" />
+        </div>
+        <div class="col">
+          <label>Gym ID</label>
+          <input id="gymId" placeholder="main" />
+        </div>
+        <div class="col">
+          <label>Admin Token</label>
+          <input id="token" placeholder="paste token" />
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:10px; align-items:flex-end;">
+        <div class="col" style="max-width:220px;">
+          <button class="primary" id="loadBtn" type="button">Load Dashboard</button>
+        </div>
+        <div class="col">
+          <div class="muted">Tip: your admin link can be <span class="pill">/admin.html?gym=peters&token=...</span></div>
+        </div>
+      </div>
+
+      <div class="kpis" id="kpis" style="display:none;">
+        <div class="kpi">
+          <div class="kpiLabel">Last 7 days</div>
+          <div class="kpiValue" id="kpi7">—</div>
+          <div class="muted" id="kpi7sub">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpiLabel">Last 30 days</div>
+          <div class="kpiValue" id="kpi30">—</div>
+          <div class="muted" id="kpi30sub">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpiLabel">Unique devices (7d)</div>
+          <div class="kpiValue" id="kpiUniq">—</div>
+          <div class="muted">Estimated (anonymous)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="machinesCard" style="display:none;">
+      <div style="font-weight:1000;">Top Machines (last 30 days)</div>
+      <div class="muted" style="margin-top:6px;">Sorted by scans. “Dead machines” will come once we compare against your full MACHINE_MAP list per gym.</div>
+      <div style="overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Machine</th>
+              <th>Scans</th>
+              <th>Saves</th>
+              <th>Last Activity</th>
+            </tr>
+          </thead>
+          <tbody id="machinesBody">
+            <tr><td colspan="4" class="muted">No data yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  function qp(name) { return new URL(location.href).searchParams.get(name) || ""; }
+  function fmtDate(ts) {
+    if (!ts) return "—";
+    try { return new Date(Number(ts)).toLocaleString(); } catch { return "—"; }
+  }
+
+  const apiBaseEl = document.getElementById("apiBase");
+  const gymIdEl = document.getElementById("gymId");
+  const tokenEl = document.getElementById("token");
+  const loadBtn = document.getElementById("loadBtn");
+  const statusPill = document.getElementById("statusPill");
+
+  // Prefill from URL + localStorage
+  apiBaseEl.value = localStorage.getItem("sll_admin_api_base") || "";
+  gymIdEl.value = qp("gym") || localStorage.getItem("sll_admin_gym") || "main";
+  tokenEl.value = qp("token") || localStorage.getItem("sll_admin_token") || "";
+
+  async function loadDashboard() {
+    const base = (apiBaseEl.value || "").trim().replace(/\/+$/,"");
+    const gym = (gymIdEl.value || "").trim().toLowerCase();
+    const token = (tokenEl.value || "").trim();
+
+    if (!base || !gym || !token) {
+      statusPill.textContent = "Status: Missing api base / gym / token";
+      return;
+    }
+
+    localStorage.setItem("sll_admin_api_base", base);
+    localStorage.setItem("sll_admin_gym", gym);
+    localStorage.setItem("sll_admin_token", token);
+
+    statusPill.textContent = "Status: Loading…";
+
+    const summaryRes = await fetch(`${base}/api/admin/summary?gym=${encodeURIComponent(gym)}&token=${encodeURIComponent(token)}`);
+    const summary = await summaryRes.json().catch(()=>null);
+    if (!summaryRes.ok) {
+      statusPill.textContent = `Status: ${summary?.error || "Error"}`;
+      return;
+    }
+
+    document.getElementById("kpis").style.display = "";
+    document.getElementById("kpi7").textContent = `${summary.last7d.scans} scans`;
+    document.getElementById("kpi7sub").textContent = `${summary.last7d.saves} saves`;
+    document.getElementById("kpi30").textContent = `${summary.last30d.scans} scans`;
+    document.getElementById("kpi30sub").textContent = `${summary.last30d.saves} saves`;
+    document.getElementById("kpiUniq").textContent = `${summary.last7d.uniqueDevices || 0}`;
+
+    const machinesRes = await fetch(`${base}/api/admin/machines?gym=${encodeURIComponent(gym)}&token=${encodeURIComponent(token)}`);
+    const machines = await machinesRes.json().catch(()=>null);
+    if (!machinesRes.ok) {
+      statusPill.textContent = `Status: Loaded summary, machines failed`;
+      return;
+    }
+
+    const body = document.getElementById("machinesBody");
+    body.innerHTML = "";
+    const rows = (machines.last30d || []).slice(0, 30);
+
+    if (!rows.length) {
+      body.innerHTML = `<tr><td colspan="4" class="muted">No data yet.</td></tr>`;
+    } else {
+      for (const r of rows) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><span class="pill">${r.machine_id}</span></td>
+          <td>${r.scans || 0}</td>
+          <td>${r.saves || 0}</td>
+          <td class="muted">${fmtDate(r.last_ts)}</td>
+        `;
+        body.appendChild(tr);
+      }
+    }
+
+    document.getElementById("machinesCard").style.display = "";
+    statusPill.textContent = "Status: Loaded";
+  }
+
+  loadBtn.addEventListener("click", loadDashboard);
+
+  // auto-load if url has gym+token+apiBase stored
+  if (apiBaseEl.value && gymIdEl.value && tokenEl.value) loadDashboard();
+</script>
+</body>
+</html>
