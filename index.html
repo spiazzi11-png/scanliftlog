@@ -1,4 +1,4 @@
-<head>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ScanLiftLog</title>
@@ -189,6 +189,11 @@
       font-weight:900;
       letter-spacing:.4px;
     }
+     /* Inactive Gate */
+    #inactiveGate {
+      border-color: rgba(239,68,68,.30);
+      background: rgba(18,19,24,.66);
+    }
   </style>
 </head>
 <body>
@@ -200,7 +205,7 @@
         <div class="brandBadge">App</div>
       </div>
       <div class="navLinks">
-        <a class="navLink" href="https://spiazzi11-png.github.io/scanliftlog/" target="_blank" rel="noopener">Home</a>
+        <a class="navLink" href="https://app.scanliftlog.com/" target="_blank" rel="noopener">Home</a>
         <a class="navCta" href="#logger">Log Workout</a>
       </div>
     </div>
@@ -232,7 +237,21 @@
           <div class="contextValue" id="machineNameText">…</div>
         </div>
       </div>
-    </div>
+    </div> <!-- end card headerCard -->
+
+<!-- Service Inactive Gate (shown only if gym is disabled) -->
+<div class="card" id="inactiveGate" style="display:none;">
+  <div style="font-weight:900; font-size:18px;">Service Inactive</div>
+  <div class="muted" style="margin-top:8px; line-height:1.5;">
+    This gym is not currently active on ScanLiftLog.
+    <br />
+    If you believe this is a mistake, please contact the gym front desk.
+  </div>
+  <div class="hr"></div>
+  <div class="muted" style="font-size:12px;">
+    Gym ID: <span id="inactiveGymId">—</span>
+  </div>
+</div>
 
     <!-- Logger -->
     <div class="card" id="logger">
@@ -342,7 +361,7 @@
 
     <footer>
       © <span id="year"></span> ScanLiftLog •
-      <a href="https://spiazzi11-png.github.io/scanliftlog/" target="_blank" rel="noopener">Home</a>
+      <a href="https://app.scanliftlog.com/" target="_blank" rel="noopener">Home</a>
     </footer>
   </div>
 
@@ -410,7 +429,6 @@
 
         // Vibrate (mobile)
 try { navigator.vibrate && navigator.vibrate([150, 75, 150]); } catch {}
-
 
 // Audio beep
 try {
@@ -481,7 +499,7 @@ try {
       "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
     }[m]));
   }
-  function normalizeSlug(v) {
+   function normalizeSlug(v) {
     return String(v || "")
       .trim()
       .toLowerCase()
@@ -489,7 +507,33 @@ try {
       .replace(/-+/g, "-")
       .replace(/^-|-$/g, "");
   }
+
+  /* ---------- Analytics (Cloudflare Worker) ---------- */
+  // Leave this as-is for now. It will do nothing until you replace it later.
+  const ANALYTICS_BASE = "https://YOUR-WORKER-DOMAIN";
+
+  function canLogAnalytics() {
+    return !!(gymId && machineId && ANALYTICS_BASE && !ANALYTICS_BASE.includes("YOUR-WORKER-DOMAIN"));
+  }
+
+  function logEvent(eventType) {
+    if (!canLogAnalytics()) return;
+
+    fetch(`${ANALYTICS_BASE}/api/event`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        gymId,
+        machineId,
+        eventType,          // "scan" | "save"
+        deviceHash: userId, // anonymous per-device id
+        ts: Date.now()
+      })
+    }).catch(() => {});
+  }
+
   function toNumberOrNull(v) {
+
     const n = parseFloat(String(v || "").replace(/[^0-9.\-]/g, ""));
     return Number.isFinite(n) ? n : null;
   }
@@ -548,27 +592,70 @@ try {
     }
     return id;
   }
-  function resetUser() {
-    localStorage.removeItem(USER_KEY);
-    location.reload();
+ function resetUser() {
+  localStorage.removeItem(USER_KEY);
+  location.reload();
+}
+function showInactiveGate(gid) {
+  // Hide logger
+  const logger = document.getElementById("logger");
+  if (logger) logger.style.display = "none";
+
+  // Hide the History card by finding the card that contains the history table
+  const historyBody = document.getElementById("historyBody");
+  if (historyBody) {
+    const historyCard = historyBody.closest(".card");
+    if (historyCard) historyCard.style.display = "none";
   }
 
+  // Show inactive message
+  const inactiveGate = document.getElementById("inactiveGate");
+  const inactiveGymId = document.getElementById("inactiveGymId");
+  if (inactiveGymId) inactiveGymId.textContent = gid || "—";
+  if (inactiveGate) inactiveGate.style.display = "";
+}
+
+ 
   /* ---------- UI State ---------- */
-  const userId = getOrCreateUserId();
+    const userId = getOrCreateUserId();
   const ctx = parseContextFromUrl();
   const gymId = ctx.gymId;
   // Default to a demo machine so the name is always shown when testing.
   const machineId = ctx.machineId || "LEGPR";
 
+  /* ---------- Gym Status (Option A: local kill switch) ---------- */
+/**
+ * true  = ACTIVE
+ * false = INACTIVE (cancelled / disabled)
+ *
+ * Gym IDs MUST match normalizeGymSlug() output (lowercase slugs)
+ */
+const GYM_STATUS = {
+  "main": true,
+  // "peters": true,
+  // "smithtown": false
+};
+
+function isGymActiveLocal(gid) {
+  // For early testing: gyms NOT listed are treated as ACTIVE
+  if (!(gid in GYM_STATUS)) return true;
+  return !!GYM_STATUS[gid];
+}
+
   /* ---------- Gym Map (optional display names) ---------- */
   const GYM_MAP = {
-    "main": "ScanLiftLog Test Gym",
-    "peters": "PETER'S GYM"
+    "main": "ScanLiftLog Test Gym"
     // Add more display names if you want:
     // "peters": "Peters Gym",
     // "smithtown": "Smithtown Fitness"
   };
   const gymName = GYM_MAP[gymId] || gymId.toUpperCase();
+  
+  if (!isGymActiveLocal(gymId)) {
+  showInactiveGate(gymId);
+  throw new Error("Gym is inactive");
+}
+    logEvent("scan");
 
   /* ---------- Machine Map (expanded) ---------- */
   const MACHINE_MAP = {
@@ -1295,7 +1382,8 @@ r.addEventListener("input", maybeTriggerRestOnReps);
         cardio: res.data,
         savedAt: nowReadable()
       });
-      saveWorkouts(workouts);
+          saveWorkouts(workouts);
+      logEvent("save");
 
       exerciseInput.value = "";
       notesInput.value = "";
@@ -1321,6 +1409,7 @@ r.addEventListener("input", maybeTriggerRestOnReps);
       savedAt: nowReadable()
     });
     saveWorkouts(workouts);
+    logEvent("save");
 
     exerciseInput.value = "";
     notesInput.value = "";
