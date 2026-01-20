@@ -338,9 +338,10 @@ function setText(id, v){
     }
 
     function updateHeader(){
-      gymText.textContent = gymId || "—";
-      apiText.textContent = API_BASE || "—";
-      apiInput.value = API_BASE || DEFAULT_API_BASE;
+    setVal("gymInput", gymId);
+setVal("tokenInput", token);
+setVal("apiInput", API_BASE);
+setText("parsedPreview", `gymId=${gymId} | token=${token} | api=${API_BASE}`);
 
       parsedPreview.textContent =
         `gymId=${gymId || "(missing)"} | token=${token ? token.slice(0, 8) + "…" : "(missing)"} | api=${API_BASE || "(missing)"}`;
