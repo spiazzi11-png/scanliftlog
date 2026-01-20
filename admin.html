@@ -531,45 +531,20 @@
         );
       }
     }
+    // Boot (no controls UI)
+updateHeader();
 
-    // Controls
-    $("btnApply").addEventListener("click", () => {
-      const newGym = normGymId(gymInput.value);
-      const newToken = normToken(tokenInput.value);
-      const newApi = (apiInput.value || "").trim() || DEFAULT_API_BASE;
+if (!gymId || !token){
+  setStatus(false, "Missing gymId/token.");
+  showMsg(
+    `Missing <span class="mono">gymId</span> and/or <span class="mono">token</span>.<br/>
+     This link is incomplete.`,
+    "error"
+  );
+} else {
+  loadDashboard();
+}
 
-      const url = new URL(location.href);
-      url.searchParams.set("gymId", newGym);
-      url.searchParams.set("token", newToken);
-
-      if (newApi && newApi !== DEFAULT_API_BASE) url.searchParams.set("api", newApi);
-      else url.searchParams.delete("api");
-
-      location.href = url.toString();
-    });
-
-    $("btnLoad").addEventListener("click", async () => {
-      gymId = normGymId(gymInput.value);
-      token = normToken(tokenInput.value);
-      API_BASE = (apiInput.value || "").trim() || DEFAULT_API_BASE;
-
-      updateHeader();
-      await loadDashboard();
-    });
-
-    // Boot
-    updateHeader();
-
-    if (!gymId || !token){
-      setStatus(false, "Missing gymId/token.");
-      showMsg(
-        `Missing <span class="mono">gymId</span> and/or <span class="mono">token</span>.<br/>
-         Open with: <span class="mono">admin.html?gymId=main&amp;token=YOUR_TOKEN</span>`,
-        "error"
-      );
-    } else {
-      loadDashboard();
-    }
   </script>
 </body>
 </html>
