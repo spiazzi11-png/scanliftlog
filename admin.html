@@ -295,7 +295,6 @@ function setText(id, v){
     const msgArea = $("msgArea");
 
     const gymText = $("gymText");
-    const apiText = $("apiText");
     const kpis = $("kpis");
     const kpiScans = $("kpiScans");
     const kpiSaves = $("kpiSaves");
@@ -335,7 +334,7 @@ function setText(id, v){
 function updateHeader(){
   // Top pills (these exist)
   if (gymText) gymText.textContent = gymId || "—";
-  if (apiText) apiText.textContent = API_BASE || "—";
+  
 
   // Controls UI was removed, so only set these if elements exist
   setVal("gymInput", gymId);
