@@ -780,6 +780,7 @@ function isGymActiveLocal(gid) {
     "SPIN": "Spin Bike",
     "ARC": "Arc Trainer"
   };
+  window.MACHINE_MAP = MACHINE_MAP;
 
   const machineName = machineId
     ? (MACHINE_MAP[machineId] || `Machine (${machineId})`)
