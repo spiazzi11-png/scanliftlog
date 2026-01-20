@@ -510,7 +510,8 @@ try {
 
   /* ---------- Analytics (Cloudflare Worker) ---------- */
   // Leave this as-is for now. It will do nothing until you replace it later.
-  const ANALYTICS_BASE = "https://YOUR-WORKER-DOMAIN";
+  const ANALYTICS_BASE = "https://scanliftlog-api.scanliftlogapp.workers.dev";
+
 
   function canLogAnalytics() {
     return !!(gymId && machineId && ANALYTICS_BASE && !ANALYTICS_BASE.includes("YOUR-WORKER-DOMAIN"));
