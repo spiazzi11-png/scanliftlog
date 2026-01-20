@@ -191,7 +191,10 @@
   const statusPill = document.getElementById("statusPill");
 
   // Prefill from URL + localStorage
-  apiBaseEl.value = localStorage.getItem("sll_admin_api_base") || "";
+  apiBaseEl.value =
+  localStorage.getItem("sll_admin_api_base") ||
+  "https://scanliftlog-api.scanliftlogapp.workers.dev";
+
   gymIdEl.value = qp("gym") || localStorage.getItem("sll_admin_gym") || "main";
   tokenEl.value = qp("token") || localStorage.getItem("sll_admin_token") || "";
 
