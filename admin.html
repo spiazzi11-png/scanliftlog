@@ -296,11 +296,6 @@ function setText(id, v){
 
     const gymText = $("gymText");
     const apiText = $("apiText");
-    const gymInput = $("gymInput");
-    const tokenInput = $("tokenInput");
-    const apiInput = $("apiInput");
-    const parsedPreview = $("parsedPreview");
-
     const kpis = $("kpis");
     const kpiScans = $("kpiScans");
     const kpiSaves = $("kpiSaves");
@@ -337,19 +332,21 @@ function setText(id, v){
         .replaceAll("'","&#039;");
     }
 
-    function updateHeader(){
-    setVal("gymInput", gymId);
-setVal("tokenInput", token);
-setVal("apiInput", API_BASE);
-setText("parsedPreview", `gymId=${gymId} | token=${token} | api=${API_BASE}`);
+function updateHeader(){
+  // Top pills (these exist)
+  if (gymText) gymText.textContent = gymId || "—";
+  if (apiText) apiText.textContent = API_BASE || "—";
 
-      parsedPreview.textContent =
-        `gymId=${gymId || "(missing)"} | token=${token ? token.slice(0, 8) + "…" : "(missing)"} | api=${API_BASE || "(missing)"}`;
+  // Controls UI was removed, so only set these if elements exist
+  setVal("gymInput", gymId);
+  setVal("tokenInput", token);
+  setVal("apiInput", API_BASE);
 
-      gymInput.value = gymId || "";
-      tokenInput.value = token || "";
-    }
-
+  setText(
+    "parsedPreview",
+    `gymId=${gymId || "(missing)"} | token=${token ? token.slice(0, 8) + "…" : "(missing)"} | api=${API_BASE || "(missing)"}`
+  );
+}
     async function fetchJson(url, opts){
       const res = await fetch(url, Object.assign({
         headers: { "Content-Type": "application/json" }
