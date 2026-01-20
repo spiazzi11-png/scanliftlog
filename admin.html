@@ -319,6 +319,26 @@
   </div>
 
   <script>
+    // --- Debug: show JS errors on-page ---
+window.onerror = function (msg, src, line, col, err) {
+  const el = document.getElementById("msgArea");
+  if (el) {
+    el.innerHTML = `<div class="error">
+      <b>JavaScript error:</b><br>
+      <span class="mono">${String(msg)}</span><br>
+      <span class="mono">Line ${line}:${col}</span>
+    </div>`;
+  } else {
+    alert("JS error: " + msg + " @ " + line + ":" + col);
+  }
+};
+
+// --- Debug: prove the script executed ---
+document.addEventListener("DOMContentLoaded", () => {
+  const p = document.getElementById("parsedPreview");
+  if (p) p.textContent = "JS loaded (before parsing)…";
+});
+
     // ============================================================
     // ✅ FIX 1: Hardcode your Worker API base (can be overridden by ?api=)
     // ============================================================
