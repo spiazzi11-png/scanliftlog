@@ -281,7 +281,14 @@
 
     // --- UI refs ---
     const $ = (id) => document.getElementById(id);
-
+    function setVal(id, v){
+  const el = $(id);
+  if (el) el.value = v;
+}
+function setText(id, v){
+  const el = $(id);
+  if (el) el.textContent = v;
+}
     const dot = $("dot");
     const statusText = $("statusText");
     const lastLoaded = $("lastLoaded");
