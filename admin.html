@@ -1,11 +1,11 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ScanLiftLog Admin</title>
   <style>
-    :root {
+    :root{
       --bg:#0b0c10;
       --panel:#121318;
       --panel2:#0f1015;
@@ -18,250 +18,583 @@
       --radius:18px;
       --radius2:26px;
     }
+    *{box-sizing:border-box}
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background:
-        radial-gradient(1000px 600px at 20% 0%, rgba(139,92,246,.22), transparent 60%),
-        radial-gradient(900px 600px at 90% 10%, rgba(34,197,94,.14), transparent 55%),
-        linear-gradient(180deg, #07080c 0%, #0b0c10 70%, #07080c 100%);
+      background: radial-gradient(1200px 900px at 10% 10%, rgba(139,92,246,.18), transparent 60%),
+                  radial-gradient(1000px 800px at 90% 20%, rgba(34,197,94,.12), transparent 55%),
+                  var(--bg);
       color:var(--text);
+      min-height:100vh;
     }
-    .wrap{max-width:980px;margin:0 auto;padding:22px;}
-    .card{
-      margin-top:16px;
-      background: rgba(18,19,24,.72);
+    a{color:inherit}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:18px 18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid var(--line);
-      border-radius:var(--radius);
-      padding:16px;
-      box-shadow: var(--shadow);
+      border-radius:var(--radius2);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
     }
-    .headerCard{padding:18px;border-radius:var(--radius2);background: rgba(18,19,24,.82);}
-    .top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;}
-    h1{margin:0;font-size:22px;letter-spacing:.2px;}
-    .sub{margin-top:6px;color:var(--muted);font-size:13px;}
-    label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;}
-    input{
-      width:100%;
-      box-sizing:border-box;
-      padding:10px 12px;
-      border:1px solid var(--line);
-      border-radius:12px;
-      font-size:14px;
-      background: rgba(255,255,255,.03);
-      color:var(--text);
+    .brand{
+      display:flex;align-items:center;gap:12px;
     }
-    input:focus{
-      outline:none;
-      border-color: rgba(139,92,246,.55);
-      box-shadow: 0 0 0 2px rgba(139,92,246,.22);
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background:linear-gradient(135deg, rgba(139,92,246,.95), rgba(34,197,94,.85));
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
     }
-    button{
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color:var(--text);
-      cursor:pointer;
-      font-weight:900;
+    .brand h1{margin:0;font-size:16px;letter-spacing:.2px}
+    .brand .sub{color:var(--muted);font-size:12px;margin-top:2px}
+    .context{
+      display:flex;flex-direction:column;align-items:flex-end;
+      gap:2px;
     }
-    button.primary{
-      border-color: rgba(139,92,246,.55);
-      background: linear-gradient(135deg, rgba(139,92,246,.95), rgba(139,92,246,.55));
-      color:#fff;
-    }
-    .row{display:flex;gap:12px;flex-wrap:wrap;}
-    .col{flex:1;min-width:220px;}
     .pill{
-      display:inline-block;
-      font-size:12px;
-      padding:8px 12px;
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
       border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      border-radius:999px;
+      background:rgba(255,255,255,.03);
       color:var(--muted);
-      font-weight:900;
+      font-size:12px;
+      max-width:520px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
     }
-    .kpis{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
-    .kpi{
-      flex:1;
-      min-width:220px;
-      padding:12px 14px;
-      border-radius:14px;
-      background: rgba(255,255,255,.03);
+    .pill b{color:var(--text);font-weight:650}
+    .grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:16px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+      .context{align-items:flex-start}
+      .topbar{flex-direction:column;align-items:flex-start}
+    }
+    .card{
       border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+      backdrop-filter: blur(8px);
     }
-    .kpiLabel{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--muted);font-weight:900;}
-    .kpiValue{margin-top:6px;font-size:24px;font-weight:1000;}
-    table{width:100%;border-collapse:collapse;margin-top:10px;}
-    th,td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top;}
-    th{color:var(--muted);font-weight:1000;font-size:12px;}
-    .muted{color:var(--muted);font-size:12px;}
-    .hr{height:1px;background:var(--line);margin:14px 0;}
-    .good{color:var(--accent2);font-weight:1000;}
+    .card h2{
+      margin:0 0 10px 0;
+      font-size:14px;
+      letter-spacing:.2px;
+      color:var(--text);
+    }
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .btn{
+      cursor:pointer;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:650;
+      letter-spacing:.2px;
+    }
+    .btn.primary{
+      background:linear-gradient(135deg, rgba(139,92,246,.95), rgba(139,92,246,.60));
+      border-color:rgba(139,92,246,.35);
+    }
+    .btn.good{
+      background:linear-gradient(135deg, rgba(34,197,94,.95), rgba(34,197,94,.60));
+      border-color:rgba(34,197,94,.30);
+    }
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.25);
+      color:var(--text);
+      outline:none;
+    }
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:12px;
+      margin-top:10px;
+    }
+    @media (max-width: 540px){
+      .kpis{grid-template-columns:1fr}
+    }
+    .kpi{
+      padding:12px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+    }
+    .kpi .label{color:var(--muted);font-size:12px}
+    .kpi .value{font-size:22px;font-weight:800;margin-top:4px}
+    .hr{height:1px;background:var(--line);margin:12px 0}
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+      overflow:hidden;
+      border-radius:14px;
+    }
+    th,td{padding:10px 10px;border-bottom:1px solid var(--line);text-align:left}
+    th{color:var(--muted);font-weight:700;background:rgba(255,255,255,.03)}
+    tr:hover td{background:rgba(255,255,255,.02)}
+    .status{
+      display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+      font-size:12px;color:var(--muted);
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;background:#666;
+      box-shadow:0 0 0 4px rgba(255,255,255,.03);
+    }
+    .dot.ok{background:var(--accent2)}
+    .dot.bad{background:#ef4444}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;}
+    .small{font-size:12px}
+    .error{
+      border:1px solid rgba(239,68,68,.35);
+      background:rgba(239,68,68,.08);
+      color:#fecaca;
+      padding:12px;border-radius:14px;
+    }
+    .note{
+      border:1px solid rgba(139,92,246,.30);
+      background:rgba(139,92,246,.08);
+      color:#ddd6fe;
+      padding:12px;border-radius:14px;
+    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
-    <div class="card headerCard">
-      <div class="top">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
         <div>
           <h1>ScanLiftLog Admin</h1>
-          <div class="sub">Usage analytics (no accounts, no personal data). Add <span class="pill">?gym=</span> and <span class="pill">&token=</span> to view.</div>
-        </div>
-        <div class="pill" id="statusPill">Status: —</div>
-      </div>
-
-      <div class="row" style="margin-top:12px;">
-        <div class="col">
-          <label>Analytics API Base</label>
-          <input id="apiBase" placeholder="https://YOUR-WORKER-DOMAIN" />
-        </div>
-        <div class="col">
-          <label>Gym ID</label>
-          <input id="gymId" placeholder="main" />
-        </div>
-        <div class="col">
-          <label>Admin Token</label>
-          <input id="token" placeholder="paste token" />
+          <div class="sub">Usage analytics • gym status • machine insights</div>
         </div>
       </div>
 
-      <div class="row" style="margin-top:10px; align-items:flex-end;">
-        <div class="col" style="max-width:220px;">
-          <button class="primary" id="loadBtn" type="button">Load Dashboard</button>
-        </div>
-        <div class="col">
-          <div class="muted">Tip: your admin link can be <span class="pill">/admin.html?gym=peters&token=...</span></div>
-        </div>
-      </div>
-
-      <div class="kpis" id="kpis" style="display:none;">
-        <div class="kpi">
-          <div class="kpiLabel">Last 7 days</div>
-          <div class="kpiValue" id="kpi7">—</div>
-          <div class="muted" id="kpi7sub">—</div>
-        </div>
-        <div class="kpi">
-          <div class="kpiLabel">Last 30 days</div>
-          <div class="kpiValue" id="kpi30">—</div>
-          <div class="muted" id="kpi30sub">—</div>
-        </div>
-        <div class="kpi">
-          <div class="kpiLabel">Unique devices (7d)</div>
-          <div class="kpiValue" id="kpiUniq">—</div>
-          <div class="muted">Estimated (anonymous)</div>
-        </div>
+      <div class="context">
+        <div class="pill" id="pillGym"><b>Gym:</b> <span class="mono" id="gymText">—</span></div>
+        <div class="pill" id="pillApi"><b>API:</b> <span class="mono" id="apiText">—</span></div>
       </div>
     </div>
 
-    <div class="card" id="machinesCard" style="display:none;">
-      <div style="font-weight:1000;">Top Machines (last 30 days)</div>
-      <div class="muted" style="margin-top:6px;">Sorted by scans. “Dead machines” will come once we compare against your full MACHINE_MAP list per gym.</div>
-      <div style="overflow:auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>Machine</th>
-              <th>Scans</th>
-              <th>Saves</th>
-              <th>Last Activity</th>
-            </tr>
-          </thead>
-          <tbody id="machinesBody">
-            <tr><td colspan="4" class="muted">No data yet.</td></tr>
-          </tbody>
-        </table>
+    <div class="grid">
+      <!-- LEFT: Dashboard -->
+      <div class="card">
+        <h2>Dashboard</h2>
+
+        <div class="status">
+          <span class="dot" id="dot"></span>
+          <span id="statusText">Not loaded.</span>
+          <span class="mono small" id="lastLoaded"></span>
+        </div>
+
+        <div class="hr"></div>
+
+        <div id="msgArea"></div>
+
+        <div class="kpis" id="kpis" style="display:none">
+          <div class="kpi">
+            <div class="label">Total scans</div>
+            <div class="value" id="kpiScans">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Workouts saved</div>
+            <div class="value" id="kpiSaves">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Unique devices</div>
+            <div class="value" id="kpiDevices">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Repeat devices</div>
+            <div class="value" id="kpiRepeat">—</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Top machines</h2>
+        <div class="muted small" style="margin-bottom:8px">Sorted by total activity (scans + saves).</div>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Machine</th>
+                <th>Scans</th>
+                <th>Saves</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody id="topMachinesBody">
+              <tr><td colspan="4" class="muted">No data loaded.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Activity by day</h2>
+        <div class="muted small" style="margin-bottom:8px">If your API returns daily buckets, they show here.</div>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Scans</th>
+                <th>Saves</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody id="byDayBody">
+              <tr><td colspan="4" class="muted">No data loaded.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RIGHT: Controls -->
+      <div class="card">
+        <h2>Controls</h2>
+        <div class="muted small">
+          Your admin link should look like:
+          <div class="mono" style="margin-top:6px;word-break:break-all">
+            /admin.html?gymId=main&amp;token=SLL_main_...
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <label class="muted small">Gym ID</label>
+        <input class="input mono" id="gymInput" placeholder="main" />
+
+        <div style="height:10px"></div>
+
+        <label class="muted small">Admin token</label>
+        <input class="input mono" id="tokenInput" placeholder="SLL_main_..." />
+
+        <div style="height:10px"></div>
+
+        <label class="muted small">API Base (advanced)</label>
+        <input class="input mono" id="apiInput" />
+
+        <div style="height:12px"></div>
+
+        <div class="row">
+          <button class="btn primary" id="btnApply">Apply to URL</button>
+          <button class="btn good" id="btnLoad">Load dashboard</button>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="note small">
+          <b>Tip:</b> This page accepts <span class="mono">gymId</span> or <span class="mono">gym</span>,
+          and <span class="mono">token</span> or <span class="mono">adminToken</span>.
+          So either URL format works.
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="muted small">
+          Current parsed values:
+          <div class="mono" id="parsedPreview" style="margin-top:6px;word-break:break-all"></div>
+        </div>
       </div>
     </div>
-
   </div>
 
-<script>
-  function qp(name) { return new URL(location.href).searchParams.get(name) || ""; }
-  function fmtDate(ts) {
-    if (!ts) return "—";
-    try { return new Date(Number(ts)).toLocaleString(); } catch { return "—"; }
-  }
+  <script>
+    // ============================================================
+    // ✅ FIX 1: Hardcode your Worker API base (can be overridden by ?api=)
+    // ============================================================
+    const DEFAULT_API_BASE = "https://scanliftlog-api.scanliftlogapp.workers.dev";
 
-  const apiBaseEl = document.getElementById("apiBase");
-  const gymIdEl = document.getElementById("gymId");
-  const tokenEl = document.getElementById("token");
-  const loadBtn = document.getElementById("loadBtn");
-  const statusPill = document.getElementById("statusPill");
+    // ============================================================
+    // ✅ FIX 2: Robust query param parsing
+    // Accept: gymId= or gym=   AND   token= or adminToken=
+    // ============================================================
+    const qs = new URLSearchParams(location.search);
 
-  // Prefill from URL + localStorage
-  apiBaseEl.value =
-  localStorage.getItem("sll_admin_api_base") ||
-  "https://scanliftlog-api.scanliftlogapp.workers.dev";
-
-  gymIdEl.value = qp("gym") || localStorage.getItem("sll_admin_gym") || "main";
-  tokenEl.value = qp("token") || localStorage.getItem("sll_admin_token") || "";
-
-  async function loadDashboard() {
-    const base = (apiBaseEl.value || "").trim().replace(/\/+$/,"");
-    const gym = (gymIdEl.value || "").trim().toLowerCase();
-    const token = (tokenEl.value || "").trim();
-
-    if (!base || !gym || !token) {
-      statusPill.textContent = "Status: Missing api base / gym / token";
-      return;
+    function normGymId(v){
+      return (v || "").trim().toLowerCase();
+    }
+    function normToken(v){
+      return (v || "").trim();
     }
 
-    localStorage.setItem("sll_admin_api_base", base);
-    localStorage.setItem("sll_admin_gym", gym);
-    localStorage.setItem("sll_admin_token", token);
+    let gymId = normGymId(qs.get("gymId") || qs.get("gym"));
+    let token = normToken(qs.get("token") || qs.get("adminToken"));
 
-    statusPill.textContent = "Status: Loading…";
+    // Optional override: ?api=https://...
+    let API_BASE = (qs.get("api") || "").trim() || DEFAULT_API_BASE;
 
-    const summaryRes = await fetch(`${base}/api/admin/summary?gym=${encodeURIComponent(gym)}&token=${encodeURIComponent(token)}`);
-    const summary = await summaryRes.json().catch(()=>null);
-    if (!summaryRes.ok) {
-      statusPill.textContent = `Status: ${summary?.error || "Error"}`;
-      return;
+    // UI refs
+    const $ = (id) => document.getElementById(id);
+    const dot = $("dot");
+    const statusText = $("statusText");
+    const lastLoaded = $("lastLoaded");
+    const msgArea = $("msgArea");
+
+    const gymText = $("gymText");
+    const apiText = $("apiText");
+    const gymInput = $("gymInput");
+    const tokenInput = $("tokenInput");
+    const apiInput = $("apiInput");
+    const parsedPreview = $("parsedPreview");
+
+    const kpis = $("kpis");
+    const kpiScans = $("kpiScans");
+    const kpiSaves = $("kpiSaves");
+    const kpiDevices = $("kpiDevices");
+    const kpiRepeat = $("kpiRepeat");
+
+    const topMachinesBody = $("topMachinesBody");
+    const byDayBody = $("byDayBody");
+
+    function setStatus(ok, text){
+      dot.classList.remove("ok","bad");
+      dot.classList.add(ok ? "ok" : "bad");
+      statusText.textContent = text;
     }
 
-    document.getElementById("kpis").style.display = "";
-    document.getElementById("kpi7").textContent = `${summary.last7d.scans} scans`;
-    document.getElementById("kpi7sub").textContent = `${summary.last7d.saves} saves`;
-    document.getElementById("kpi30").textContent = `${summary.last30d.scans} scans`;
-    document.getElementById("kpi30sub").textContent = `${summary.last30d.saves} saves`;
-    document.getElementById("kpiUniq").textContent = `${summary.last7d.uniqueDevices || 0}`;
-
-    const machinesRes = await fetch(`${base}/api/admin/machines?gym=${encodeURIComponent(gym)}&token=${encodeURIComponent(token)}`);
-    const machines = await machinesRes.json().catch(()=>null);
-    if (!machinesRes.ok) {
-      statusPill.textContent = `Status: Loaded summary, machines failed`;
-      return;
+    function showMsg(html, type){
+      // type: "error" | "note"
+      msgArea.innerHTML = `<div class="${type}">${html}</div>`;
     }
 
-    const body = document.getElementById("machinesBody");
-    body.innerHTML = "";
-    const rows = (machines.last30d || []).slice(0, 30);
+    function clearMsg(){ msgArea.innerHTML = ""; }
 
-    if (!rows.length) {
-      body.innerHTML = `<tr><td colspan="4" class="muted">No data yet.</td></tr>`;
-    } else {
-      for (const r of rows) {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><span class="pill">${r.machine_id}</span></td>
-          <td>${r.scans || 0}</td>
-          <td>${r.saves || 0}</td>
-          <td class="muted">${fmtDate(r.last_ts)}</td>
+    function fmtInt(n){
+      const x = Number(n);
+      if (!Number.isFinite(x)) return "—";
+      return x.toLocaleString();
+    }
+
+    function escapeHtml(s){
+      return String(s ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function updateHeader(){
+      gymText.textContent = gymId || "—";
+      apiText.textContent = API_BASE || "—";
+      apiInput.value = API_BASE || DEFAULT_API_BASE;
+
+      parsedPreview.textContent =
+        `gymId=${gymId || "(missing)"} | token=${token ? token.slice(0, 8) + "…" : "(missing)"} | api=${API_BASE || "(missing)"}`;
+
+      // Prefill controls if values exist
+      gymInput.value = gymId || "";
+      tokenInput.value = token || "";
+    }
+
+    // ============================================================
+    // Networking helpers
+    // ============================================================
+    async function fetchJson(url, opts){
+      const res = await fetch(url, Object.assign({
+        headers: { "Content-Type": "application/json" }
+      }, opts || {}));
+
+      const text = await res.text();
+      let data = null;
+      try { data = text ? JSON.parse(text) : null; } catch(e){ /* ignore */ }
+
+      if (!res.ok){
+        const msg = (data && (data.error || data.message)) ? (data.error || data.message) : text || res.statusText;
+        throw new Error(`${res.status} ${res.statusText}: ${msg}`);
+      }
+      return data;
+    }
+
+    // Try multiple possible endpoint names so you don't get stuck if we named it slightly differently
+    async function trySummaryEndpoints(){
+      const candidates = [
+        `${API_BASE}/api/admin-summary?gymId=${encodeURIComponent(gymId)}&token=${encodeURIComponent(token)}`,
+        `${API_BASE}/api/admin/summary?gymId=${encodeURIComponent(gymId)}&token=${encodeURIComponent(token)}`,
+        `${API_BASE}/api/summary?gymId=${encodeURIComponent(gymId)}&token=${encodeURIComponent(token)}`
+      ];
+      let lastErr = null;
+      for (const url of candidates){
+        try { return await fetchJson(url); }
+        catch(e){ lastErr = e; }
+      }
+      throw lastErr || new Error("No summary endpoint responded.");
+    }
+
+    async function getGymStatus(){
+      // Your worker already supports /api/gym-status (per your notes)
+      const url = `${API_BASE}/api/gym-status?gymId=${encodeURIComponent(gymId)}`;
+      return await fetchJson(url);
+    }
+
+    // ============================================================
+    // Renderers (shape-flexible)
+    // ============================================================
+    function renderKpis(summary){
+      // We accept multiple naming conventions:
+      // totalScans / scans / scanCount
+      // totalSaves / saves / saveCount
+      // uniqueDevices / devices
+      // repeatDevices / repeat
+      const scans =
+        summary?.totalScans ?? summary?.scans ?? summary?.scanCount ?? summary?.kpis?.scans;
+      const saves =
+        summary?.totalSaves ?? summary?.saves ?? summary?.saveCount ?? summary?.kpis?.saves;
+      const devices =
+        summary?.uniqueDevices ?? summary?.devices ?? summary?.deviceCount ?? summary?.kpis?.devices;
+      const repeat =
+        summary?.repeatDevices ?? summary?.repeat ?? summary?.repeatCount ?? summary?.kpis?.repeat;
+
+      kpiScans.textContent = fmtInt(scans);
+      kpiSaves.textContent = fmtInt(saves);
+      kpiDevices.textContent = fmtInt(devices);
+      kpiRepeat.textContent = fmtInt(repeat);
+
+      kpis.style.display = "grid";
+    }
+
+    function renderTopMachines(summary){
+      // Accept: topMachines = [{machineId, machineName, scans, saves, total}]
+      // or machines = [...]
+      const list = summary?.topMachines ?? summary?.machines ?? summary?.top_machines ?? [];
+      const rows = Array.isArray(list) ? list : [];
+
+      if (!rows.length){
+        topMachinesBody.innerHTML = `<tr><td colspan="4" class="muted">No machine breakdown returned.</td></tr>`;
+        return;
+      }
+
+      topMachinesBody.innerHTML = rows.slice(0, 20).map(m => {
+        const name = m.machineName || m.name || m.machineId || m.machine || "—";
+        const scans = m.scans ?? m.scanCount ?? 0;
+        const saves = m.saves ?? m.saveCount ?? 0;
+        const total = m.total ?? (Number(scans) + Number(saves));
+        return `
+          <tr>
+            <td>${escapeHtml(name)}</td>
+            <td>${fmtInt(scans)}</td>
+            <td>${fmtInt(saves)}</td>
+            <td>${fmtInt(total)}</td>
+          </tr>
         `;
-        body.appendChild(tr);
+      }).join("");
+    }
+
+    function renderByDay(summary){
+      // Accept: byDay = [{date, scans, saves, total}] or daily = [...]
+      const list = summary?.byDay ?? summary?.daily ?? summary?.by_day ?? [];
+      const rows = Array.isArray(list) ? list : [];
+
+      if (!rows.length){
+        byDayBody.innerHTML = `<tr><td colspan="4" class="muted">No daily breakdown returned.</td></tr>`;
+        return;
+      }
+
+      byDayBody.innerHTML = rows.slice(0, 31).map(d => {
+        const date = d.date || d.day || d.dt || "—";
+        const scans = d.scans ?? d.scanCount ?? 0;
+        const saves = d.saves ?? d.saveCount ?? 0;
+        const total = d.total ?? (Number(scans) + Number(saves));
+        return `
+          <tr>
+            <td class="mono">${escapeHtml(date)}</td>
+            <td>${fmtInt(scans)}</td>
+            <td>${fmtInt(saves)}</td>
+            <td>${fmtInt(total)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // ============================================================
+    // Main load
+    // ============================================================
+    async function loadDashboard(){
+      clearMsg();
+
+      if (!gymId || !token){
+        setStatus(false, "Missing gymId/token.");
+        showMsg(
+          `Missing <span class="mono">gymId</span> and/or <span class="mono">token</span> in the URL.<br/>
+           Use: <span class="mono">admin.html?gymId=main&amp;token=YOUR_TOKEN</span>`,
+          "error"
+        );
+        return;
+      }
+
+      try{
+        setStatus(true, "Loading…");
+
+        // 1) Gym status check (optional but helpful)
+        let gs = null;
+        try { gs = await getGymStatus(); } catch(e){ /* keep going */ }
+
+        if (gs && gs.status && String(gs.status).toUpperCase() === "DISABLED"){
+          showMsg(
+            `Gym is currently <b>DISABLED</b>. QR scans should show “service inactive”.`,
+            "note"
+          );
+        }
+
+        // 2) Summary
+        const summary = await trySummaryEndpoints();
+        renderKpis(summary);
+        renderTopMachines(summary);
+        renderByDay(summary);
+
+        setStatus(true, "Loaded.");
+        lastLoaded.textContent = `Last loaded: ${new Date().toLocaleString()}`;
+      }catch(err){
+        console.error(err);
+        setStatus(false, "Error loading dashboard.");
+        showMsg(
+          `Could not load admin summary.<br/>
+           <span class="mono">${escapeHtml(err.message || String(err))}</span>`,
+          "error"
+        );
       }
     }
 
-    document.getElementById("machinesCard").style.display = "";
-    statusPill.textContent = "Status: Loaded";
-  }
+    // ============================================================
+    // Controls
+    // ============================================================
+    $("btnApply").addEventListener("click", () => {
+      const newGym = normGymId(gymInput.value);
+      const newToken = normToken(tokenInput.value);
+      const newApi = (apiInput.value || "").trim() || DEFAULT_API_BASE;
 
-  loadBtn.addEventListener("click", loadDashboard);
+      const url = new URL(location.href);
+      url.searchParams.set("gymId", newGym);
+      url.searchParams.set("token", newToken);
+      // Only include api= if it differs from default (keeps URL clean)
+      if (newApi && newApi !== DEFAULT_API_BASE) url.searchParams.set("api", newApi);
+      else url.searchParams.delete("api");
 
-  // auto-load if url has gym+token+apiBase stored
-  if (apiBaseEl.value && gymIdEl.value && tokenEl.value) loadDashboard();
-</script>
-</body>
-</html>
+      location.href = url.toString();
+    });
+
+    $("btnLoad").addEventListener("click", async () => {
+      // Update runtime values from inputs without forcing navigation
+      gymId = normGymId(gymInput.value);
+      token = normToken(tokenInput.value);
+      API_BASE = (apiInput.value || "").trim() 
