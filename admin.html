@@ -62,7 +62,7 @@
     .grid{
       margin-top:18px;
       display:grid;
-      grid-template-columns: 1.1fr .9fr;
+      grid-template-columns: 1fr;
       gap:16px;
     }
     @media (max-width: 980px){
@@ -247,56 +247,6 @@
           </table>
         </div>
       </div>
-
-      <!-- RIGHT: Controls -->
-      <div class="card">
-        <h2>Controls</h2>
-        <div class="muted small">
-          Your admin link should look like:
-          <div class="mono" style="margin-top:6px;word-break:break-all">
-            /admin.html?gymId=main&amp;token=SLL_main_...
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <label class="muted small">Gym ID</label>
-        <input class="input mono" id="gymInput" placeholder="main" />
-
-        <div style="height:10px"></div>
-
-        <label class="muted small">Admin token</label>
-        <input class="input mono" id="tokenInput" placeholder="SLL_main_..." />
-
-        <div style="height:10px"></div>
-
-        <label class="muted small">API Base (advanced)</label>
-        <input class="input mono" id="apiInput" />
-
-        <div style="height:12px"></div>
-
-        <div class="row">
-          <button class="btn primary" id="btnApply">Apply to URL</button>
-          <button class="btn good" id="btnLoad">Load dashboard</button>
-        </div>
-
-        <div style="height:12px"></div>
-
-        <div class="note small">
-          <b>Tip:</b> This page accepts <span class="mono">gymId</span> or <span class="mono">gym</span>,
-          and <span class="mono">token</span> or <span class="mono">adminToken</span>.
-          So either URL format works.
-        </div>
-
-        <div style="height:12px"></div>
-
-        <div class="muted small">
-          Current parsed values:
-          <div class="mono" id="parsedPreview" style="margin-top:6px;word-break:break-all"></div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- ============================================================
        MAIN SCRIPT (includes on-page error catcher + robust parsing)
