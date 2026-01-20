@@ -526,7 +526,7 @@ try {
       body: JSON.stringify({
         gymId,
         machineId,
-        machineName: (MACHINE_MAP?.[machineId] || machineId),
+        machineName: (window.MACHINE_MAP?.[machineId] || machineId),
         eventType,          // "scan" | "save"
         deviceHash: userId, // anonymous per-device id
         ts: Date.now()
