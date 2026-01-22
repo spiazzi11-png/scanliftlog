@@ -329,7 +329,11 @@ function setText(id, v){
         .replaceAll('"',"&quot;")
         .replaceAll("'","&#039;");
     }
-
+function prettyMachine(machineId, machineName) {
+  const n = (machineName || "").trim();
+  return n || (MACHINE_MAP[machineId] || machineId);
+}
+    
 function updateHeader(){
   // Top pills (these exist)
   if (gymText) gymText.textContent = gymId || "—";
@@ -404,7 +408,9 @@ function updateHeader(){
       }
 
       topMachinesBody.innerHTML = rows.slice(0, 20).map(m => {
-        const name = m.machineName || m.name || m.machineId || m.machine || "—";
+       const machineId = m.machineId || m.machine || "";
+const machineName = m.machineName || m.name || "";
+const name = prettyMachine(machineId, machineName);
         const scans = m.scans ?? m.scanCount ?? 0;
         const saves = m.saves ?? m.saveCount ?? 0;
         const total = m.total ?? (Number(scans) + Number(saves));
