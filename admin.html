@@ -343,7 +343,8 @@ function prettyMachine(machineId, machineName) {
     /^[A-Z0-9_]{3,10}$/.test(name); // codes like TRED, SETRW, LEGPR, etc.
 
   // Prefer mapping by ID when possible.
-  const mapped = MACHINE_MAP[id];
+  const mapped = (window.MACHINE_MAP || {})[id];
+
 
   if (mapped) return mapped;
 
