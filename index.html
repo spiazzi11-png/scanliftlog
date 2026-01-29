@@ -725,6 +725,55 @@ const CARDIO_MACHINE_IDS = [
     if (mid === "SKIER") {
       return base.concat([ distanceM ]);
     }
+        // Recumbent / Upright bikes
+    if (mid === "RECBK" || mid === "UPRBK") {
+      return base.concat([
+        distanceMi,
+        { key: "resistance", label: "Resistance (optional)", placeholder: "e.g., 12", inputMode: "numeric", required: false }
+      ]);
+    }
+
+    // Incline trainer (common treadmill-style climber)
+    if (mid === "ICLMB") {
+      return base.concat([
+        distanceMi,
+        { key: "incline", label: "Incline % (optional)", placeholder: "e.g., 12", inputMode: "decimal", required: false },
+        { key: "speed", label: "Speed (mph, optional)", placeholder: "e.g., 3.2", inputMode: "decimal", required: false }
+      ]);
+    }
+
+    // Jacob’s Ladder / Vertical Climber
+    if (mid === "JACOB" || mid === "VCLMB") {
+      return base.concat([
+        { key: "level", label: "Level (optional)", placeholder: "e.g., 8", inputMode: "numeric", required: false },
+        { key: "steps", label: "Steps (optional)", placeholder: "e.g., 1200", inputMode: "numeric", required: false }
+      ]);
+    }
+
+    // Cross Trainer / Strider (elliptical-like)
+    if (mid === "XTRNR" || mid === "STRDR") {
+      return base.concat([
+        distanceMi,
+        { key: "resistance", label: "Resistance (optional)", placeholder: "e.g., 10", inputMode: "numeric", required: false },
+        { key: "incline", label: "Incline % (optional)", placeholder: "e.g., 6", inputMode: "decimal", required: false }
+      ]);
+    }
+
+    // Sprint Bike / Air Ski Trainer
+    if (mid === "SPRBK" || mid === "ADSKI") {
+      return base.concat([
+        { key: "resistance", label: "Resistance (optional)", placeholder: "e.g., 10", inputMode: "numeric", required: false },
+        { key: "pace", label: "Interval / Pace notes (optional)", placeholder: "e.g., 30s hard / 90s easy", inputMode: "text", required: false }
+      ]);
+    }
+
+    // Lateral trainer / Slide mill
+    if (mid === "SLDM") {
+      return base.concat([
+        { key: "level", label: "Level (optional)", placeholder: "e.g., 7", inputMode: "numeric", required: false },
+        { key: "distance", label: "Distance (miles, optional)", placeholder: "e.g., 1.2", inputMode: "decimal", required: false }
+      ]);
+    }
 
     // Fallback
     return base.concat([distanceMi]);
