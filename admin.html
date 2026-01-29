@@ -330,8 +330,28 @@ function setText(id, v){
         .replaceAll("'","&#039;");
     }
 function prettyMachine(machineId, machineName) {
-  const n = (machineName || "").trim();
-  return n || (MACHINE_MAP[machineId] || machineId);
+  const rawId = String(machineId ?? "");
+  const rawName = String(machineName ?? "");
+
+  const id = rawId.trim().toUpperCase();
+  const name = rawName.trim();
+
+  // If the provided "name" is just a code (or equals the id), ignore it.
+  const nameLooksLikeCode =
+    !name ||
+    name.toUpperCase() === id ||
+    /^[A-Z0-9_]{3,10}$/.test(name); // codes like TRED, SETRW, LEGPR, etc.
+
+  // Prefer mapping by ID when possible.
+  const mapped = MACHINE_MAP[id];
+
+  if (mapped) return mapped;
+
+  // If no mapping, prefer a real human name if we have one.
+  if (!nameLooksLikeCode) return name;
+
+  // Fallback to whatever we have.
+  return name || rawId || "—";
 }
     
 function updateHeader(){
