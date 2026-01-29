@@ -666,9 +666,10 @@ const machineName = key
   : "Scan a machine QR code to begin";
 
   /* ---------- Machine Type (DEFAULT LIST = CARDIO) ---------- */
-  const CARDIO_MACHINE_IDS = [
-    "TRED","ELIP","STAIR","BIKE","ROW","SKIER","CURVE","STEP","SPIN","ARC","ASSLT"
-  ];
+const CARDIO_MACHINE_IDS = [
+  "TRED","ELIP","STAIR","BIKE","ROW","SKIER","CURVE","STEP","SPIN","ARC","ASSLT",
+  "RECBK","UPRBK","ICLMB","JACOB","VCLMB","XTRNR","SPRBK","STRDR","ADSKI","SLDM"
+];
 
   const machineType = (machineId && CARDIO_MACHINE_IDS.includes(machineId)) ? "cardio" : "strength";
 
