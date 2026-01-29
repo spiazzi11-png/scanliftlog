@@ -109,7 +109,17 @@ window.MACHINE_MAP = {
   "HANGK": "Hanging Knee Raise Station",
   "ABWHL": "Ab Wheel Area",
   "PALLF": "Pallof Press Station",
-
+    // --- Added cardio machines ---
+  "RECBK": "Recumbent Bike",
+  "UPRBK": "Upright Bike",
+  "ICLMB": "Incline Trainer",
+  "JACOB": "Jacob’s Ladder",
+  "VCLMB": "Vertical Climber (VersaClimber)",
+  "XTRNR": "Cross Trainer",
+  "SPRBK": "Sprint Bike",
+  "STRDR": "Strider",
+  "ADSKI": "Air Ski Trainer",
+  "SLDM":  "Slide Mill / Lateral Trainer",
   "ASSLT": "Air Bike (Assault-Style)",
   "SKIER": "SkiErg",
   "CURVE": "Curved Manual Treadmill",
