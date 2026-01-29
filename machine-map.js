@@ -17,7 +17,7 @@ window.MACHINE_MAP = {
   "ASSTPD": "Assisted Pull-Up / Dip",
   "STRPD": "Straight-Arm Pulldown",
   "BKEXT": "Back Extension",
-"BENCHBP": "Barbell Bench Press Station",
+"BENCHBP": "Barbell Bench Press",
 "INCBP": "Incline Barbell Bench Press",
 "DECBP": "Decline Barbell Bench Press",
 "TRAPDL": "Trap Bar Deadlift Station",
