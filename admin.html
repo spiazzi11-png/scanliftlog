@@ -218,10 +218,11 @@
                 <th>Scans</th>
                 <th>Saves</th>
                 <th>Total</th>
+                <th>Unique Devices</th>
               </tr>
             </thead>
             <tbody id="topMachinesBody">
-              <tr><td colspan="4" class="muted">No data loaded.</td></tr>
+              <tr><td colspan="5" class="muted">No data loaded.</td></tr>
             </tbody>
           </table>
         </div>
@@ -426,7 +427,7 @@ function updateHeader(){
       const rows = Array.isArray(list) ? list : [];
 
       if (!rows.length){
-        topMachinesBody.innerHTML = `<tr><td colspan="4" class="muted">No machine breakdown returned.</td></tr>`;
+        topMachinesBody.innerHTML = `<tr><td colspan="5" class="muted">No machine breakdown returned.</td></tr>`;
         return;
       }
 
@@ -437,12 +438,14 @@ const name = prettyMachine(machineId, machineName);
         const scans = m.scans ?? m.scanCount ?? 0;
         const saves = m.saves ?? m.saveCount ?? 0;
         const total = m.total ?? (Number(scans) + Number(saves));
+        const unique = d.uniqueDevices ?? d.uniqueDeviceCount ?? d.devices ?? 0;
         return `
           <tr>
             <td>${escapeHtml(name)}</td>
             <td>${fmtInt(scans)}</td>
             <td>${fmtInt(saves)}</td>
             <td>${fmtInt(total)}</td>
+            td>${fmtInt(unique)}</td>
           </tr>
         `;
       }).join("");
