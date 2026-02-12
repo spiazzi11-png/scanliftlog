@@ -78,7 +78,7 @@
       padding:16px;
       backdrop-filter: blur(8px);
     }
-    .card h2{margin:0 0 10px 0;font-size:14px;letter-spacing:.2px;color:var(--text);}
+    .card h2{margin:0 0 10px 0;font-size:14px;letter-spacing:.2px;color:var(--text);}}
     .muted{color:var(--muted)}
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .btn{
@@ -218,11 +218,10 @@
                 <th>Scans</th>
                 <th>Saves</th>
                 <th>Total</th>
-                <th>Unique Devices</th>
               </tr>
             </thead>
             <tbody id="topMachinesBody">
-              <tr><td colspan="5" class="muted">No data loaded.</td></tr>
+              <tr><td colspan="4" class="muted">No data loaded.</td></tr>
             </tbody>
           </table>
         </div>
@@ -239,20 +238,18 @@
                 <th>Scans</th>
                 <th>Saves</th>
                 <th>Total</th>
+                <th>Unique Devices</th>
               </tr>
             </thead>
             <tbody id="byDayBody">
-              <tr><td colspan="4" class="muted">No data loaded.</td></tr>
+              <tr><td colspan="5" class="muted">No data loaded.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
-      
+
 <script src="/machine-map.js"></script>
 
-      <!-- ============================================================
-       MAIN SCRIPT (includes on-page error catcher + robust parsing)
-       ============================================================ -->
   <script>
     // --- Debug/diagnostics: show JS errors on-page ---
     window.onerror = function (msg, src, line, col, err) {
@@ -284,13 +281,13 @@
     // --- UI refs ---
     const $ = (id) => document.getElementById(id);
     function setVal(id, v){
-  const el = $(id);
-  if (el) el.value = v;
-}
-function setText(id, v){
-  const el = $(id);
-  if (el) el.textContent = v;
-}
+      const el = $(id);
+      if (el) el.value = v;
+    }
+    function setText(id, v){
+      const el = $(id);
+      if (el) el.textContent = v;
+    }
     const dot = $("dot");
     const statusText = $("statusText");
     const lastLoaded = $("lastLoaded");
@@ -332,47 +329,40 @@ function setText(id, v){
         .replaceAll('"',"&quot;")
         .replaceAll("'","&#039;");
     }
-function prettyMachine(machineId, machineName) {
-  const rawId = String(machineId ?? "");
-  const rawName = String(machineName ?? "");
 
-  const id = rawId.trim().toUpperCase();
-  const name = rawName.trim();
+    function prettyMachine(machineId, machineName) {
+      const rawId = String(machineId ?? "");
+      const rawName = String(machineName ?? "");
 
-  // If the provided "name" is just a code (or equals the id), ignore it.
-  const nameLooksLikeCode =
-    !name ||
-    name.toUpperCase() === id ||
-    /^[A-Z0-9_]{3,10}$/.test(name); // codes like TRED, SETRW, LEGPR, etc.
+      const id = rawId.trim().toUpperCase();
+      const name = rawName.trim();
 
-  // Prefer mapping by ID when possible.
-  const mapped = (window.MACHINE_MAP || {})[id];
+      const nameLooksLikeCode =
+        !name ||
+        name.toUpperCase() === id ||
+        /^[A-Z0-9_]{3,10}$/.test(name);
 
+      const mapped = (window.MACHINE_MAP || {})[id];
+      if (mapped) return mapped;
 
-  if (mapped) return mapped;
+      if (!nameLooksLikeCode) return name;
 
-  // If no mapping, prefer a real human name if we have one.
-  if (!nameLooksLikeCode) return name;
+      return name || rawId || "—";
+    }
 
-  // Fallback to whatever we have.
-  return name || rawId || "—";
-}
-    
-function updateHeader(){
-  // Top pills (these exist)
-  if (gymText) gymText.textContent = gymId || "—";
-  
+    function updateHeader(){
+      if (gymText) gymText.textContent = gymId || "—";
 
-  // Controls UI was removed, so only set these if elements exist
-  setVal("gymInput", gymId);
-  setVal("tokenInput", token);
-  setVal("apiInput", API_BASE);
+      setVal("gymInput", gymId);
+      setVal("tokenInput", token);
+      setVal("apiInput", API_BASE);
 
-  setText(
-    "parsedPreview",
-    `gymId=${gymId || "(missing)"} | token=${token ? token.slice(0, 8) + "…" : "(missing)"} | api=${API_BASE || "(missing)"}`
-  );
-}
+      setText(
+        "parsedPreview",
+        `gymId=${gymId || "(missing)"} | token=${token ? token.slice(0, 8) + "…" : "(missing)"} | api=${API_BASE || "(missing)"}`
+      );
+    }
+
     async function fetchJson(url, opts){
       const res = await fetch(url, Object.assign({
         headers: { "Content-Type": "application/json" }
@@ -427,25 +417,25 @@ function updateHeader(){
       const rows = Array.isArray(list) ? list : [];
 
       if (!rows.length){
-        topMachinesBody.innerHTML = `<tr><td colspan="5" class="muted">No machine breakdown returned.</td></tr>`;
+        topMachinesBody.innerHTML = `<tr><td colspan="4" class="muted">No machine breakdown returned.</td></tr>`;
         return;
       }
 
       topMachinesBody.innerHTML = rows.slice(0, 20).map(m => {
-       const machineId = m.machineId || m.machine || "";
-const machineName = m.machineName || m.name || "";
-const name = prettyMachine(machineId, machineName);
+        const machineId = m.machineId || m.machine || "";
+        const machineName = m.machineName || m.name || "";
+        const name = prettyMachine(machineId, machineName);
+
         const scans = m.scans ?? m.scanCount ?? 0;
         const saves = m.saves ?? m.saveCount ?? 0;
         const total = m.total ?? (Number(scans) + Number(saves));
-        const unique = d.uniqueDevices ?? d.uniqueDeviceCount ?? d.devices ?? 0;
+
         return `
           <tr>
             <td>${escapeHtml(name)}</td>
             <td>${fmtInt(scans)}</td>
             <td>${fmtInt(saves)}</td>
             <td>${fmtInt(total)}</td>
-            td>${fmtInt(unique)}</td>
           </tr>
         `;
       }).join("");
@@ -456,7 +446,7 @@ const name = prettyMachine(machineId, machineName);
       const rows = Array.isArray(list) ? list : [];
 
       if (!rows.length){
-        byDayBody.innerHTML = `<tr><td colspan="4" class="muted">No daily breakdown returned.</td></tr>`;
+        byDayBody.innerHTML = `<tr><td colspan="5" class="muted">No daily breakdown returned.</td></tr>`;
         return;
       }
 
@@ -465,12 +455,15 @@ const name = prettyMachine(machineId, machineName);
         const scans = d.scans ?? d.scanCount ?? 0;
         const saves = d.saves ?? d.saveCount ?? 0;
         const total = d.total ?? (Number(scans) + Number(saves));
+        const unique = d.uniqueDevices ?? d.uniqueDeviceCount ?? d.devices ?? 0;
+
         return `
           <tr>
             <td class="mono">${escapeHtml(date)}</td>
             <td>${fmtInt(scans)}</td>
             <td>${fmtInt(saves)}</td>
             <td>${fmtInt(total)}</td>
+            <td>${fmtInt(unique)}</td>
           </tr>
         `;
       }).join("");
@@ -516,20 +509,20 @@ const name = prettyMachine(machineId, machineName);
         );
       }
     }
+
     // Boot (no controls UI)
-updateHeader();
+    updateHeader();
 
-if (!gymId || !token){
-  setStatus(false, "Missing gymId/token.");
-  showMsg(
-    `Missing <span class="mono">gymId</span> and/or <span class="mono">token</span>.<br/>
-     This link is incomplete.`,
-    "error"
-  );
-} else {
-  loadDashboard();
-}
-
+    if (!gymId || !token){
+      setStatus(false, "Missing gymId/token.");
+      showMsg(
+        `Missing <span class="mono">gymId</span> and/or <span class="mono">token</span>.<br/>
+         This link is incomplete.`,
+        "error"
+      );
+    } else {
+      loadDashboard();
+    }
   </script>
 </body>
 </html>
