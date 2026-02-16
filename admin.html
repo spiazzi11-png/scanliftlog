@@ -78,7 +78,7 @@
       padding:16px;
       backdrop-filter: blur(8px);
     }
-    .card h2{margin:0 0 10px 0;font-size:14px;letter-spacing:.2px;color:var(--text);}}
+    .card h2{margin:0 0 10px 0;font-size:14px;letter-spacing:.2px;color:var(--text);}
     .muted{color:var(--muted)}
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .btn{
@@ -201,7 +201,7 @@
             <div class="value" id="kpiDevices">—</div>
           </div>
           <div class="kpi">
-            <div class="label">Repeat devices</div>
+            <div class="label">Returning Members</div>
             <div class="value" id="kpiRepeat">—</div>
           </div>
         </div>
@@ -398,19 +398,23 @@
       return await fetchJson(url);
     }
 
-    function renderKpis(summary){
-      const scans = summary?.totalScans ?? summary?.scans ?? summary?.scanCount ?? summary?.kpis?.scans;
-      const saves = summary?.totalSaves ?? summary?.saves ?? summary?.saveCount ?? summary?.kpis?.saves;
-      const devices = summary?.uniqueDevices ?? summary?.devices ?? summary?.deviceCount ?? summary?.kpis?.devices;
-      const repeat = summary?.repeatDevices ?? summary?.repeat ?? summary?.repeatCount ?? summary?.kpis?.repeat;
+ function renderKpis(summary){
+  const scans = summary?.totalScans ?? summary?.scans ?? summary?.scanCount ?? summary?.kpis?.scans;
+  const saves = summary?.totalSaves ?? summary?.saves ?? summary?.saveCount ?? summary?.kpis?.saves;
+  const devices = summary?.uniqueDevices ?? summary?.devices ?? summary?.deviceCount ?? summary?.kpis?.devices;
 
-      kpiScans.textContent = fmtInt(scans);
-      kpiSaves.textContent = fmtInt(saves);
-      kpiDevices.textContent = fmtInt(devices);
-      kpiRepeat.textContent = fmtInt(repeat);
+  // NEW: Returning devices from Worker
+  const returning = summary?.returningDevices ?? 0;
 
-      kpis.style.display = "grid";
-    }
+  kpiScans.textContent = fmtInt(scans);
+  kpiSaves.textContent = fmtInt(saves);
+  kpiDevices.textContent = fmtInt(devices);
+
+  // IMPORTANT: Actually render it in the 4th KPI tile
+  kpiRepeat.textContent = fmtInt(returning);
+
+  kpis.style.display = "grid";
+}
 
     function renderTopMachines(summary){
       const list = summary?.topMachines ?? summary?.machines ?? summary?.top_machines ?? [];
