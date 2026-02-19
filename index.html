@@ -742,7 +742,10 @@
     }
 
     /* ---------- Storage: workouts per user+machine ---------- */
-    function storageKeyFor(mid) { return `scanliftlog_workouts_v1:${userId}:${mid}`; }
+    function storageKeyFor(mid) {
+  // IMPORTANT: include gymId so each gym's history is isolated
+  return `scanliftlog_workouts_v1:${userId}:${gymId}:${mid}`;
+}
     function loadWorkouts() {
       if (!machineId) return [];
       return safeJSONParse(localStorage.getItem(storageKeyFor(machineId)) || "[]", []);
