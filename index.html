@@ -196,6 +196,70 @@
       border-color: rgba(239,68,68,.30);
       background: rgba(18,19,24,.66);
     }
+
+    /* ===== Tooltip (Download Data) ===== */
+    .tipWrap{
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .tipIcon{
+      font-size:12px;
+      color:var(--muted);
+      cursor:pointer;
+      user-select:none;
+      line-height:1;
+      padding:2px 4px;
+      border-radius:8px;
+      border:1px solid transparent;
+    }
+    .tipIcon:hover{
+      color:var(--text);
+      border-color:var(--line);
+      background: rgba(255,255,255,.04);
+    }
+    .tipBox{
+      position:absolute;
+      bottom:140%;
+      left:50%;
+      transform:translateX(-50%);
+      width:240px;
+      padding:10px 12px;
+      font-size:12px;
+      line-height:1.4;
+      background: var(--panel);
+      border:1px solid var(--line);
+      border-radius:12px;
+      color:var(--text);
+      box-shadow: var(--shadow);
+      opacity:0;
+      pointer-events:none;
+      transition:.18s ease;
+      text-align:center;
+      z-index:1000;
+    }
+    .tipBox::after{
+      content:"";
+      position:absolute;
+      top:100%;
+      left:50%;
+      transform:translateX(-50%);
+      width:0;height:0;
+      border-left:7px solid transparent;
+      border-right:7px solid transparent;
+      border-top:7px solid var(--panel);
+      filter: drop-shadow(0 -1px 0 rgba(255,255,255,.10));
+    }
+    .tipWrap:hover .tipBox,
+    .tipWrap:focus-within .tipBox{
+      opacity:1;
+      pointer-events:auto;
+    }
+    .tipWrap.isOpen .tipBox{
+      opacity:1;
+      pointer-events:auto;
+    }
   </style>
 </head>
 <body>
@@ -223,7 +287,19 @@
 
         <div class="pills">
           <div class="pill" id="userPill">User: …</div>
-          <div class="pill"><button class="pillBtn" id="downloadBtn" type="button">Download Data</button></div>
+
+          <!-- Download Data (with tooltip) -->
+          <div class="pill">
+            <div class="tipWrap">
+              <button class="pillBtn" id="downloadBtn" type="button">Download Data</button>
+              <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
+              <div class="tipBox">
+                Clearing browser data can erase workout history.
+                Export occasionally to keep a backup.
+              </div>
+            </div>
+          </div>
+
           <div class="pill"><button class="pillBtn" id="uploadBtn" type="button">Upload Data</button></div>
           <input id="uploadFileInput" type="file" accept="application/json,.json" style="display:none;" />
           <div class="pill"><button class="pillBtn" id="resetUserBtn" type="button">Reset User ID</button></div>
@@ -1143,6 +1219,20 @@
       // Wire buttons
       document.getElementById('resetUserBtn').addEventListener('click', resetUser);
       document.getElementById('downloadBtn').addEventListener('click', downloadData);
+
+      // Tooltip tap support (mobile): tap ⓘ to toggle
+      document.querySelectorAll('.tipIcon').forEach(icon => {
+        icon.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const wrap = icon.closest('.tipWrap');
+          if (wrap) wrap.classList.toggle('isOpen');
+        });
+      });
+      // Close tooltip if user taps elsewhere
+      document.addEventListener('click', () => {
+        document.querySelectorAll('.tipWrap.isOpen').forEach(w => w.classList.remove('isOpen'));
+      });
 
       const uploadBtn = document.getElementById('uploadBtn');
       const uploadFileInput = document.getElementById('uploadFileInput');
