@@ -261,21 +261,21 @@
       pointer-events:auto;
     }
     /* ===== Always-visible backup warning ===== */
-.backupNote{
-  margin-top:6px;
-  font-size:11px;
-  line-height:1.35;
-  color: rgba(233,233,238,.72);
-}
+    .backupNote{
+      margin-top:6px;
+      font-size:11px;
+      line-height:1.35;
+      color: rgba(233,233,238,.72);
+    }
 
-.backupNote strong{
-  color: rgba(233,233,238,.92);
-}
+    .backupNote strong{
+      color: rgba(233,233,238,.92);
+    }
 
-.backupNote .warn{
-  color: rgba(239,68,68,.90);
-  font-weight:900;
-}
+    .backupNote .warn{
+      color: rgba(239,68,68,.90);
+      font-weight:900;
+    }
   </style>
 </head>
 <body>
@@ -305,21 +305,20 @@
           <div class="pill" id="userPill">User: …</div>
 
           <div class="pill">
-  <div class="tipWrap">
-    <button class="pillBtn" id="downloadBtn" type="button">Download Data</button>
-    <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
-    <div class="tipBox">
-      Clearing browser data can erase workout history.
-      Export occasionally to keep a backup.
-    </div>
+            <div class="tipWrap">
+              <button class="pillBtn" id="downloadBtn" type="button">Download Data</button>
+              <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
+              <div class="tipBox">
+                Clearing browser data can erase workout history.
+                Export occasionally to keep a backup.
+              </div>
+            </div>
 
-    <!-- Always-visible note (so it can't be missed) -->
-    <div class="backupNote">
-  Download data before clearing browser cache/data to keep your history.
-</div>
-    </div>
-  </div>
-</div>
+            <div class="backupNote">
+              <span class="warn">⚠</span> <strong>Important:</strong> Clearing your browser cache/data can erase history.
+              Use <strong>Download Data</strong> occasionally to keep a backup.
+            </div>
+          </div>
 
           <div class="pill"><button class="pillBtn" id="uploadBtn" type="button">Upload Data</button></div>
           <input id="uploadFileInput" type="file" accept="application/json,.json" style="display:none;" />
@@ -604,9 +603,10 @@
     /* ---------- URL Parsing (robust) ---------- */
     function parseContextFromUrl() {
       const url = new URL(window.location.href);
+      const params = url.searchParams;
 
-      let gym = url.searchParams.get("gym") || "";
-      let machine = url.searchParams.get("machine") || "";
+      let gym = params.get("gym") || "";
+      let machine = params.get("machine") || "";
 
       const parts = url.pathname.split("/").filter(Boolean);
 
@@ -630,8 +630,10 @@
 
       const gymId = normalizeGymSlug(gym) || "main";
       const machineId = machine ? normalizeMachineId(machine) : null;
+      // After you’ve determined gymId from URL
+      const orgId = (params.get("org") || "").trim().toLowerCase() || gymId;
 
-      return { gymId, machineId };
+      return { gymId, machineId, orgId };
     }
 
     /* ---------- User ID (device-local) ---------- */
@@ -713,7 +715,8 @@
     const userId = getOrCreateUserId();
     const ctx = parseContextFromUrl();
     const gymId = ctx.gymId;
-    const machineId = ctx.machineId || "LEGPR"; // demo fallback for testing
+    const orgId = ctx.orgId;
+    const machineId = ctx.machineId; // NO fallback in production
 
     /* ---------- Local kill switch (optional) ---------- */
     const GYM_STATUS = {
@@ -730,8 +733,10 @@
 
     /* ---------- Gym Map (display names) ---------- */
     const GYM_MAP = {
-      "main": "ScanLiftLog Test Gym",
-      "pushfitness": "PUSH FITNESS CLUB"
+      "pushfitness-melville": "Push Fitness",
+      "pushfitness-newhydepark": "Push Fitness",
+      "pushfitness-collegepoint": "Push Fitness",
+      "pushfitness-freshmeadows": "Push Fitness"
     };
 
     const gymName = GYM_MAP[gymId] || gymId.toUpperCase();
@@ -791,7 +796,7 @@
         return base.concat([
           distanceMi,
           { key: "incline", label: "Incline % (optional)", placeholder: "e.g., 12", inputMode: "decimal", required: false },
-          { key: "speed", label: "Speed (mph, optional)", placeholder: "e.g., 3.2", inputMode: "decimal", required: false }
+          { key: "speed", label: "Speed (mph)", placeholder: "e.g., 3.2", inputMode: "decimal", required: false }
         ]);
       }
       if (mid === "JACOB" || mid === "VCLMB") {
@@ -840,9 +845,9 @@
 
     /* ---------- Storage: workouts per user+machine ---------- */
     function storageKeyFor(mid) {
-  // IMPORTANT: include gymId so each gym's history is isolated
-  return `scanliftlog_workouts_v1:${userId}:${gymId}:${mid}`;
-}
+      // If ?org= is present, history is shared across locations. Otherwise it defaults to gymId.
+      return `scanliftlog_workouts_v1:${userId}:${orgId}:${mid}`;
+    }
     function loadWorkouts() {
       if (!machineId) return [];
       return safeJSONParse(localStorage.getItem(storageKeyFor(machineId)) || "[]", []);
@@ -1221,7 +1226,7 @@
       document.getElementById('gymNameText').textContent = gymName;
       document.getElementById('machineNameText').textContent = machineName;
       document.getElementById('userPill').textContent = `User: ${userId.slice(0,8)}…`;
-      document.getElementById('historyScopeBadge').textContent = `Scope: ${machineId || "—"}`;
+      document.getElementById('historyScopeBadge').textContent = `Scope: ${machineId ? machineId : "No machine scanned"}`;
       dateInput.value = todayISO();
 
       // Local kill switch (optional)
