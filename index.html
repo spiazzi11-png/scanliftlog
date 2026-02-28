@@ -260,6 +260,22 @@
       opacity:1;
       pointer-events:auto;
     }
+    /* ===== Always-visible backup warning ===== */
+.backupNote{
+  margin-top:6px;
+  font-size:11px;
+  line-height:1.35;
+  color: rgba(233,233,238,.72);
+}
+
+.backupNote strong{
+  color: rgba(233,233,238,.92);
+}
+
+.backupNote .warn{
+  color: rgba(239,68,68,.90);
+  font-weight:900;
+}
   </style>
 </head>
 <body>
@@ -288,17 +304,22 @@
         <div class="pills">
           <div class="pill" id="userPill">User: …</div>
 
-          <!-- Download Data (with tooltip) -->
           <div class="pill">
-            <div class="tipWrap">
-              <button class="pillBtn" id="downloadBtn" type="button">Download Data</button>
-              <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
-              <div class="tipBox">
-                Clearing browser data can erase workout history.
-                Export occasionally to keep a backup.
-              </div>
-            </div>
-          </div>
+  <div class="tipWrap">
+    <button class="pillBtn" id="downloadBtn" type="button">Download Data</button>
+    <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
+    <div class="tipBox">
+      Clearing browser data can erase workout history.
+      Export occasionally to keep a backup.
+    </div>
+
+    <!-- Always-visible note (so it can't be missed) -->
+    <div class="backupNote">
+      <span class="warn">⚠</span> <strong>Important:</strong> Clearing your browser cache/data can erase history.
+      Use <strong>Download Data</strong> occasionally to keep a backup.
+    </div>
+  </div>
+</div>
 
           <div class="pill"><button class="pillBtn" id="uploadBtn" type="button">Upload Data</button></div>
           <input id="uploadFileInput" type="file" accept="application/json,.json" style="display:none;" />
