@@ -260,21 +260,15 @@
       opacity:1;
       pointer-events:auto;
     }
-    /* ===== Always-visible backup warning ===== */
-    .backupNote{
+
+    .backupNoteRow{
+      width:100%;
       margin-top:6px;
+    }
+    .backupNote{
       font-size:11px;
       line-height:1.35;
       color: rgba(233,233,238,.72);
-    }
-
-    .backupNote strong{
-      color: rgba(233,233,238,.92);
-    }
-
-    .backupNote .warn{
-      color: rgba(239,68,68,.90);
-      font-weight:900;
     }
   </style>
 </head>
@@ -313,14 +307,17 @@
                 Export occasionally to keep a backup.
               </div>
             </div>
-
-         <div class="backupNote">
-  Download data before clearing browser cache/data to keep your history.
-</div>
+          </div>
 
           <div class="pill"><button class="pillBtn" id="uploadBtn" type="button">Upload Data</button></div>
           <input id="uploadFileInput" type="file" accept="application/json,.json" style="display:none;" />
           <div class="pill"><button class="pillBtn" id="resetUserBtn" type="button">Reset User ID</button></div>
+        </div>
+
+        <div class="backupNoteRow">
+          <div class="backupNote">
+            Download data before clearing browser cache/data to keep your history.
+          </div>
         </div>
       </div>
 
@@ -634,7 +631,7 @@
       return { gymId, machineId, orgId };
     }
 
-    /* ---------- User ID (device-local) ---------- */
+    /* ---------- User ID (device-local) */
     const USER_KEY = 'scanliftlog_user_v1';
     function getOrCreateUserId() {
       let id = localStorage.getItem(USER_KEY);
