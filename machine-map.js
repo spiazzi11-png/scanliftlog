@@ -178,7 +178,7 @@ window.MACHINE_MAP = {
 
   // --- Pin-loaded (Name - Pin) ---
   "SEATDIPPIN": "Seated Dip - Pin Loaded",
-  "BCPN": "Biceps Curl Pin-Loaded",
+  "BCPN": "Biceps Curl- Pin Loaded",
   "LEGPRPIN": "Leg Press - Pin",
   "LEGEXPIN": "Leg Extension - Pin",
   "SLCURPIN": "Seated Leg Curl - Pin",
