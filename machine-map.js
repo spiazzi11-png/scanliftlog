@@ -58,7 +58,7 @@ window.MACHINE_MAP = {
   "STCALF": "Standing Calf Raise",
 
   "PRCUR": "Preacher Curl",
-  "BICUR": "Biceps Curl Machine",
+  "BICUR": "Bicep Curl Machine",
   "CABCRL": "Cable Curl Station",
   "TRIEX": "Triceps Extension Machine",
   "DIPMT": "Dip Machine",
@@ -188,7 +188,7 @@ window.MACHINE_MAP = {
   "TRIEXPIN": "Triceps Extension - Pin",
   "ABDOMPIN": "Abdominal - Pin",
   "RTTORPIN": "Rotary Torso - Pin",
-  "BICURPIN": "Biceps Curl - Pin",
+  "BICURPIN": "Bicep Curl - Pin",
   "DIVLROWPIN": "Diverging Low Row - Pin",
   "DIVLATPDPIN": "Diverging Lat Pulldown - Pin",
   "CONVCHPRPIN": "Converging Chest Press - Pin",
