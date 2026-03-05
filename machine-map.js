@@ -175,7 +175,7 @@ window.MACHINE_MAP = {
   "PULLDNPLATE": "Pulldown - Plate",
 
   // --- Pin-loaded (Name - Pin) ---
-  "SEATDIPPIN": "Seated Dip - Pin",
+  "SEATDIPPIN": "Seated Dip - Pin Loaded",
   "LEGPRPIN": "Leg Press - Pin",
   "LEGEXPIN": "Leg Extension - Pin",
   "SLCURPIN": "Seated Leg Curl - Pin",
@@ -188,7 +188,7 @@ window.MACHINE_MAP = {
   "TRIEXPIN": "Triceps Extension - Pin",
   "ABDOMPIN": "Abdominal - Pin",
   "RTTORPIN": "Rotary Torso - Pin",
-  "BICURPIN": "Biceps Curl - Pin",
+  "BICURPIN": "Biceps Curl - Pin Loaded",
   "DIVLROWPIN": "Diverging Low Row - Pin",
   "DIVLATPDPIN": "Diverging Lat Pulldown - Pin",
   "CONVCHPRPIN": "Converging Chest Press - Pin",
