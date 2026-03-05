@@ -47,6 +47,7 @@ window.MACHINE_MAP = {
   "HKSQ": "Hack Squat",
   "SQMT": "Squat Machine",
   "LEGEX": "Leg Extension",
+  "LEGCUR": "Leg Curl",
   "SLCUR": "Seated Leg Curl",
   "LLCUR": "Lying Leg Curl",
   "STCUR": "Standing Leg Curl",
