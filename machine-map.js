@@ -96,7 +96,7 @@ window.MACHINE_MAP = {
   "CHINB": "Chin-Up Bar",
   "INVRT": "Inverted Row Station",
 
-  "BPBEN": "Barbell Bench Press (Bench)",
+  "BPBEN": "Barbell Bench Press",
   "IBPBN": "Incline Barbell Bench Press (Bench)",
   "DBBEN": "Dumbbell Bench Press (Bench)",
   "IDBBN": "Incline Dumbbell Bench Press (Bench)",
