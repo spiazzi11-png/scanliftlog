@@ -156,7 +156,7 @@ window.MACHINE_MAP = {
   "OHBP": "Overhead Barbell Press",
 
   // --- Plate-loaded (Name - Plate) ---
-  "SEATDIPPLATE": "Seated Dip - Plate",
+  "SEATDIPPLATE": "Seated Dip - Plate Loaded",
   "TBRWPLATE": "T-Bar Row - Plate",
   "HIPTHPLATE": "Hip Thrust - Plate",
   "DEADLUNGEPLATE": "Deadlift Lunge - Plate",
@@ -173,9 +173,12 @@ window.MACHINE_MAP = {
   "SQMTPLATE": "Squat Machine - Plate",
   "SETRWPLATE": "Seated Row - Plate",
   "PULLDNPLATE": "Pulldown - Plate",
+  "BCPL": "Biceps Curl- Plate Loaded",
+  
 
   // --- Pin-loaded (Name - Pin) ---
   "SEATDIPPIN": "Seated Dip - Pin Loaded",
+  "BCPN": "Biceps Curl Pin-Loaded",
   "LEGPRPIN": "Leg Press - Pin",
   "LEGEXPIN": "Leg Extension - Pin",
   "SLCURPIN": "Seated Leg Curl - Pin",
