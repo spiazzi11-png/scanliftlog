@@ -287,19 +287,19 @@
       .pill{ width:100%; justify-content:flex-start; }
     }
 
-    /* Per-gym promotional banner (optional) */
+    /* Per-gym promotional banner (optional) - fixed height so image crops, never stretches on desktop */
     .promoBanner {
       width: 100%;
-      max-height: 140px;
+      height: 140px;
       overflow: hidden;
       background: rgba(15,16,21,.6);
       border-bottom: 1px solid var(--line);
     }
     .promoBanner img {
       width: 100%;
-      height: auto;
-      max-height: 140px;
+      height: 100%;
       object-fit: cover;
+      object-position: center center;
       display: block;
     }
   </style>
@@ -407,9 +407,6 @@
 
       <!-- Strength -->
       <div id="strengthSection">
-        <div style="font-weight:900;">Sets</div>
-        <div class="muted" style="margin-top:6px;">Use + to add sets. Each set stores weight and reps.</div>
-
         <!-- Rest Timer UI -->
         <div class="row" style="align-items:flex-end; margin-top:12px;">
           <div class="col" style="max-width:220px;">
@@ -431,6 +428,9 @@
             </div>
           </div>
         </div>
+
+        <div style="font-weight:900;">Sets</div>
+        <div class="muted" style="margin-top:6px;">Use + to add sets. Each set stores weight and reps.</div>
 
         <div class="setsHeader">
           <div class="muted">Set</div>
