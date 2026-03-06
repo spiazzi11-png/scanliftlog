@@ -287,20 +287,30 @@
       .pill{ width:100%; justify-content:flex-start; }
     }
 
-    /* Per-gym promotional banner (optional) - fixed height so image crops, never stretches on desktop */
+    /* Per-gym promotional banner (optional) */
     .promoBanner {
       width: 100%;
-      height: 140px;
       overflow: hidden;
       background: rgba(15,16,21,.6);
       border-bottom: 1px solid var(--line);
     }
     .promoBanner img {
       width: 100%;
-      height: 100%;
+      height: auto;
+      max-height: 140px;
       object-fit: cover;
-      object-position: center center;
       display: block;
+    }
+    /* Desktop: smaller fixed height so image crops, never stretches */
+    @media (min-width: 769px) {
+      .promoBanner {
+        height: 90px;
+      }
+      .promoBanner img {
+        height: 100%;
+        max-height: none;
+        object-position: center center;
+      }
     }
   </style>
 </head>
@@ -429,7 +439,7 @@
           </div>
         </div>
 
-        <div style="font-weight:900;">Sets</div>
+        <div style="font-weight:900; margin-top:18px;">Sets</div>
         <div class="muted" style="margin-top:6px;">Use + to add sets. Each set stores weight and reps.</div>
 
         <div class="setsHeader">
@@ -1454,3 +1464,4 @@
   </script>
 </body>
 </html>
+
