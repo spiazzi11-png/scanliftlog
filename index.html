@@ -155,10 +155,37 @@
     }
 
     /* Context bar (Gym / Machine emphasis) */
-    .contextBar { display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; }
-    .contextItem { flex:1; min-width:220px; padding:12px 14px; border-radius:14px; background: rgba(255,255,255,.03); border:1px solid var(--line); }
-    .contextLabel { font-size:11px; text-transform:uppercase; letter-spacing:.9px; color:var(--muted); font-weight:800; }
-    .contextValue { margin-top:4px; font-size:20px; font-weight:900; color:var(--text); }
+    .contextBar {
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
+
+    .contextItem {
+      flex:1;
+      min-width:260px;
+      padding:18px 18px;
+      border-radius:18px;
+      background: rgba(255,255,255,.04);
+      border:1px solid var(--line);
+    }
+
+    .contextLabel {
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    .contextValue {
+      margin-top:8px;
+      font-size:30px;
+      line-height:1.1;
+      font-weight:900;
+      color:var(--text);
+    }
 
     /* Sets grid */
     .setsHeader { display:grid; grid-template-columns: 52px 1fr 1fr 60px; gap:10px; align-items:center; margin-top:10px; }
@@ -418,10 +445,7 @@
   <div class="wrap">
     <div class="card headerCard">
       <div class="top">
-        <div>
-          <h1>ScanLiftLog</h1>
-          <div class="sub" id="subLine">Scan a machine QR code to view and log your workout history.</div>
-        </div>
+        <div></div>
 
         <div class="pills">
           <div class="pill" id="userPill">User: …</div>
@@ -626,16 +650,16 @@
     }
 
     async function detectPrivateModeLikely() {
+      // 1) localStorage unavailable = likely private/restricted
       try {
         const key = "__sll_private_test__";
         localStorage.setItem(key, "1");
-        const ok = localStorage.getItem(key) === "1";
         localStorage.removeItem(key);
-        if (!ok) return true;
       } catch (e) {
         return true;
       }
 
+      // 2) Chrome / WebKit temporary FS heuristic
       const fs = window.RequestFileSystem || window.webkitRequestFileSystem;
       if (fs) {
         const fsPrivate = await new Promise(resolve => {
@@ -648,6 +672,42 @@
         if (fsPrivate) return true;
       }
 
+      // 3) IndexedDB test
+      try {
+        const dbTest = await new Promise(resolve => {
+          let resolved = false;
+          const req = indexedDB.open("__sll_private_db__");
+
+          req.onsuccess = () => {
+            if (!resolved) {
+              resolved = true;
+              req.result.close();
+              indexedDB.deleteDatabase("__sll_private_db__");
+              resolve(false);
+            }
+          };
+
+          req.onerror = () => {
+            if (!resolved) {
+              resolved = true;
+              resolve(true);
+            }
+          };
+
+          setTimeout(() => {
+            if (!resolved) {
+              resolved = true;
+              resolve(false);
+            }
+          }, 500);
+        });
+
+        if (dbTest) return true;
+      } catch (e) {
+        return true;
+      }
+
+      // 4) Storage quota heuristic
       if (navigator.storage && navigator.storage.estimate) {
         try {
           const estimate = await navigator.storage.estimate();
@@ -921,9 +981,9 @@
     /* ---------- Gym Map (display names) ---------- */
     const GYM_MAP = {
       "pushfitness-melville": "Push Fitness Club",
-      "pushfitness-newhydepark": "Push Fitness Club",
-      "pushfitness-collegepoint": "Push Fitness Club",
-      "pushfitness-freshmeadows": "Push Fitness Club"
+      "pushfitness-newhydepark": "Push Fitness",
+      "pushfitness-collegepoint": "Push Fitness",
+      "pushfitness-freshmeadows": "Push Fitness"
     };
 
     /* ---------- Per-gym promotional banner: images in /banners/ named <gymId>.jpg or <gymId>.png ---------- */
