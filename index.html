@@ -260,15 +260,47 @@
       opacity:1;
       pointer-events:auto;
     }
+    /* ===== Always-visible backup warning ===== */
+    .backupNote{
+      margin-top:6px;
+      font-size:11px;
+      line-height:1.35;
+      color: rgba(233,233,238,.72);
+    }
+
+    .backupNote strong{
+      color: rgba(233,233,238,.92);
+    }
+
+    .backupNote .warn{
+      color: rgba(239,68,68,.90);
+      font-weight:900;
+    }
 
     .backupNoteRow{
       width:100%;
       margin-top:6px;
     }
-    .backupNote{
-      font-size:11px;
-      line-height:1.35;
-      color: rgba(233,233,238,.72);
+
+    @media (max-width: 520px){
+      .pills{ width:100%; align-items:stretch; }
+      .pill{ width:100%; justify-content:flex-start; }
+    }
+
+    /* Per-gym promotional banner (optional) */
+    .promoBanner {
+      width: 100%;
+      max-height: 140px;
+      overflow: hidden;
+      background: rgba(15,16,21,.6);
+      border-bottom: 1px solid var(--line);
+    }
+    .promoBanner img {
+      width: 100%;
+      height: auto;
+      max-height: 140px;
+      object-fit: cover;
+      display: block;
     }
   </style>
 </head>
@@ -281,10 +313,14 @@
         <div class="brandBadge">App</div>
       </div>
       <div class="navLinks">
-        <a class="navLink" href="https://ScanLiftLog.com" target="_blank" rel="noopener">Home</a>
+        <a class="navLink" href="https://app.scanliftlog.com/" target="_blank" rel="noopener">Home</a>
         <a class="navCta" href="#logger">Log Workout</a>
       </div>
     </div>
+  </div>
+
+  <div class="promoBanner" id="promoBanner" style="display:none;" aria-hidden="true">
+    <img id="promoBannerImg" src="" alt="Promotional banner" />
   </div>
 
   <div class="wrap">
@@ -316,7 +352,7 @@
 
         <div class="backupNoteRow">
           <div class="backupNote">
-            Download data before clearing browser cache/data to keep your history.
+            To keep your history, download your data before clearing browser cache/data.
           </div>
         </div>
       </div>
@@ -453,7 +489,7 @@
 
     <footer>
       © <span id="year"></span> ScanLiftLog •
-      <a href="/https://ScanLiftLog.com" target="_blank" rel="noopener">Home</a>
+      <a href="https://app.scanliftlog.com/" target="_blank" rel="noopener">Home</a>
     </footer>
   </div>
 
@@ -631,7 +667,7 @@
       return { gymId, machineId, orgId };
     }
 
-    /* ---------- User ID (device-local) */
+    /* ---------- User ID (device-local) ---------- */
     const USER_KEY = 'scanliftlog_user_v1';
     function getOrCreateUserId() {
       let id = localStorage.getItem(USER_KEY);
@@ -728,11 +764,14 @@
 
     /* ---------- Gym Map (display names) ---------- */
     const GYM_MAP = {
-      "pushfitness-melville": "Push Fitness Club",
-      "pushfitness-newhydepark": "Push Fitness Club",
-      "pushfitness-collegepoint": "Push Fitness Club",
-      "pushfitness-freshmeadows": "Push Fitness Club"
+      "pushfitness-melville": "Push Fitness",
+      "pushfitness-newhydepark": "Push Fitness",
+      "pushfitness-collegepoint": "Push Fitness",
+      "pushfitness-freshmeadows": "Push Fitness"
     };
+
+    /* ---------- Per-gym promotional banner: images in /banners/ named <gymId>.jpg or <gymId>.png ---------- */
+    const BANNER_FOLDER = "banners";
 
     const gymName = GYM_MAP[gymId] || gymId.toUpperCase();
 
@@ -791,7 +830,7 @@
         return base.concat([
           distanceMi,
           { key: "incline", label: "Incline % (optional)", placeholder: "e.g., 12", inputMode: "decimal", required: false },
-          { key: "speed", label: "Speed (mph)", placeholder: "e.g., 3.2", inputMode: "decimal", required: false }
+          { key: "speed", label: "Speed (mph, optional)", placeholder: "e.g., 3.2", inputMode: "decimal", required: false }
         ]);
       }
       if (mid === "JACOB" || mid === "VCLMB") {
@@ -1223,6 +1262,29 @@
       document.getElementById('userPill').textContent = `User: ${userId.slice(0,8)}…`;
       document.getElementById('historyScopeBadge').textContent = `Scope: ${machineId ? machineId : "No machine scanned"}`;
       dateInput.value = todayISO();
+
+      // Per-gym promotional banner: load from banners/<gymId>.jpg or .png (front-end only, no backend)
+      const promoBannerEl = document.getElementById('promoBanner');
+      const promoBannerImg = document.getElementById('promoBannerImg');
+      if (promoBannerEl && promoBannerImg && gymId && gymId !== "main") {
+        const base = BANNER_FOLDER + "/" + encodeURIComponent(gymId);
+        const tryExt = (ext) => {
+          promoBannerImg.onerror = () => {
+            if (ext === ".jpg") tryExt(".png");
+            else { promoBannerEl.style.display = "none"; promoBannerEl.setAttribute("aria-hidden", "true"); }
+          };
+          promoBannerImg.onload = () => {
+            promoBannerEl.style.display = "";
+            promoBannerEl.setAttribute("aria-hidden", "false");
+          };
+          promoBannerImg.alt = gymName + " promotional banner";
+          promoBannerImg.src = base + ext;
+        };
+        tryExt(".jpg");
+      } else if (promoBannerEl) {
+        promoBannerEl.style.display = "none";
+        promoBannerEl.setAttribute("aria-hidden", "true");
+      }
 
       // Local kill switch (optional)
       if (!isGymActiveLocal(gymId)) {
