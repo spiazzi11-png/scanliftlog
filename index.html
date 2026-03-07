@@ -327,26 +327,10 @@
       display: block;
     }
     /* Desktop only: shorter height + limited width so banner isn't a long strip (mobile unchanged) */
-   @media (min-width: 769px) {
+  /* Desktop only: hide promo banner */
+@media (min-width: 769px) {
   .promoBanner {
-    height: 72px !important;
-    max-height: 72px !important;
-    max-width: 980px;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    margin-top: 6px;
-  }
-  .promoBanner img {
-    width: 100%;
-    height: 100% !important;
-    max-height: none !important;
-    min-height: 72px;
-    object-fit: cover;
-    object-position: center 72%;
-    border-radius: 8px;
-    display: block;
+    display: none !important;
   }
 }
 
