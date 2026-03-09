@@ -539,7 +539,7 @@
     <div class="promoBanner" id="promoBanner" style="display:none;" aria-hidden="true">
     <a
       id="promoBannerLink"
-      href="https://www.pushfitnessclub.com/free-guest-pass-melville?utm_source=adwords&hsa_tgt=kwd-2304550438300&hsa_kw=push+fitness+of+melville&hsa_cam=21310870749&gad_campaignid=21310870749&gclid=Cj0KCQjw37nNBhDkARIsAEBGI8OeUqcsxHg78wyXI7mCnX1nPXaIHF9z5nkPiXgAg-5UWSrezgSQRaoaApmfEALw_wcB&gbraid=0AAAAACuZg8eCmeRgHHplLLp2Mct5vMpG5&hsa_mt=p&utm_campaign=Brand&hsa_src=g&hsa_acc=1770197758&gad_source=1&hsa_net=adwords&hsa_grp=163581655878&hsa_ad=700371486676&utm_medium=ppc&utm_term=push+fitness+of+melville&hsa_ver=3"
+      href="#"
       target="_blank"
       rel="noopener noreferrer"
       style="display:block;"
@@ -1038,26 +1038,27 @@
       }
     }
 
-    function canLogAnalytics(gymId, machineId) {
-      return !!(gymId && machineId && ANALYTICS_BASE && !ANALYTICS_BASE.includes("YOUR-WORKER-DOMAIN"));
+      function canLogAnalytics(gymId, machineId) {
+      return !!(gymId && ANALYTICS_BASE && !ANALYTICS_BASE.includes("YOUR-WORKER-DOMAIN"));
     }
+    
+function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) {
+  if (!canLogAnalytics(gymId, machineId)) return;
 
-    function logEvent(gymId, machineId, machineName, userId, eventType) {
-      if (!canLogAnalytics(gymId, machineId)) return;
-
-      fetch(`${ANALYTICS_BASE}/api/event`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          gymId,
-          machineId,
-          machineName,
-          eventType,          // "scan" | "save"
-          deviceHash: userId, // anonymous per-device id
-          ts: Date.now()
-        })
-      }).catch(() => {});
-    }
+  fetch(`${ANALYTICS_BASE}/api/event`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      gymId,
+      machineId,
+      machineName,
+      eventType,
+      deviceHash: userId,
+      ts: Date.now(),
+      ...extra
+    })
+  }).catch(() => {});
+}
 
     function toNumberOrNull(v) {
       const n = parseFloat(String(v || "").replace(/[^0-9.\-]/g, ""));
@@ -1090,6 +1091,11 @@
       "pushfitness-newhydepark": "Push Fitness",
       "pushfitness-collegepoint": "Push Fitness",
       "pushfitness-freshmeadows": "Push Fitness"
+    };
+
+    const BANNER_LINK_MAP = {
+      "main": "https://scanliftlog.com",
+      "pushfitness-melville": "https://www.pushfitnessclub.com/free-guest-pass-melville?utm_source=adwords&hsa_tgt=kwd-2304550438300&hsa_kw=push+fitness+of+melville&hsa_cam=21310870749&gad_campaignid=21310870749&gclid=Cj0KCQjw37nNBhDkARIsAEBGI8OeUqcsxHg78wyXI7mCnX1nPXaIHF9z5nkPiXgAg-5UWSrezgSQRaoaApmfEALw_wcB&gbraid=0AAAAACuZg8eCmeRgHHplLLp2Mct5vMpG5&hsa_mt=p&utm_campaign=Brand&hsa_src=g&hsa_acc=1770197758&gad_source=1&hsa_net=adwords&hsa_grp=163581655878&hsa_ad=700371486676&utm_medium=ppc&utm_term=push+fitness+of+melville&hsa_ver=3"
     };
 
     /* ---------- Per-gym promotional banner: images in /banners/ named <gymId>.jpg or <gymId>.png ---------- */
@@ -1590,23 +1596,53 @@
       document.getElementById('historyScopeBadge').textContent = `Scope: ${machineId ? machineId : "No machine scanned"}`;
       dateInput.value = todayISO();
 
-      // Per-gym promotional banner: load from banners/<gymId>.jpg or .png (front-end only, no backend)
+          // Per-gym promotional banner: load from banners/<gymId>.jpg or .png (front-end only, no backend)
       const promoBannerEl = document.getElementById('promoBanner');
       const promoBannerImg = document.getElementById('promoBannerImg');
-      if (promoBannerEl && promoBannerImg && gymId && gymId !== "main") {
+      const promoBannerLink = document.getElementById('promoBannerLink');
+
+      if (promoBannerEl && promoBannerImg && promoBannerLink && gymId) {
         const base = BANNER_FOLDER + "/" + encodeURIComponent(gymId);
+
         const tryExt = (ext) => {
           promoBannerImg.onerror = () => {
-            if (ext === ".jpg") tryExt(".png");
-            else { promoBannerEl.style.display = "none"; promoBannerEl.setAttribute("aria-hidden", "true"); }
+            if (ext === ".jpg") {
+              tryExt(".png");
+            } else {
+              promoBannerEl.style.display = "none";
+              promoBannerEl.setAttribute("aria-hidden", "true");
+            }
           };
+
           promoBannerImg.onload = () => {
             promoBannerEl.style.display = "";
             promoBannerEl.setAttribute("aria-hidden", "false");
           };
+
           promoBannerImg.alt = gymName + " promotional banner";
           promoBannerImg.src = base + ext;
         };
+
+     const bannerHref = BANNER_LINK_MAP[gymId] || "";
+
+if (bannerHref) {
+  promoBannerLink.href = bannerHref;
+  promoBannerLink.style.pointerEvents = "auto";
+  promoBannerLink.style.cursor = "pointer";
+} else {
+  promoBannerLink.removeAttribute("href");
+  promoBannerLink.style.pointerEvents = "none";
+  promoBannerLink.style.cursor = "default";
+}
+
+promoBannerLink.addEventListener('click', () => {
+  if (!bannerHref) return;
+
+  logEvent(gymId, machineId || null, machineName || "PROMO_BANNER", userId, "banner_click", {
+    bannerTargetUrl: bannerHref
+  });
+});
+
         tryExt(".jpg");
       } else if (promoBannerEl) {
         promoBannerEl.style.display = "none";
