@@ -1593,7 +1593,7 @@
       // Per-gym promotional banner: load from banners/<gymId>.jpg or .png (front-end only, no backend)
       const promoBannerEl = document.getElementById('promoBanner');
       const promoBannerImg = document.getElementById('promoBannerImg');
-      if (promoBannerEl && promoBannerImg && gymId && gymId !== "main") {
+      if (promoBannerEl && promoBannerImg && gymId) {
         const base = BANNER_FOLDER + "/" + encodeURIComponent(gymId);
         const tryExt = (ext) => {
           promoBannerImg.onerror = () => {
