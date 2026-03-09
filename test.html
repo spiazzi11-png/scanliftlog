@@ -1038,26 +1038,27 @@
       }
     }
 
-    function canLogAnalytics(gymId, machineId) {
-      return !!(gymId && machineId && ANALYTICS_BASE && !ANALYTICS_BASE.includes("YOUR-WORKER-DOMAIN"));
+      function canLogAnalytics(gymId, machineId) {
+      return !!(gymId && ANALYTICS_BASE && !ANALYTICS_BASE.includes("YOUR-WORKER-DOMAIN"));
     }
+    
+function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) {
+  if (!canLogAnalytics(gymId, machineId)) return;
 
-    function logEvent(gymId, machineId, machineName, userId, eventType) {
-      if (!canLogAnalytics(gymId, machineId)) return;
-
-      fetch(`${ANALYTICS_BASE}/api/event`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          gymId,
-          machineId,
-          machineName,
-          eventType,          // "scan" | "save"
-          deviceHash: userId, // anonymous per-device id
-          ts: Date.now()
-        })
-      }).catch(() => {});
-    }
+  fetch(`${ANALYTICS_BASE}/api/event`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      gymId,
+      machineId,
+      machineName,
+      eventType,
+      deviceHash: userId,
+      ts: Date.now(),
+      ...extra
+    })
+  }).catch(() => {});
+}
 
     function toNumberOrNull(v) {
       const n = parseFloat(String(v || "").replace(/[^0-9.\-]/g, ""));
@@ -1590,23 +1591,39 @@
       document.getElementById('historyScopeBadge').textContent = `Scope: ${machineId ? machineId : "No machine scanned"}`;
       dateInput.value = todayISO();
 
-      // Per-gym promotional banner: load from banners/<gymId>.jpg or .png (front-end only, no backend)
+          // Per-gym promotional banner: load from banners/<gymId>.jpg or .png (front-end only, no backend)
       const promoBannerEl = document.getElementById('promoBanner');
       const promoBannerImg = document.getElementById('promoBannerImg');
-      if (promoBannerEl && promoBannerImg && gymId) {
+      const promoBannerLink = document.getElementById('promoBannerLink');
+
+      if (promoBannerEl && promoBannerImg && promoBannerLink && gymId) {
         const base = BANNER_FOLDER + "/" + encodeURIComponent(gymId);
+
         const tryExt = (ext) => {
           promoBannerImg.onerror = () => {
-            if (ext === ".jpg") tryExt(".png");
-            else { promoBannerEl.style.display = "none"; promoBannerEl.setAttribute("aria-hidden", "true"); }
+            if (ext === ".jpg") {
+              tryExt(".png");
+            } else {
+              promoBannerEl.style.display = "none";
+              promoBannerEl.setAttribute("aria-hidden", "true");
+            }
           };
+
           promoBannerImg.onload = () => {
             promoBannerEl.style.display = "";
             promoBannerEl.setAttribute("aria-hidden", "false");
           };
+
           promoBannerImg.alt = gymName + " promotional banner";
           promoBannerImg.src = base + ext;
         };
+
+        promoBannerLink.addEventListener('click', () => {
+          logEvent(gymId, machineId || null, machineName || "PROMO_BANNER", userId, "banner_click", {
+            bannerTargetUrl: promoBannerLink.href
+          });
+        });
+
         tryExt(".jpg");
       } else if (promoBannerEl) {
         promoBannerEl.style.display = "none";
