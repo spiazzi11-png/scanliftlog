@@ -539,7 +539,7 @@
     <div class="promoBanner" id="promoBanner" style="display:none;" aria-hidden="true">
     <a
       id="promoBannerLink"
-      href="https://www.pushfitnessclub.com/free-guest-pass-melville?utm_source=adwords&hsa_tgt=kwd-2304550438300&hsa_kw=push+fitness+of+melville&hsa_cam=21310870749&gad_campaignid=21310870749&gclid=Cj0KCQjw37nNBhDkARIsAEBGI8OeUqcsxHg78wyXI7mCnX1nPXaIHF9z5nkPiXgAg-5UWSrezgSQRaoaApmfEALw_wcB&gbraid=0AAAAACuZg8eCmeRgHHplLLp2Mct5vMpG5&hsa_mt=p&utm_campaign=Brand&hsa_src=g&hsa_acc=1770197758&gad_source=1&hsa_net=adwords&hsa_grp=163581655878&hsa_ad=700371486676&utm_medium=ppc&utm_term=push+fitness+of+melville&hsa_ver=3"
+      href="#"
       target="_blank"
       rel="noopener noreferrer"
       style="display:block;"
@@ -1093,6 +1093,11 @@ function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) 
       "pushfitness-freshmeadows": "Push Fitness"
     };
 
+    const BANNER_LINK_MAP = {
+      "main": "https://scanliftlog.com",
+      "pushfitness-melville": "https://www.pushfitnessclub.com/free-guest-pass-melville?utm_source=adwords&hsa_tgt=kwd-2304550438300&hsa_kw=push+fitness+of+melville&hsa_cam=21310870749&gad_campaignid=21310870749&gclid=Cj0KCQjw37nNBhDkARIsAEBGI8OeUqcsxHg78wyXI7mCnX1nPXaIHF9z5nkPiXgAg-5UWSrezgSQRaoaApmfEALw_wcB&gbraid=0AAAAACuZg8eCmeRgHHplLLp2Mct5vMpG5&hsa_mt=p&utm_campaign=Brand&hsa_src=g&hsa_acc=1770197758&gad_source=1&hsa_net=adwords&hsa_grp=163581655878&hsa_ad=700371486676&utm_medium=ppc&utm_term=push+fitness+of+melville&hsa_ver=3"
+    };
+
     /* ---------- Per-gym promotional banner: images in /banners/ named <gymId>.jpg or <gymId>.png ---------- */
     const BANNER_FOLDER = "banners";
 
@@ -1617,6 +1622,8 @@ function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) 
           promoBannerImg.alt = gymName + " promotional banner";
           promoBannerImg.src = base + ext;
         };
+
+        promoBannerLink.href = BANNER_LINK_MAP[gymId] || "#";
 
         promoBannerLink.addEventListener('click', () => {
           logEvent(gymId, machineId || null, machineName || "PROMO_BANNER", userId, "banner_click", {
