@@ -1623,13 +1623,25 @@ function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) 
           promoBannerImg.src = base + ext;
         };
 
-        promoBannerLink.href = BANNER_LINK_MAP[gymId] || "#";
+     const bannerHref = BANNER_LINK_MAP[gymId] || "";
 
-        promoBannerLink.addEventListener('click', () => {
-          logEvent(gymId, machineId || null, machineName || "PROMO_BANNER", userId, "banner_click", {
-            bannerTargetUrl: promoBannerLink.href
-          });
-        });
+if (bannerHref) {
+  promoBannerLink.href = bannerHref;
+  promoBannerLink.style.pointerEvents = "auto";
+  promoBannerLink.style.cursor = "pointer";
+} else {
+  promoBannerLink.removeAttribute("href");
+  promoBannerLink.style.pointerEvents = "none";
+  promoBannerLink.style.cursor = "default";
+}
+
+promoBannerLink.addEventListener('click', () => {
+  if (!bannerHref) return;
+
+  logEvent(gymId, machineId || null, machineName || "PROMO_BANNER", userId, "banner_click", {
+    bannerTargetUrl: bannerHref
+  });
+});
 
         tryExt(".jpg");
       } else if (promoBannerEl) {
