@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ScanLiftLog Admin</title>
+  <style>
+    :root{
+      --bg:#0b0c10;
+      --panel:#121318;
+      --panel2:#0f1015;
+      --text:#e9e9ee;
+      --muted:#a9a9b6;
+      --line:rgba(255,255,255,.10);
+      --accent:#8b5cf6;
+      --accent2:#22c55e;
+      --shadow:0 10px 40px rgba(0,0,0,.35);
+      --radius:18px;
+      --radius2:26px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: radial-gradient(1200px 900px at 10% 10%, rgba(139,92,246,.18), transparent 60%),
+                  radial-gradient(1000px 800px at 90% 20%, rgba(34,197,94,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    a{color:inherit}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:18px 18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:var(--radius2);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .brand{display:flex;align-items:center;gap:12px;}
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background:linear-gradient(135deg, rgba(139,92,246,.95), rgba(34,197,94,.85));
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    .brand h1{margin:0;font-size:16px;letter-spacing:.2px}
+    .brand .sub{color:var(--muted);font-size:12px;margin-top:2px}
+    .context{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+      font-size:12px;
+      max-width:520px;
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    }
+    .pill b{color:var(--text);font-weight:650}
+    .grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:16px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+      .context{align-items:flex-start}
+      .topbar{flex-direction:column;align-items:flex-start}
+    }
+    .card{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+      backdrop-filter: blur(8px);
+    }
+    .card h2{margin:0 0 10px 0;font-size:14px;letter-spacing:.2px;color:var(--text);}
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .btn{
+      cursor:pointer;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:650;
+      letter-spacing:.2px;
+    }
+    .btn.primary{
+      background:linear-gradient(135deg, rgba(139,92,246,.95), rgba(139,92,246,.60));
+      border-color:rgba(139,92,246,.35);
+    }
+    .btn.good{
+      background:linear-gradient(135deg, rgba(34,197,94,.95), rgba(34,197,94,.60));
+      border-color:rgba(34,197,94,.30);
+    }
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.25);
+      color:var(--text);
+      outline:none;
+    }
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:12px;
+      margin-top:10px;
+    }
+    @media (max-width: 540px){ .kpis{grid-template-columns:1fr} }
+    .kpi{
+      padding:12px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+    }
+    .kpi .label{color:var(--muted);font-size:12px}
+    .kpi .value{font-size:22px;font-weight:800;margin-top:4px}
+    .hr{height:1px;background:var(--line);margin:12px 0}
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+      overflow:hidden;
+      border-radius:14px;
+    }
+    th,td{padding:10px 10px;border-bottom:1px solid var(--line);text-align:left}
+    th{color:var(--muted);font-weight:700;background:rgba(255,255,255,.03)}
+    tr:hover td{background:rgba(255,255,255,.02)}
+    .status{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted);}
+    .dot{width:10px;height:10px;border-radius:999px;background:#666;box-shadow:0 0 0 4px rgba(255,255,255,.03);}
+    .dot.ok{background:var(--accent2)}
+    .dot.bad{background:#ef4444}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;}
+    .small{font-size:12px}
+    .error{
+      border:1px solid rgba(239,68,68,.35);
+      background:rgba(239,68,68,.08);
+      color:#fecaca;
+      padding:12px;border-radius:14px;
+    }
+    .note{
+      border:1px solid rgba(139,92,246,.30);
+      background:rgba(139,92,246,.08);
+      color:#ddd6fe;
+      padding:12px;border-radius:14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>ScanLiftLog Admin</h1>
+          <div class="sub">Usage analytics • gym status • machine insights</div>
+        </div>
+      </div>
+
+      <div class="context">
+        <div class="pill" id="pillGym"><b>Gym:</b> <span class="mono" id="gymText">—</span></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: Dashboard -->
+      <div class="card">
+        <h2>Dashboard</h2>
+
+        <div class="status">
+          <span class="dot" id="dot"></span>
+          <span id="statusText">Not loaded.</span>
+          <span class="mono small" id="lastLoaded"></span>
+        </div>
+
+        <div class="hr"></div>
+
+        <div id="msgArea"></div>
+
+        <div class="kpis" id="kpis" style="display:none">
+          <div class="kpi">
+            <div class="label">Total scans</div>
+            <div class="value" id="kpiScans">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Workouts saved</div>
+            <div class="value" id="kpiSaves">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Active Members</div>
+            <div class="value" id="kpiDevices">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Returning Members</div>
+            <div class="value" id="kpiRepeat">—</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Top machines</h2>
+        <div class="muted small" style="margin-bottom:8px">Sorted by total activity (scans + saves).</div>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Machine</th>
+                <th>Scans</th>
+                <th>Saves</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody id="topMachinesBody">
+              <tr><td colspan="4" class="muted">No data loaded.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Activity by day</h2>
+        <div class="muted small" style="margin-bottom:8px">If your API returns daily buckets, they show here.</div>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Scans</th>
+                <th>Saves</th>
+                <th>Total</th>
+                <th>Active Members (Daily)</th>
+              </tr>
+            </thead>
+            <tbody id="byDayBody">
+              <tr><td colspan="5" class="muted">No data loaded.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+<script src="/machine-map.js"></script>
+
+  <script>
+    // --- Debug/diagnostics: show JS errors on-page ---
+    window.onerror = function (msg, src, line, col, err) {
+      const el = document.getElementById("msgArea");
+      if (el) {
+        el.innerHTML = `<div class="error">
+          <b>JavaScript error:</b><br>
+          <span class="mono">${String(msg)}</span><br>
+          <span class="mono">Line ${line}:${col}</span>
+        </div>`;
+      } else {
+        alert("JS error: " + msg + " @ " + line + ":" + col);
+      }
+    };
+
+    // --- Config ---
+    const DEFAULT_API_BASE = "https://scanliftlog-api.scanliftlogapp.workers.dev";
+
+    // --- Read URL params (accept multiple names) ---
+    const qs = new URLSearchParams(location.search);
+
+    function normGymId(v){ return (v || "").trim().toLowerCase(); }
+    function normToken(v){ return (v || "").trim(); }
+
+    let gymId = normGymId(qs.get("gymId") || qs.get("gym"));
+    let token = normToken(qs.get("token") || qs.get("adminToken"));
+    let API_BASE = (qs.get("api") || "").trim() || DEFAULT_API_BASE;
+
+    // --- UI refs ---
+    const $ = (id) => document.getElementById(id);
+    function setVal(id, v){
+      const el = $(id);
+      if (el) el.value = v;
+    }
+    function setText(id, v){
+      const el = $(id);
+      if (el) el.textContent = v;
+    }
+    const dot = $("dot");
+    const statusText = $("statusText");
+    const lastLoaded = $("lastLoaded");
+    const msgArea = $("msgArea");
+
+    const gymText = $("gymText");
+    const kpis = $("kpis");
+    const kpiScans = $("kpiScans");
+    const kpiSaves = $("kpiSaves");
+    const kpiDevices = $("kpiDevices");
+    const kpiRepeat = $("kpiRepeat");
+
+    const topMachinesBody = $("topMachinesBody");
+    const byDayBody = $("byDayBody");
+
+    function setStatus(ok, text){
+      dot.classList.remove("ok","bad");
+      dot.classList.add(ok ? "ok" : "bad");
+      statusText.textContent = text;
+    }
+
+    function showMsg(html, type){
+      msgArea.innerHTML = `<div class="${type}">${html}</div>`;
+    }
+
+    function clearMsg(){ msgArea.innerHTML = ""; }
+
+    function fmtInt(n){
+      const x = Number(n);
+      if (!Number.isFinite(x)) return "—";
+      return x.toLocaleString();
+    }
+
+    function escapeHtml(s){
+      return String(s ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function prettyMachine(machineId, machineName) {
+      const rawId = String(machineId ?? "");
+      const rawName = String(machineName ?? "");
+
+      const id = rawId.trim().toUpperCase();
+      const name = rawName.trim();
+
+      const nameLooksLikeCode =
+        !name ||
+        name.toUpperCase() === id ||
+        /^[A-Z0-9_]{3,10}$/.test(name);
+
+      const mapped = (window.MACHINE_MAP || {})[id];
+      if (mapped) return mapped;
+
+      if (!nameLooksLikeCode) return name;
+
+      return name || rawId || "—";
+    }
+
+    function updateHeader(){
+      if (gymText) gymText.textContent = gymId || "—";
+
+      setVal("gymInput", gymId);
+      setVal("tokenInput", token);
+      setVal("apiInput", API_BASE);
+
+      setText(
+        "parsedPreview",
+        `gymId=${gymId || "(missing)"} | token=${token ? token.slice(0, 8) + "…" : "(missing)"} | api=${API_BASE || "(missing)"}`
+      );
+    }
+
+    async function fetchJson(url, opts){
+      const res = await fetch(url, Object.assign({
+        headers: { "Content-Type": "application/json" }
+      }, opts || {}));
+
+      const text = await res.text();
+      let data = null;
+      try { data = text ? JSON.parse(text) : null; } catch(e){}
+
+      if (!res.ok){
+        const msg = (data && (data.error || data.message)) ? (data.error || data.message) : text || res.statusText;
+        throw new Error(`${res.status} ${res.statusText}: ${msg}`);
+      }
+      return data;
+    }
+
+    async function trySummaryEndpoints(){
+      const candidates = [
+        `${API_BASE}/api/admin-summary?gymId=${encodeURIComponent(gymId)}&token=${encodeURIComponent(token)}`,
+        `${API_BASE}/api/admin/summary?gymId=${encodeURIComponent(gymId)}&token=${encodeURIComponent(token)}`,
+        `${API_BASE}/api/summary?gymId=${encodeURIComponent(gymId)}&token=${encodeURIComponent(token)}`
+      ];
+      let lastErr = null;
+      for (const url of candidates){
+        try { return await fetchJson(url); }
+        catch(e){ lastErr = e; }
+      }
+      throw lastErr || new Error("No summary endpoint responded.");
+    }
+
+    async function getGymStatus(){
+      const url = `${API_BASE}/api/gym-status?gymId=${encodeURIComponent(gymId)}`;
+      return await fetchJson(url);
+    }
+
+ function renderKpis(summary){
+  const scans = summary?.totalScans ?? summary?.scans ?? summary?.scanCount ?? summary?.kpis?.scans;
+  const saves = summary?.totalSaves ?? summary?.saves ?? summary?.saveCount ?? summary?.kpis?.saves;
+  const devices = summary?.uniqueDevices ?? summary?.devices ?? summary?.deviceCount ?? summary?.kpis?.devices;
+
+  // NEW: Returning devices from Worker
+  const returning = summary?.returningDevices ?? 0;
+
+  kpiScans.textContent = fmtInt(scans);
+  kpiSaves.textContent = fmtInt(saves);
+  kpiDevices.textContent = fmtInt(devices);
+
+  // IMPORTANT: Actually render it in the 4th KPI tile
+  kpiRepeat.textContent = fmtInt(returning);
+
+  kpis.style.display = "grid";
+}
+
+    function renderTopMachines(summary){
+      const list = summary?.topMachines ?? summary?.machines ?? summary?.top_machines ?? [];
+      const rows = Array.isArray(list) ? list : [];
+
+      if (!rows.length){
+        topMachinesBody.innerHTML = `<tr><td colspan="4" class="muted">No machine breakdown returned.</td></tr>`;
+        return;
+      }
+
+      topMachinesBody.innerHTML = rows.slice(0, 20).map(m => {
+        const machineId = m.machineId || m.machine || "";
+        const machineName = m.machineName || m.name || "";
+        const name = prettyMachine(machineId, machineName);
+
+        const scans = m.scans ?? m.scanCount ?? 0;
+        const saves = m.saves ?? m.saveCount ?? 0;
+        const total = m.total ?? (Number(scans) + Number(saves));
+
+        return `
+          <tr>
+            <td>${escapeHtml(name)}</td>
+            <td>${fmtInt(scans)}</td>
+            <td>${fmtInt(saves)}</td>
+            <td>${fmtInt(total)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderByDay(summary){
+      const list = summary?.byDay ?? summary?.daily ?? summary?.by_day ?? [];
+      const rows = Array.isArray(list) ? list : [];
+
+      if (!rows.length){
+        byDayBody.innerHTML = `<tr><td colspan="5" class="muted">No daily breakdown returned.</td></tr>`;
+        return;
+      }
+
+      byDayBody.innerHTML = rows.slice(0, 31).map(d => {
+        const date = d.date || d.day || d.dt || "—";
+        const scans = d.scans ?? d.scanCount ?? 0;
+        const saves = d.saves ?? d.saveCount ?? 0;
+        const total = d.total ?? (Number(scans) + Number(saves));
+        const unique = d.uniqueDevices ?? d.uniqueDeviceCount ?? d.devices ?? 0;
+
+        return `
+          <tr>
+            <td class="mono">${escapeHtml(date)}</td>
+            <td>${fmtInt(scans)}</td>
+            <td>${fmtInt(saves)}</td>
+            <td>${fmtInt(total)}</td>
+            <td>${fmtInt(unique)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadDashboard(){
+      clearMsg();
+
+      if (!gymId || !token){
+        setStatus(false, "Missing gymId/token.");
+        showMsg(
+          `Missing <span class="mono">gymId</span> and/or <span class="mono">token</span> in the URL.<br/>
+           Use: <span class="mono">admin.html?gymId=main&amp;token=YOUR_TOKEN</span>`,
+          "error"
+        );
+        return;
+      }
+
+      try{
+        setStatus(true, "Loading…");
+
+        let gs = null;
+        try { gs = await getGymStatus(); } catch(e){}
+
+        if (gs && gs.status && String(gs.status).toUpperCase() === "DISABLED"){
+          showMsg(`Gym is currently <b>DISABLED</b>. QR scans should show “service inactive”.`, "note");
+        }
+
+        const summary = await trySummaryEndpoints();
+        renderKpis(summary);
+        renderTopMachines(summary);
+        renderByDay(summary);
+
+        setStatus(true, "Loaded.");
+        lastLoaded.textContent = `Last loaded: ${new Date().toLocaleString()}`;
+      }catch(err){
+        console.error(err);
+        setStatus(false, "Error loading dashboard.");
+        showMsg(
+          `Could not load admin summary.<br/>
+           <span class="mono">${escapeHtml(err.message || String(err))}</span>`,
+          "error"
+        );
+      }
+    }
+
+    // Boot (no controls UI)
+    updateHeader();
+
+    if (!gymId || !token){
+      setStatus(false, "Missing gymId/token.");
+      showMsg(
+        `Missing <span class="mono">gymId</span> and/or <span class="mono">token</span>.<br/>
+         This link is incomplete.`,
+        "error"
+      );
+    } else {
+      loadDashboard();
+    }
+  </script>
+</body>
+</html>
