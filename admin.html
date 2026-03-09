@@ -111,7 +111,7 @@
     }
     .kpis{
       display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap:12px;
       margin-top:10px;
     }
@@ -197,6 +197,10 @@
             <div class="value" id="kpiSaves">—</div>
           </div>
           <div class="kpi">
+            <div class="label">Total Banner Clicks</div>
+            <div class="value" id="kpiBannerClicks">—</div>
+          </div>
+          <div class="kpi">
             <div class="label">Active Members</div>
             <div class="value" id="kpiDevices">—</div>
           </div>
@@ -243,6 +247,24 @@
             </thead>
             <tbody id="byDayBody">
               <tr><td colspan="5" class="muted">No data loaded.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Banner Clicks by Day </h2>
+        <div class="muted small" style="margin-bottom:8px">Tracks daily promotional banner clicks.</div>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Clicks</th>
+              </tr>
+            </thead>
+            <tbody id="bannerClicksByDayBody">
+              <tr><td colspan="2" class="muted">No data loaded.</td></tr>
             </tbody>
           </table>
         </div>
@@ -297,11 +319,13 @@
     const kpis = $("kpis");
     const kpiScans = $("kpiScans");
     const kpiSaves = $("kpiSaves");
+    const kpiBannerClicks = $("kpiBannerClicks");
     const kpiDevices = $("kpiDevices");
     const kpiRepeat = $("kpiRepeat");
 
     const topMachinesBody = $("topMachinesBody");
     const byDayBody = $("byDayBody");
+    const bannerClicksByDayBody = $("bannerClicksByDayBody");
 
     function setStatus(ok, text){
       dot.classList.remove("ok","bad");
@@ -401,6 +425,7 @@
  function renderKpis(summary){
   const scans = summary?.totalScans ?? summary?.scans ?? summary?.scanCount ?? summary?.kpis?.scans;
   const saves = summary?.totalSaves ?? summary?.saves ?? summary?.saveCount ?? summary?.kpis?.saves;
+  const bannerClicks = summary?.totalBannerClicks ?? summary?.bannerClicks ?? summary?.bannerClickCount ?? summary?.kpis?.bannerClicks ?? 0;
   const devices = summary?.uniqueDevices ?? summary?.devices ?? summary?.deviceCount ?? summary?.kpis?.devices;
 
   // NEW: Returning devices from Worker
@@ -408,6 +433,7 @@
 
   kpiScans.textContent = fmtInt(scans);
   kpiSaves.textContent = fmtInt(saves);
+  kpiBannerClicks.textContent = fmtInt(bannerClicks);
   kpiDevices.textContent = fmtInt(devices);
 
   // IMPORTANT: Actually render it in the 4th KPI tile
@@ -473,6 +499,28 @@
       }).join("");
     }
 
+    function renderBannerClicksByDay(summary){
+      const list = summary?.bannerClicksByDay ?? summary?.banner_clicks_by_day ?? [];
+      const rows = Array.isArray(list) ? list : [];
+
+      if (!rows.length){
+        bannerClicksByDayBody.innerHTML = `<tr><td colspan="2" class="muted">No banner clicks returned.</td></tr>`;
+        return;
+      }
+
+      bannerClicksByDayBody.innerHTML = rows.slice(0, 7).map(d => {
+        const date = d.date || d.day || d.dt || "—";
+        const clicks = d.clicks ?? d.count ?? 0;
+
+        return `
+          <tr>
+            <td class="mono">${escapeHtml(date)}</td>
+            <td>${fmtInt(clicks)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
     async function loadDashboard(){
       clearMsg();
 
@@ -500,6 +548,7 @@
         renderKpis(summary);
         renderTopMachines(summary);
         renderByDay(summary);
+        renderBannerClicksByDay(summary);
 
         setStatus(true, "Loaded.");
         lastLoaded.textContent = `Last loaded: ${new Date().toLocaleString()}`;
