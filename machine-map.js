@@ -1,7 +1,7 @@
 window.MACHINE_MAP = {
-  "CHPR": "Flat Chest Press",
-  "INCHPR": "Incline Chest Press",
-  "DECHPR": "Decline Chest Press",
+  "CHPR": "Chest Press",
+  "INCHPR": "Incline Press",
+  "DECHPR": "Decline Press",
   "PECDK": "Pec Deck / Chest Fly",
   "CABFLY": "Cable Fly (Chest)",
   "SMTH": "Smith Machine",
