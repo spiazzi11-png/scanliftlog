@@ -119,6 +119,7 @@ window.MACHINE_MAP = {
   "SQTST": "Squat Stand / Platform",
 
   "HAMMR": "Hammer Strength Curl (Iso)",
+  "TRICEPPRESS": "Tricep Press",
   "TRIDP": "Triceps Dip/Press Machine",
   "SKULL": "Skull Crushers Bench Area",
   "CLOSEB": "Close-Grip Bench Area",
