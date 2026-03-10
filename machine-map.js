@@ -88,7 +88,7 @@ window.MACHINE_MAP = {
   "CABLE": "Cable Station (Single)",
   "LATISO": "Iso-Lateral Lat Pulldown",
   "LTRW": "Low Row Machine",
-  "TBRW": "T-Bar Row Station",
+  "TBRW": "T-Bar Row ",
   "CHSRW": "Chest-Supported Row",
   "PLOVR": "Pullover Machine",
   "FACEP": "Face Pull Station",
