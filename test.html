@@ -282,15 +282,6 @@
       color: rgba(233,233,238,.72);
     }
 
-    .backupNote strong{
-      color: rgba(233,233,238,.92);
-    }
-
-    .backupNote .warn{
-      color: rgba(239,68,68,.90);
-      font-weight:900;
-    }
-
     .backupNoteRow{
       width:100%;
       margin-top:6px;
@@ -522,13 +513,7 @@
   </div>
 
   <div class="promoBanner" id="promoBanner" style="display:none;" aria-hidden="true">
-    <a
-      id="promoBannerLink"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      style="display:block;"
-    >
+    <a id="promoBannerLink" href="#" target="_blank" rel="noopener noreferrer" style="display:block;">
       <img id="promoBannerImg" src="" alt="Promotional banner" />
     </a>
   </div>
@@ -921,6 +906,7 @@
     function safeJSONParse(s, fallback) {
       try { return JSON.parse(s); } catch { return fallback; }
     }
+
     function todayISO() {
       const d = new Date();
       const yyyy = d.getFullYear();
@@ -928,9 +914,11 @@
       const dd = String(d.getDate()).padStart(2,'0');
       return `${yyyy}-${mm}-${dd}`;
     }
+
     function nowReadable() {
       return new Date().toLocaleString();
     }
+
     function escapeHtml(str) {
       return String(str).replace(/[&<>"']/g, m => ({
         "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
@@ -970,6 +958,7 @@
     }
 
     const USER_KEY = 'scanliftlog_user_v1';
+
     function getOrCreateUserId() {
       let id = localStorage.getItem(USER_KEY);
       if (!id) {
@@ -978,6 +967,7 @@
       }
       return id;
     }
+
     function resetUser() {
       localStorage.removeItem(USER_KEY);
       location.reload();
@@ -1168,12 +1158,14 @@
     }
 
     function restKeyFor(gid, mid) { return `scanliftlog_restseconds_v1:${gid}:${mid}`; }
+
     function loadRestSeconds() {
       if (!machineId) return 120;
       const raw = localStorage.getItem(restKeyFor(gymId, machineId));
       const n = raw == null ? null : Number(raw);
       return (n != null && Number.isFinite(n) && n >= 0) ? n : 120;
     }
+
     function saveRestSeconds(v) {
       if (!machineId) return;
       const n = Number(v);
@@ -1184,10 +1176,12 @@
     function storageKeyFor(mid) {
       return `scanliftlog_workouts_v1:${userId}:${orgId}:${mid}`;
     }
+
     function loadWorkouts() {
       if (!machineId) return [];
       return safeJSONParse(localStorage.getItem(storageKeyFor(machineId)) || "[]", []);
     }
+
     function saveWorkouts(arr) {
       if (!machineId) return;
       localStorage.setItem(storageKeyFor(machineId), JSON.stringify(arr));
@@ -1403,7 +1397,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>ScanLiftLog Workout Report</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>
 <style>
   :root{
     --bg:#0b0c10;
@@ -1673,7 +1667,7 @@
         alert("PDF download failed on this device.");
       }
     }
-  </script>
+  <\/script>
 </body>
 </html>
       `;
@@ -1794,7 +1788,7 @@
         lab.textContent = def.label;
 
         const inp = document.createElement("input");
-        inp.id = \`cardio_\${def.key}\`;
+        inp.id = `cardio_${def.key}`;
         inp.placeholder = def.placeholder || "";
         inp.inputMode = def.inputMode === "text" ? undefined : (def.inputMode || "text");
         inp.type = "text";
@@ -1818,7 +1812,7 @@
         const inp = cardioInputs[def.key];
         const raw = (inp && inp.value != null) ? String(inp.value).trim() : "";
 
-        if (def.required && !raw) return { ok: false, error: \`Please enter \${def.label}.\` };
+        if (def.required && !raw) return { ok: false, error: `Please enter ${def.label}.` };
 
         if (def.key === "pace") {
           if (raw) data[def.key] = raw;
@@ -1826,7 +1820,7 @@
         }
 
         const num = toNumberOrNull(raw);
-        if (raw && num === null) return { ok: false, error: \`Please enter a valid number for \${def.label}.\` };
+        if (raw && num === null) return { ok: false, error: `Please enter a valid number for ${def.label}.` };
         if (num !== null) data[def.key] = num;
       }
 
@@ -1887,10 +1881,10 @@
     function formatCardioSummary(c) {
       if (!c) return "—";
       const parts = [];
-      if (c.minutes != null) parts.push(\`\${c.minutes} min\`);
-      if (c.distance != null) parts.push(\`\${c.distance} mi\`);
-      if (c.distance_m != null) parts.push(\`\${c.distance_m} m\`);
-      if (c.calories != null) parts.push(\`\${c.calories} cal\`);
+      if (c.minutes != null) parts.push(`${c.minutes} min`);
+      if (c.distance != null) parts.push(`${c.distance} mi`);
+      if (c.distance_m != null) parts.push(`${c.distance_m} m`);
+      if (c.calories != null) parts.push(`${c.calories} cal`);
       return parts.length ? parts.join(" • ") : "—";
     }
 
@@ -1900,7 +1894,7 @@
 
       const workouts = loadWorkouts();
       if (!workouts.length) {
-        tbody.innerHTML = \`<tr><td colspan="5" class="muted">No workouts saved yet.</td></tr>\`;
+        tbody.innerHTML = `<tr><td colspan="5" class="muted">No workouts saved yet.</td></tr>`;
         return;
       }
 
@@ -1914,21 +1908,21 @@
           summary = formatCardioSummary(w.cardio);
         } else {
           const top = getTopSet(w.sets || []);
-          summary = top ? \`\${escapeHtml(top.weight || "—")} x \${escapeHtml(top.reps || "—")}\` : "—";
+          summary = top ? `${escapeHtml(top.weight || "—")} x ${escapeHtml(top.reps || "—")}` : "—";
         }
 
         const tr = document.createElement('tr');
 
-        let detailsHtml = \`<details><summary>View</summary>\`;
-        if (w.exercise) detailsHtml += \`<div class="muted" style="margin-top:6px;">Exercise: \${escapeHtml(w.exercise)}</div>\`;
-        if (w.notes) detailsHtml += \`<div class="muted" style="margin-top:6px;">Notes: \${escapeHtml(w.notes)}</div>\`;
+        let detailsHtml = `<details><summary>View</summary>`;
+        if (w.exercise) detailsHtml += `<div class="muted" style="margin-top:6px;">Exercise: ${escapeHtml(w.exercise)}</div>`;
+        if (w.notes) detailsHtml += `<div class="muted" style="margin-top:6px;">Notes: ${escapeHtml(w.notes)}</div>`;
 
         if (isCardio) {
           const c = w.cardio || {};
           const rows = [];
           function addRow(label, val) {
             if (val == null || val === "") return;
-            rows.push(\`<tr><th>\${escapeHtml(label)}</th><td>\${escapeHtml(String(val))}</td></tr>\`);
+            rows.push(`<tr><th>${escapeHtml(label)}</th><td>${escapeHtml(String(val))}</td></tr>`);
           }
           addRow("Time (minutes)", c.minutes);
           addRow("Calories", c.calories);
@@ -1940,34 +1934,34 @@
           addRow("Level", c.level);
           addRow("Avg pace", c.pace);
 
-          detailsHtml += \`
+          detailsHtml += `
             <table class="setsMini" style="margin-top:8px;">
               <thead><tr><th>Metric</th><th>Value</th></tr></thead>
-              <tbody>\${rows.join("") || \`<tr><td colspan="2" class="muted">No cardio details.</td></tr>\`}</tbody>
+              <tbody>${rows.join("") || `<tr><td colspan="2" class="muted">No cardio details.</td></tr>`}</tbody>
             </table>
-          \`;
+          `;
         } else {
-          detailsHtml += \`
+          detailsHtml += `
             <table class="setsMini" style="margin-top:8px;">
               <thead><tr><th>Set</th><th>Weight</th><th>Reps</th></tr></thead>
               <tbody>
-                \${(w.sets||[]).map((s,i)=>\`
-                  <tr><td>\${i+1}</td><td>\${escapeHtml(s.weight||"")}</td><td>\${escapeHtml(s.reps||"")}</td></tr>
-                \`).join("") || \`<tr><td colspan="3" class="muted">No sets.</td></tr>\`}
+                ${(w.sets||[]).map((s,i)=>`
+                  <tr><td>${i+1}</td><td>${escapeHtml(s.weight||"")}</td><td>${escapeHtml(s.reps||"")}</td></tr>
+                `).join("") || `<tr><td colspan="3" class="muted">No sets.</td></tr>`}
               </tbody>
             </table>
-          \`;
+          `;
         }
 
-        detailsHtml += \`</details>\`;
+        detailsHtml += `</details>`;
 
-        tr.innerHTML = \`
-          <td>\${escapeHtml(w.date || "")}</td>
-          <td>\${typeLabel}</td>
-          <td>\${summary}</td>
-          <td>\${detailsHtml}</td>
-          <td class="muted">\${escapeHtml(w.savedAt || "")}</td>
-        \`;
+        tr.innerHTML = `
+          <td>${escapeHtml(w.date || "")}</td>
+          <td>${typeLabel}</td>
+          <td>${summary}</td>
+          <td>${detailsHtml}</td>
+          <td class="muted">${escapeHtml(w.savedAt || "")}</td>
+        `;
         tbody.appendChild(tr);
       }
     }
@@ -1986,8 +1980,8 @@
       document.getElementById('year').textContent = String(new Date().getFullYear());
       document.getElementById('gymNameText').textContent = gymName;
       document.getElementById('machineNameText').textContent = machineName;
-      document.getElementById('userPill').textContent = \`User: \${userId.slice(0,8)}…\`;
-      document.getElementById('historyScopeBadge').textContent = \`Scope: \${machineId ? machineId : "No machine scanned"}\`;
+      document.getElementById('userPill').textContent = `User: ${userId.slice(0,8)}…`;
+      document.getElementById('historyScopeBadge').textContent = `Scope: ${machineId ? machineId : "No machine scanned"}`;
       dateInput.value = todayISO();
 
       const promoBannerEl = document.getElementById('promoBanner');
