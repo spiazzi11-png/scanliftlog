@@ -620,8 +620,13 @@
 
       <div class="row" id="exerciseRow" style="align-items:flex-end; margin-top:12px;">
         <div class="col">
-          <label>Exercise (optional)</label>
+          <label id="exerciseLabel">Exercise (optional)</label>
           <input id="exerciseInput" placeholder="e.g., Dumbbell Flys, DB Press, Incline DB Row" />
+          <select id="exerciseSelect" style="display:none;">
+            <option value="">Select Inner or Outer</option>
+            <option value="Inner">Inner</option>
+            <option value="Outer">Outer</option>
+          </select>
         </div>
       </div>
 
@@ -1313,6 +1318,8 @@ function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) 
     const dateInput = document.getElementById('dateInput');
     const notesInput = document.getElementById('notesInput');
     const exerciseInput = document.getElementById('exerciseInput');
+    const exerciseSelect = document.getElementById('exerciseSelect');
+    const exerciseLabel = document.getElementById('exerciseLabel');
     const exerciseRow = document.getElementById('exerciseRow');
 
     const strengthSection = document.getElementById('strengthSection');
@@ -1453,10 +1460,27 @@ function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) 
       return { ok: true, data };
     }
 
+    function setExerciseFieldMode() {
+      if (!exerciseInput || !exerciseSelect || !exerciseLabel) return;
+
+      if (machineId === "HIPAB") {
+        exerciseLabel.textContent = "Select Movement";
+        exerciseInput.style.display = "none";
+        exerciseSelect.style.display = "";
+        exerciseInput.value = "";
+      } else {
+        exerciseLabel.textContent = "Exercise (optional)";
+        exerciseInput.style.display = "";
+        exerciseSelect.style.display = "none";
+        exerciseSelect.value = "";
+      }
+    }
+
     function setModeUI() {
       if (!machineId) {
         strengthSection.style.display = "";
         cardioSection.style.display = "none";
+        setExerciseFieldMode();
         return;
       }
 
@@ -1465,6 +1489,7 @@ function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) 
         cardioSection.style.display = "";
         if (exerciseRow) exerciseRow.style.display = "none";
         if (exerciseInput) exerciseInput.value = "";
+        if (exerciseSelect) exerciseSelect.value = "";
         if (notesInput) notesInput.placeholder = "e.g., steady pace, interval session, heart rate zone 2";
         buildCardioInputs();
       } else {
@@ -1472,6 +1497,7 @@ function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) 
         cardioSection.style.display = "none";
         if (exerciseRow) exerciseRow.style.display = "";
         if (notesInput) notesInput.placeholder = "e.g., controlled reps, last set to failure";
+        setExerciseFieldMode();
       }
     }
 
@@ -1746,7 +1772,14 @@ promoBannerLink.addEventListener('click', () => {
 
         const date = (dateInput.value || todayISO()).trim();
         const notes = (notesInput.value || "").trim();
-        const exercise = (exerciseInput.value || "").trim();
+        const exercise = machineId === "HIPAB"
+          ? (exerciseSelect.value || "").trim()
+          : (exerciseInput.value || "").trim();
+
+        if (machineId === "HIPAB" && !exercise) {
+          alert("Please select Inner or Outer before saving.");
+          return;
+        }
 
         // CARDIO
         if (machineType === "cardio") {
@@ -1769,7 +1802,11 @@ promoBannerLink.addEventListener('click', () => {
           saveWorkouts(workouts);
           logEvent(gymId, machineId, machineName, userId, "save");
 
-          if (exerciseInput) exerciseInput.value = "";
+          if (machineId === "HIPAB") {
+            if (exerciseSelect) exerciseSelect.value = "";
+          } else {
+            if (exerciseInput) exerciseInput.value = "";
+          }
           notesInput.value = "";
           clearCardioInputs();
           renderHistory();
@@ -1796,7 +1833,11 @@ promoBannerLink.addEventListener('click', () => {
         saveWorkouts(workouts);
         logEvent(gymId, machineId, machineName, userId, "save");
 
-        if (exerciseInput) exerciseInput.value = "";
+        if (machineId === "HIPAB") {
+          if (exerciseSelect) exerciseSelect.value = "";
+        } else {
+          if (exerciseInput) exerciseInput.value = "";
+        }
         notesInput.value = "";
         clearCurrentSets();
         renderHistory();
