@@ -35,7 +35,7 @@
     .pill { font-size:12px; padding:8px 12px; border:1px solid var(--line); background: rgba(255,255,255,.03); border-radius:999px; }
     .pill.context { border-color: rgba(139,92,246,.55); background: rgba(139,92,246,.18); font-weight:800; color:var(--text); }
     .card { margin-top:16px; background: rgba(18,19,24,.66); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow: var(--shadow); }
-    .card.headerCard { margin-top:14px; padding:18px; background: rgba(18,19,24,.78); border-radius: var(--radius2); }
+    .card.headerCard { margin-top:14px; padding:18px; background: rgba(18,19,24,.78); border-radius: var(--radius2); box-sizing: border-box; overflow: hidden; }
     label { display:block; font-size: 12px; color:var(--muted); margin: 0 0 6px; }
     input, select {
       width: 100%;
@@ -283,8 +283,13 @@
     }
 
     @media (max-width: 520px){
-      .pills{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; width:100%; }
-      .pill{ width:100%; min-width:0; justify-content:center; text-align:center; }
+      .card.headerCard { padding: 14px 12px; }
+      .pills{ display:grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; max-width: 100%; box-sizing: border-box; min-width: 0; }
+      .pill{ width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; overflow: hidden; justify-content: center; text-align: center; padding: 6px 8px; font-size: 11px; }
+      .pill .pillBtn{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; display: block; }
+      .pill#userPill{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .pill .tipWrap{ min-width: 0; overflow: hidden; }
+      .pill .tipWrap .pillBtn{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     }
 
     /* Per-gym promotional banner (optional) - fixed height so image crops, never stretches on desktop */
@@ -1084,6 +1089,8 @@
 
     function openWorkoutReport() {
       const workouts = getAllWorkoutsForReport();
+      const cleanBodyHtml = buildPdfOnlyReportHtml(workouts);
+      const standaloneReportHtml = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Workout Report</title><style>body{background:#fff;color:#000;font-family:system-ui,sans-serif;font-size:12px;margin:0;padding:12px;} table{border-collapse:collapse;width:100%;} th,td{text-align:left;padding:6px 8px;border:1px solid #333;} th{background:#f5f5f5;}</style></head><body>" + cleanBodyHtml + "</body></html>";
       const workoutCardsHtml = workouts.length
         ? workouts.map(w => {
             const savedAt = formatSavedAtForReport(w.savedAt, w.ts);
@@ -1159,19 +1166,35 @@
     <div class="actions">
       <button class="btn primary" onclick="window.print()">Print</button>
       <button class="btn" id="downloadPdfBtn" type="button">Save as PDF</button>
+      <button class="btn" id="downloadReportHtmlBtn" type="button">Download report</button>
       <button class="btn" onclick="window.close()">Close</button>
     </div>
   </div>
-  <div id="pdfOnlyContent" style="position:absolute; left:-9999px; top:0; width:720px; background:#fff;">${buildPdfOnlyReportHtml(workouts)}</div>
+  <textarea id="standaloneReportHtml" style="display:none">${standaloneReportHtml.replace(/</g, "\\u003c").replace(/>/g, "\\u003e")}</textarea>
+  <div id="pdfOnlyContent" style="position:absolute; left:-9999px; top:0; width:720px; background:#fff;">${cleanBodyHtml}</div>
   <script>
+    function getStandaloneHtml() {
+      var ta = document.getElementById("standaloneReportHtml");
+      if (!ta) return ""; var s = ta.value; return s.replace(/[\\\\]u003c/g, "<").replace(/[\\\\]u003e/g, ">");
+    }
+    function downloadReportHtml() {
+      var html = getStandaloneHtml();
+      if (!html) { alert("Report content not available."); return; }
+      var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "scanliftlog_workout_report_" + new Date().toISOString().slice(0,10) + ".html";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
     async function downloadWorkoutPdf() {
-      const reportEl = document.getElementById("pdfOnlyContent");
+      var reportEl = document.getElementById("pdfOnlyContent");
       if (!reportEl) { alert("Could not find the report content."); return; }
-      if (typeof html2pdf === "undefined") { alert("PDF tool failed to load. Please try again."); return; }
-      const fileDate = new Date().toISOString().slice(0,10);
-      const opt = {
+      if (typeof html2pdf === "undefined") { alert("PDF tool failed to load. Try \"Download report\" instead for a file you can save and open anytime."); return; }
+      var fileDate = new Date().toISOString().slice(0,10);
+      var opt = {
         margin: [0.35, 0.35, 0.35, 0.35],
-        filename: \`scanliftlog_workout_report_\${fileDate}.pdf\`,
+        filename: "scanliftlog_workout_report_" + fileDate + ".pdf",
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff", width: 720, windowWidth: 720, scrollX: 0, scrollY: 0 },
         jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
@@ -1181,10 +1204,11 @@
         await html2pdf().set(opt).from(reportEl).save();
       } catch (err) {
         console.error(err);
-        alert("PDF download failed on this device.");
+        alert("PDF failed on this device. Use \"Download report\" to save an HTML file you can open and print from your browser.");
       }
     }
     document.getElementById("downloadPdfBtn").addEventListener("click", downloadWorkoutPdf);
+    document.getElementById("downloadReportHtmlBtn").addEventListener("click", downloadReportHtml);
   <\/script>
 </body>
 </html>`;
