@@ -622,11 +622,11 @@
         <div class="col">
           <label id="exerciseLabel">Exercise (optional)</label>
           <input id="exerciseInput" placeholder="e.g., Dumbbell Flys, DB Press, Incline DB Row" />
-          <select id="exerciseSelect" style="display:none;">
-            <option value="">Select Inner or Outer</option>
-            <option value="Inner">Inner</option>
-            <option value="Outer">Outer</option>
-          </select>
+         <select id="exerciseSelect" style="display:none;">
+  <option value="">Select Movement</option>
+  <option value="Hip Adductor - Inner">Hip Adductor - Inner</option>
+  <option value="Hip Abductor - Outer">Hip Abductor - Outer</option>
+</select>
         </div>
       </div>
 
@@ -1777,7 +1777,7 @@ promoBannerLink.addEventListener('click', () => {
           : (exerciseInput.value || "").trim();
 
         if (machineId === "HIPAB" && !exercise) {
-          alert("Please select Inner or Outer before saving.");
+          alert("Please select a movement before saving.");
           return;
         }
 
