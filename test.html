@@ -283,8 +283,8 @@
     }
 
     @media (max-width: 520px){
-      .pills{ width:100%; align-items:stretch; }
-      .pill{ width:100%; justify-content:flex-start; }
+      .pills{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; width:100%; }
+      .pill{ width:100%; min-width:0; justify-content:center; text-align:center; }
     }
 
     /* Per-gym promotional banner (optional) - fixed height so image crops, never stretches on desktop */
@@ -348,7 +348,6 @@
           <div class="pill"><button class="pillBtn" id="uploadBtn" type="button">Restore Data</button></div>
           <div class="pill"><button class="pillBtn" id="reportBtn" type="button">Workout Report</button></div>
           <input id="uploadFileInput" type="file" accept="application/json,.json" style="display:none;" />
-          <div class="pill"><button class="pillBtn" id="resetUserBtn" type="button">Reset User ID</button></div>
         </div>
 
         <div class="backupNoteRow">
@@ -1047,6 +1046,42 @@
       return parts.length ? "<p>" + parts.join(" • ") + "</p>" : "<p class=\"muted\">No cardio details.</p>";
     }
 
+    /* Build clean PDF-only layout: white background, black text, no styling. Used only for Save as PDF. */
+    function buildPdfOnlyReportHtml(workouts) {
+      const pdfStyle = "style=\"background:#fff; color:#000; font-family: system-ui, sans-serif; font-size: 12px; margin: 0; padding: 0;\"";
+      const pdfTable = "style=\"width:100%; border-collapse:collapse; font-size:11px; margin-top:6px;\"";
+      const pdfTh = "style=\"text-align:left; padding:6px 8px; border:1px solid #333; background:#f5f5f5;\"";
+      const pdfTd = "style=\"text-align:left; padding:6px 8px; border:1px solid #333;\"";
+      let html = "<div " + pdfStyle + ">";
+      html += "<h1 style=\"font-size:18px; margin:0 0 12px 0; border-bottom:2px solid #000; padding-bottom:8px;\">Workout Report</h1>";
+      html += "<p style=\"margin:0 0 12px 0;\"><strong>User</strong> " + escapeHtml(userId.slice(0, 8)) + "… &nbsp; <strong>Total Workouts</strong> " + workouts.length + " &nbsp; <strong>Generated</strong> " + escapeHtml(nowReadable()) + "</p>";
+      if (!workouts.length) {
+        html += "<p style=\"margin:12px 0;\">No saved workouts for this user on this device.</p>";
+      } else {
+        workouts.forEach(w => {
+          const savedAt = formatSavedAtForReport(w.savedAt, w.ts);
+          html += "<div style=\"margin:16px 0; padding:12px 0; border-top:1px solid #333;\">";
+          html += "<p style=\"margin:0 0 8px 0; font-size:14px; font-weight:bold;\">" + escapeHtml(w.machineName || "—") + " &nbsp; <span style=\"font-weight:normal; font-size:11px;\">" + escapeHtml(w.type || "—") + "</span></p>";
+          html += "<table " + pdfTable + "><tr><th " + pdfTh + ">Date</th><td " + pdfTd + ">" + escapeHtml(w.date || "—") + "</td><th " + pdfTh + ">Gym</th><td " + pdfTd + ">" + escapeHtml(w.gymName || "—") + "</td></tr>";
+          html += "<tr><th " + pdfTh + ">Exercise</th><td " + pdfTd + ">" + escapeHtml(w.exercise || "—") + "</td><th " + pdfTh + ">Saved</th><td " + pdfTd + ">" + escapeHtml(savedAt || "—") + "</td></tr></table>";
+          html += "<p style=\"margin:8px 0 4px 0;\"><strong>Notes</strong></p><p style=\"margin:0 0 8px 0;\">" + escapeHtml(w.notes || "—") + "</p>";
+          if (w.type === "Cardio" && w.cardio) {
+            html += "<p style=\"margin:4px 0;\"><strong>Cardio</strong></p><table " + pdfTable + "><thead><tr><th " + pdfTh + ">Metric</th><th " + pdfTh + ">Value</th></tr></thead><tbody>";
+            const c = w.cardio;
+            ["minutes", "calories", "distance", "distance_m", "incline", "speed", "resistance", "level", "pace"].forEach(k => { if (c[k] != null && c[k] !== "") html += "<tr><td " + pdfTd + ">" + escapeHtml(k) + "</td><td " + pdfTd + ">" + escapeHtml(String(c[k])) + "</td></tr>"; });
+            html += "</tbody></table>";
+          } else if (w.sets && w.sets.length) {
+            html += "<p style=\"margin:4px 0;\"><strong>Sets</strong></p><table " + pdfTable + "><thead><tr><th " + pdfTh + ">Set</th><th " + pdfTh + ">Weight</th><th " + pdfTh + ">Reps</th></tr></thead><tbody>";
+            w.sets.forEach((s, i) => { html += "<tr><td " + pdfTd + ">" + (i + 1) + "</td><td " + pdfTd + ">" + escapeHtml(s.weight || "—") + "</td><td " + pdfTd + ">" + escapeHtml(s.reps || "—") + "</td></tr>"; });
+            html += "</tbody></table>";
+          }
+          html += "</div>";
+        });
+      }
+      html += "</div>";
+      return html;
+    }
+
     function openWorkoutReport() {
       const workouts = getAllWorkoutsForReport();
       const workoutCardsHtml = workouts.length
@@ -1127,9 +1162,10 @@
       <button class="btn" onclick="window.close()">Close</button>
     </div>
   </div>
+  <div id="pdfOnlyContent" style="position:absolute; left:-9999px; top:0; width:720px; background:#fff;">${buildPdfOnlyReportHtml(workouts)}</div>
   <script>
     async function downloadWorkoutPdf() {
-      const reportEl = document.getElementById("pdfReportRoot");
+      const reportEl = document.getElementById("pdfOnlyContent");
       if (!reportEl) { alert("Could not find the report content."); return; }
       if (typeof html2pdf === "undefined") { alert("PDF tool failed to load. Please try again."); return; }
       const fileDate = new Date().toISOString().slice(0,10);
@@ -1137,19 +1173,15 @@
         margin: [0.35, 0.35, 0.35, 0.35],
         filename: \`scanliftlog_workout_report_\${fileDate}.pdf\`,
         image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: "#0b0c10", width: 720, windowWidth: 720, scrollX: 0, scrollY: 0 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff", width: 720, windowWidth: 720, scrollX: 0, scrollY: 0 },
         jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-        pagebreak: { mode: ["css", "legacy"], avoid: [".workoutCard", "table"] }
+        pagebreak: { mode: ["css", "legacy"], avoid: ["table"] }
       };
-      const prevWidth = reportEl.style.width;
-      reportEl.style.width = "720px";
       try {
         await html2pdf().set(opt).from(reportEl).save();
       } catch (err) {
         console.error(err);
         alert("PDF download failed on this device.");
-      } finally {
-        reportEl.style.width = prevWidth;
       }
     }
     document.getElementById("downloadPdfBtn").addEventListener("click", downloadWorkoutPdf);
@@ -1481,7 +1513,6 @@
       logEvent(gymId, machineId, machineName, userId, "scan");
 
       // Wire buttons
-      document.getElementById('resetUserBtn').addEventListener('click', resetUser);
       document.getElementById('downloadBtn').addEventListener('click', downloadData);
       document.getElementById('reportBtn').addEventListener('click', openWorkoutReport);
 
