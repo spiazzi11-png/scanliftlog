@@ -1403,6 +1403,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>ScanLiftLog Workout Report</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root{
     --bg:#0b0c10;
@@ -1494,6 +1495,8 @@
     border-radius:20px;
     padding:16px;
     margin-bottom:14px;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
   .topRow{
     display:flex;
@@ -1578,62 +1581,99 @@
 </head>
 <body>
   <div class="wrap">
-    <div class="header">
-      <h1 class="title">Workout Report</h1>
-      <div class="sub">
-        Easy-to-read history for this device user. This report is for reviewing workouts. Use <strong>Back Up Data</strong> in the app if you want a restore file for a new phone.
+    <div id="pdfReportRoot">
+      <div class="header">
+        <h1 class="title">Workout Report</h1>
+        <div class="sub">
+          This report is for reviewing workouts. Use <strong>Back Up Data</strong> in the app if you want a restore file for a new phone.
+        </div>
+        <div class="meta">
+          <div class="metaPill">User: ${escapeHtml(userId.slice(0,8))}…</div>
+          <div class="metaPill">Total Workouts: ${workouts.length}</div>
+          <div class="metaPill">Generated: ${escapeHtml(nowReadable())}</div>
+        </div>
       </div>
-      <div class="meta">
-        <div class="metaPill">User: ${escapeHtml(userId.slice(0,8))}…</div>
-        <div class="metaPill">Total Workouts: ${workouts.length}</div>
-        <div class="metaPill">Generated: ${escapeHtml(nowReadable())}</div>
-      </div>
-      <div class="actions">
-        <button class="btn primary" onclick="window.print()">Print / Save PDF</button>
-        <button class="btn" onclick="window.close()">Close</button>
-      </div>
+
+      ${
+        workouts.length
+          ? workouts.map(w => `
+            <div class="workoutCard">
+              <div class="topRow">
+                <div class="leftTitle">${escapeHtml(w.machineName)}</div>
+                <div class="rightType">${escapeHtml(w.type)}</div>
+              </div>
+
+              <div class="infoGrid">
+                <div class="infoBox">
+                  <div class="label">Date</div>
+                  <div class="value">${escapeHtml(w.date || "—")}</div>
+                </div>
+                <div class="infoBox">
+                  <div class="label">Gym</div>
+                  <div class="value">${escapeHtml(w.gymName || "—")}</div>
+                </div>
+                <div class="infoBox">
+                  <div class="label">Exercise</div>
+                  <div class="value">${escapeHtml(w.exercise || "—")}</div>
+                </div>
+                <div class="infoBox">
+                  <div class="label">Saved</div>
+                  <div class="value">${escapeHtml(w.savedAt || "—")}</div>
+                </div>
+              </div>
+
+              <div class="sectionTitle">Notes</div>
+              <div class="infoBox">
+                <div class="value">${escapeHtml(w.notes || "—")}</div>
+              </div>
+
+              <div class="sectionTitle">${w.type === "Cardio" ? "Cardio Details" : "Sets"}</div>
+              ${w.type === "Cardio" ? renderCardioForReport(w.cardio) : renderStrengthSetsForReport(w.sets)}
+            </div>
+          `).join("")
+          : `<div class="emptyState">No saved workouts found for this user on this device yet.</div>`
+      }
     </div>
 
-    ${
-      workouts.length
-        ? workouts.map(w => `
-          <div class="workoutCard">
-            <div class="topRow">
-              <div class="leftTitle">${escapeHtml(w.machineName)}</div>
-              <div class="rightType">${escapeHtml(w.type)}</div>
-            </div>
-
-            <div class="infoGrid">
-              <div class="infoBox">
-                <div class="label">Date</div>
-                <div class="value">${escapeHtml(w.date || "—")}</div>
-              </div>
-              <div class="infoBox">
-                <div class="label">Gym</div>
-                <div class="value">${escapeHtml(w.gymName || "—")}</div>
-              </div>
-              <div class="infoBox">
-                <div class="label">Exercise</div>
-                <div class="value">${escapeHtml(w.exercise || "—")}</div>
-              </div>
-              <div class="infoBox">
-                <div class="label">Saved</div>
-                <div class="value">${escapeHtml(w.savedAt || "—")}</div>
-              </div>
-            </div>
-
-            <div class="sectionTitle">Notes</div>
-            <div class="infoBox">
-              <div class="value">${escapeHtml(w.notes || "—")}</div>
-            </div>
-
-            <div class="sectionTitle">${w.type === "Cardio" ? "Cardio Details" : "Sets"}</div>
-            ${w.type === "Cardio" ? renderCardioForReport(w.cardio) : renderStrengthSetsForReport(w.sets)}
-          </div>
-        `).join("")
-        : `<div class="emptyState">No saved workouts found for this user on this device yet.</div>`
-    }
+    <div class="actions">
+      <button class="btn primary" onclick="window.print()">Print</button>
+      <button class="btn" onclick="downloadWorkoutPdf()">Save as PDF</button>
+      <button class="btn" onclick="window.close()">Close</button>
+    </div>
   </div>
+
+  <script>
+    async function downloadWorkoutPdf() {
+      const reportEl = document.getElementById("pdfReportRoot");
+      if (!reportEl) {
+        alert("Could not find the report content.");
+        return;
+      }
+
+      if (typeof html2pdf === "undefined") {
+        alert("PDF tool failed to load. Please try again.");
+        return;
+      }
+
+      const fileDate = new Date().toISOString().slice(0,10);
+
+      const opt = {
+        margin: [0.35, 0.35, 0.35, 0.35],
+        filename: \`scanliftlog_workout_report_\${fileDate}.pdf\`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: "#0b0c10" },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+        pagebreak: { mode: ["css", "legacy"] }
+      };
+
+      try {
+        await html2pdf().set(opt).from(reportEl).save();
+      } catch (err) {
+        console.error(err);
+        alert("PDF download failed on this device.");
+      }
+    }
+  </script>
 </body>
 </html>
       `;
@@ -1754,7 +1794,7 @@
         lab.textContent = def.label;
 
         const inp = document.createElement("input");
-        inp.id = `cardio_${def.key}`;
+        inp.id = \`cardio_\${def.key}\`;
         inp.placeholder = def.placeholder || "";
         inp.inputMode = def.inputMode === "text" ? undefined : (def.inputMode || "text");
         inp.type = "text";
@@ -1778,7 +1818,7 @@
         const inp = cardioInputs[def.key];
         const raw = (inp && inp.value != null) ? String(inp.value).trim() : "";
 
-        if (def.required && !raw) return { ok: false, error: `Please enter ${def.label}.` };
+        if (def.required && !raw) return { ok: false, error: \`Please enter \${def.label}.\` };
 
         if (def.key === "pace") {
           if (raw) data[def.key] = raw;
@@ -1786,7 +1826,7 @@
         }
 
         const num = toNumberOrNull(raw);
-        if (raw && num === null) return { ok: false, error: `Please enter a valid number for ${def.label}.` };
+        if (raw && num === null) return { ok: false, error: \`Please enter a valid number for \${def.label}.\` };
         if (num !== null) data[def.key] = num;
       }
 
@@ -1847,10 +1887,10 @@
     function formatCardioSummary(c) {
       if (!c) return "—";
       const parts = [];
-      if (c.minutes != null) parts.push(`${c.minutes} min`);
-      if (c.distance != null) parts.push(`${c.distance} mi`);
-      if (c.distance_m != null) parts.push(`${c.distance_m} m`);
-      if (c.calories != null) parts.push(`${c.calories} cal`);
+      if (c.minutes != null) parts.push(\`\${c.minutes} min\`);
+      if (c.distance != null) parts.push(\`\${c.distance} mi\`);
+      if (c.distance_m != null) parts.push(\`\${c.distance_m} m\`);
+      if (c.calories != null) parts.push(\`\${c.calories} cal\`);
       return parts.length ? parts.join(" • ") : "—";
     }
 
@@ -1860,7 +1900,7 @@
 
       const workouts = loadWorkouts();
       if (!workouts.length) {
-        tbody.innerHTML = `<tr><td colspan="5" class="muted">No workouts saved yet.</td></tr>`;
+        tbody.innerHTML = \`<tr><td colspan="5" class="muted">No workouts saved yet.</td></tr>\`;
         return;
       }
 
@@ -1874,21 +1914,21 @@
           summary = formatCardioSummary(w.cardio);
         } else {
           const top = getTopSet(w.sets || []);
-          summary = top ? `${escapeHtml(top.weight || "—")} x ${escapeHtml(top.reps || "—")}` : "—";
+          summary = top ? \`\${escapeHtml(top.weight || "—")} x \${escapeHtml(top.reps || "—")}\` : "—";
         }
 
         const tr = document.createElement('tr');
 
-        let detailsHtml = `<details><summary>View</summary>`;
-        if (w.exercise) detailsHtml += `<div class="muted" style="margin-top:6px;">Exercise: ${escapeHtml(w.exercise)}</div>`;
-        if (w.notes) detailsHtml += `<div class="muted" style="margin-top:6px;">Notes: ${escapeHtml(w.notes)}</div>`;
+        let detailsHtml = \`<details><summary>View</summary>\`;
+        if (w.exercise) detailsHtml += \`<div class="muted" style="margin-top:6px;">Exercise: \${escapeHtml(w.exercise)}</div>\`;
+        if (w.notes) detailsHtml += \`<div class="muted" style="margin-top:6px;">Notes: \${escapeHtml(w.notes)}</div>\`;
 
         if (isCardio) {
           const c = w.cardio || {};
           const rows = [];
           function addRow(label, val) {
             if (val == null || val === "") return;
-            rows.push(`<tr><th>${escapeHtml(label)}</th><td>${escapeHtml(String(val))}</td></tr>`);
+            rows.push(\`<tr><th>\${escapeHtml(label)}</th><td>\${escapeHtml(String(val))}</td></tr>\`);
           }
           addRow("Time (minutes)", c.minutes);
           addRow("Calories", c.calories);
@@ -1900,34 +1940,34 @@
           addRow("Level", c.level);
           addRow("Avg pace", c.pace);
 
-          detailsHtml += `
+          detailsHtml += \`
             <table class="setsMini" style="margin-top:8px;">
               <thead><tr><th>Metric</th><th>Value</th></tr></thead>
-              <tbody>${rows.join("") || `<tr><td colspan="2" class="muted">No cardio details.</td></tr>`}</tbody>
+              <tbody>\${rows.join("") || \`<tr><td colspan="2" class="muted">No cardio details.</td></tr>\`}</tbody>
             </table>
-          `;
+          \`;
         } else {
-          detailsHtml += `
+          detailsHtml += \`
             <table class="setsMini" style="margin-top:8px;">
               <thead><tr><th>Set</th><th>Weight</th><th>Reps</th></tr></thead>
               <tbody>
-                ${(w.sets||[]).map((s,i)=>`
-                  <tr><td>${i+1}</td><td>${escapeHtml(s.weight||"")}</td><td>${escapeHtml(s.reps||"")}</td></tr>
-                `).join("") || `<tr><td colspan="3" class="muted">No sets.</td></tr>`}
+                \${(w.sets||[]).map((s,i)=>\`
+                  <tr><td>\${i+1}</td><td>\${escapeHtml(s.weight||"")}</td><td>\${escapeHtml(s.reps||"")}</td></tr>
+                \`).join("") || \`<tr><td colspan="3" class="muted">No sets.</td></tr>\`}
               </tbody>
             </table>
-          `;
+          \`;
         }
 
-        detailsHtml += `</details>`;
+        detailsHtml += \`</details>\`;
 
-        tr.innerHTML = `
-          <td>${escapeHtml(w.date || "")}</td>
-          <td>${typeLabel}</td>
-          <td>${summary}</td>
-          <td>${detailsHtml}</td>
-          <td class="muted">${escapeHtml(w.savedAt || "")}</td>
-        `;
+        tr.innerHTML = \`
+          <td>\${escapeHtml(w.date || "")}</td>
+          <td>\${typeLabel}</td>
+          <td>\${summary}</td>
+          <td>\${detailsHtml}</td>
+          <td class="muted">\${escapeHtml(w.savedAt || "")}</td>
+        \`;
         tbody.appendChild(tr);
       }
     }
@@ -1946,8 +1986,8 @@
       document.getElementById('year').textContent = String(new Date().getFullYear());
       document.getElementById('gymNameText').textContent = gymName;
       document.getElementById('machineNameText').textContent = machineName;
-      document.getElementById('userPill').textContent = `User: ${userId.slice(0,8)}…`;
-      document.getElementById('historyScopeBadge').textContent = `Scope: ${machineId ? machineId : "No machine scanned"}`;
+      document.getElementById('userPill').textContent = \`User: \${userId.slice(0,8)}…\`;
+      document.getElementById('historyScopeBadge').textContent = \`Scope: \${machineId ? machineId : "No machine scanned"}\`;
       dateInput.value = todayISO();
 
       const promoBannerEl = document.getElementById('promoBanner');
