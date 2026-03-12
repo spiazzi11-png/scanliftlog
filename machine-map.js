@@ -51,7 +51,7 @@ window.MACHINE_MAP = {
   "SLCUR": "Seated Leg Curl",
   "LLCUR": "Lying Leg Curl",
   "STCUR": "Standing Leg Curl",
-  "HIPAB": "Hip Abductor",
+  "HIPAB": "Abductor/Adductor",
   "HIPAD": "Hip Adductor",
   "GLUTKB": "Glute Kickback",
   "SCALF": "Seated Calf Raise",
