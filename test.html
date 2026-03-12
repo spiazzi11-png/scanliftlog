@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -32,10 +33,10 @@
     h1 { margin:0; font-size: 22px; letter-spacing: .2px; }
     .sub { margin:6px 0 0; color:var(--muted); font-size: 13px; }
     .pills { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
-    .pill { font-size:12px; padding:8px 12px; border:1px solid var(--line); background: rgba(255,255,255,.03); border-radius:999px; display:flex; align-items:center; justify-content:center; text-align:center; }
+    .pill { font-size:12px; padding:8px 12px; border:1px solid var(--line); background: rgba(255,255,255,.03); border-radius:999px; }
     .pill.context { border-color: rgba(139,92,246,.55); background: rgba(139,92,246,.18); font-weight:800; color:var(--text); }
     .card { margin-top:16px; background: rgba(18,19,24,.66); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow: var(--shadow); }
-    .card.headerCard { margin-top:14px; padding:18px; background: rgba(18,19,24,.78); border-radius: var(--radius2); box-sizing: border-box; overflow: hidden; }
+    .card.headerCard { margin-top:14px; padding:18px; background: rgba(18,19,24,.78); border-radius: var(--radius2); }
     label { display:block; font-size: 12px; color:var(--muted); margin: 0 0 6px; }
     input, select {
       width: 100%;
@@ -154,11 +155,35 @@
       font-size:12px;
     }
 
-    /* Context bar (Gym / Machine emphasis) */
-    .contextBar { display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; }
-    .contextItem { flex:1; min-width:220px; padding:12px 14px; border-radius:14px; background: rgba(255,255,255,.03); border:1px solid var(--line); }
-    .contextLabel { font-size:11px; text-transform:uppercase; letter-spacing:.9px; color:var(--muted); font-weight:800; }
-    .contextValue { margin-top:4px; font-size:20px; font-weight:900; color:var(--text); }
+    /* Context bar */
+    .contextBar {
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
+    .contextItem {
+      flex:1;
+      min-width:260px;
+      padding:18px 18px;
+      border-radius:18px;
+      background: rgba(255,255,255,.04);
+      border:1px solid var(--line);
+    }
+    .contextLabel {
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      color:var(--muted);
+      font-weight:800;
+    }
+    .contextValue {
+      margin-top:8px;
+      font-size:30px;
+      line-height:1.1;
+      font-weight:900;
+      color:var(--text);
+    }
 
     /* Sets grid */
     .setsHeader { display:grid; grid-template-columns: 52px 1fr 1fr 60px; gap:10px; align-items:center; margin-top:10px; }
@@ -179,8 +204,7 @@
     footer a { color:inherit; }
 
     /* Tiny helper button inside pills */
-    .pillBtn { border:0; background:transparent; cursor:pointer; font-weight:800; text-decoration:underline; padding:0; font-size:12px; opacity:.85; text-align:center; width:100%; }
-    .pill .tipWrap { display:flex; align-items:center; justify-content:center; gap:4px; flex:1; min-width:0; }
+    .pillBtn { border:0; background:transparent; cursor:pointer; font-weight:900; text-decoration:underline; padding:0; font-size:12px; opacity:.85; }
 
     /* Cardio container spacing */
     .cardioHeader { font-weight:900; }
@@ -284,30 +308,217 @@
     }
 
     @media (max-width: 520px){
-      .card.headerCard { padding: 14px 12px; }
-      .pills{ display:grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; max-width: 100%; box-sizing: border-box; min-width: 0; }
-      .pill{ width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; overflow: hidden; justify-content: center; text-align: center; padding: 6px 8px; font-size: 11px; }
-      .pill .pillBtn{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; display: block; }
-      .pill#userPill{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .pill .tipWrap{ min-width: 0; overflow: hidden; }
-      .pill .tipWrap .pillBtn{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .pills{ width:100%; align-items:stretch; }
+      .pill{ width:100%; justify-content:flex-start; }
     }
 
-    /* Per-gym promotional banner (optional) - fixed height so image crops, never stretches on desktop */
+    /* Per-gym promotional banner (optional) */
     .promoBanner {
       width: 100%;
-      height: 140px;
       overflow: hidden;
       background: rgba(15,16,21,.6);
       border-bottom: 1px solid var(--line);
     }
     .promoBanner img {
       width: 100%;
-      height: 100%;
+      height: auto;
+      max-height: 140px;
       object-fit: cover;
-      object-position: center center;
       display: block;
     }
+    .promoBanner a {
+      display: block;
+      text-decoration: none;
+    }
+    /* Desktop only: shorter height + limited width so banner isn't a long strip (mobile unchanged) */
+  /* Desktop only: hide promo banner */
+@media (min-width: 769px) {
+  .promoBanner {
+    display: none !important;
+  }
+}
+
+    /* ===== Private / Incognito Mode Modal ===== */
+    .privateModeModal.hidden {
+      display: none;
+    }
+
+    .privateModeModal {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+    }
+
+    .privateModeBackdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .privateModeCard {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(92vw, 420px);
+      transform: translate(-50%, -50%);
+      background: linear-gradient(180deg, rgba(20,22,30,.96), rgba(12,14,20,.96));
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 22px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      padding: 24px 22px 20px;
+      text-align: center;
+      color: var(--text, #e9e9ee);
+    }
+
+    .privateModeIcon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 14px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      font-weight: 800;
+      background: rgba(239, 68, 68, 0.14);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #f87171;
+    }
+
+    .privateModeCard h2 {
+      margin: 0 0 10px;
+      font-size: 1.25rem;
+      line-height: 1.2;
+    }
+
+    .privateModeCard p {
+      margin: 0 0 18px;
+      color: var(--muted, #a9a9b6);
+      font-size: 0.98rem;
+      line-height: 1.5;
+    }
+
+    #privateModeCloseBtn {
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 0.98rem;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, var(--accent, #8b5cf6), var(--accent2, #22c55e));
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+    }
+
+   /* ===== MOBILE-ONLY HEADER LAYOUT CHANGES ===== */
+@media (max-width: 768px) {
+  .card.headerCard {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .contextBar {
+    order: -1;
+    margin-top: 0;
+    margin-bottom: 12px;
+    gap: 10px;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .contextItem {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+  }
+
+  .contextValue {
+    font-size: 20px;
+    line-height: 1.08;
+    word-break: break-word;
+  }
+
+  .top {
+    width: 100%;
+    display: block;
+  }
+
+  .top > div:first-child {
+    display: none;
+  }
+
+  .pills {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    align-items: stretch;
+  }
+
+  .pill {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 7px 8px;
+    font-size: 11px;
+    line-height: 1.1;
+    overflow: hidden;
+  }
+
+  .pillBtn {
+    font-size: 11px;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  #userPill {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    justify-content: center;
+  }
+
+  .tipWrap {
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .tipIcon {
+    flex: 0 0 auto;
+    font-size: 11px;
+    padding: 1px 3px;
+  }
+
+  .backupNoteRow {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-top: 8px;
+  }
+
+  .backupNote {
+    font-size: 10px;
+    line-height: 1.3;
+  }
+}
   </style>
 </head>
 <body>
@@ -325,24 +536,29 @@
     </div>
   </div>
 
-  <div class="promoBanner" id="promoBanner" style="display:none;" aria-hidden="true">
-    <img id="promoBannerImg" src="" alt="Promotional banner" />
+    <div class="promoBanner" id="promoBanner" style="display:none;" aria-hidden="true">
+    <a
+      id="promoBannerLink"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer"
+      style="display:block;"
+    >
+      <img id="promoBannerImg" src="" alt="Promotional banner" />
+    </a>
   </div>
 
   <div class="wrap">
     <div class="card headerCard">
       <div class="top">
-        <div>
-          <h1>ScanLiftLog</h1>
-          <div class="sub" id="subLine">Scan a machine QR code to view and log your workout history.</div>
-        </div>
+        <div></div>
 
         <div class="pills">
           <div class="pill" id="userPill">User: …</div>
 
           <div class="pill">
             <div class="tipWrap">
-              <button class="pillBtn" id="downloadBtn" type="button">Back Up Data</button>
+              <button class="pillBtn" id="downloadBtn" type="button">Download Data</button>
               <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
               <div class="tipBox">
                 Clearing browser data can erase workout history.
@@ -351,14 +567,14 @@
             </div>
           </div>
 
-          <div class="pill"><button class="pillBtn" id="uploadBtn" type="button">Restore Data</button></div>
-          <div class="pill"><button class="pillBtn" id="reportBtn" type="button">Workout Report</button></div>
+          <div class="pill"><button class="pillBtn" id="uploadBtn" type="button">Upload Data</button></div>
           <input id="uploadFileInput" type="file" accept="application/json,.json" style="display:none;" />
+          <div class="pill"><button class="pillBtn" id="resetUserBtn" type="button">Reset User ID</button></div>
         </div>
 
         <div class="backupNoteRow">
           <div class="backupNote">
-            Back Up Data saves a restore file you can re-upload later. Restore Data imports that file on this device. Workout Report is for reading and printing your history.
+            Download your data before clearing browser cache. Private/incognito browsing will not save workout history.
           </div>
         </div>
       </div>
@@ -435,7 +651,7 @@
           </div>
         </div>
 
-        <div style="font-weight:900;">Sets</div>
+        <div style="font-weight:900; margin-top:18px;">Sets</div>
         <div class="muted" style="margin-top:6px;">Use + to add sets. Each set stores weight and reps.</div>
 
         <div class="setsHeader">
@@ -499,6 +715,20 @@
     </footer>
   </div>
 
+  <!-- Private / Incognito Mode Modal -->
+  <div id="privateModeModal" class="privateModeModal hidden" aria-hidden="true">
+    <div class="privateModeBackdrop"></div>
+    <div class="privateModeCard" role="dialog" aria-modal="true" aria-labelledby="privateModeTitle">
+      <div class="privateModeIcon">⚠</div>
+      <h2 id="privateModeTitle">Private Browsing Detected</h2>
+      <p>
+        Workout history is saved on your device. In Private / Incognito mode,
+        your browser may erase workout history when the tab or browser is closed.
+      </p>
+      <button id="privateModeCloseBtn" type="button">Continue</button>
+    </div>
+  </div>
+
   <!-- IMPORTANT: ensure this file exists at the site root -->
   <script src="/machine-map.js"></script>
 
@@ -509,6 +739,92 @@
        For deep links like /m/legpr to work on GitHub Pages, you MUST create 404.html in this repo
        and paste this exact same file into 404.html as well.
     */
+
+    /* ---------- Private / Incognito Mode Detection ---------- */
+    function showPrivateModeModal() {
+      const modal = document.getElementById("privateModeModal");
+      const closeBtn = document.getElementById("privateModeCloseBtn");
+      if (!modal || !closeBtn) return;
+
+      modal.classList.remove("hidden");
+      modal.setAttribute("aria-hidden", "false");
+
+      closeBtn.addEventListener("click", () => {
+        modal.classList.add("hidden");
+        modal.setAttribute("aria-hidden", "true");
+      }, { once: true });
+    }
+
+    async function detectPrivateModeLikely() {
+      // 1) localStorage unavailable = likely private/restricted
+      try {
+        const key = "__sll_private_test__";
+        localStorage.setItem(key, "1");
+        localStorage.removeItem(key);
+      } catch (e) {
+        return true;
+      }
+
+      // 2) Chrome / WebKit temporary FS heuristic
+      const fs = window.RequestFileSystem || window.webkitRequestFileSystem;
+      if (fs) {
+        const fsPrivate = await new Promise(resolve => {
+          try {
+            fs(window.TEMPORARY, 100, () => resolve(false), () => resolve(true));
+          } catch (e) {
+            resolve(false);
+          }
+        });
+        if (fsPrivate) return true;
+      }
+
+      // 3) IndexedDB test
+      try {
+        const dbTest = await new Promise(resolve => {
+          let resolved = false;
+          const req = indexedDB.open("__sll_private_db__");
+
+          req.onsuccess = () => {
+            if (!resolved) {
+              resolved = true;
+              req.result.close();
+              indexedDB.deleteDatabase("__sll_private_db__");
+              resolve(false);
+            }
+          };
+
+          req.onerror = () => {
+            if (!resolved) {
+              resolved = true;
+              resolve(true);
+            }
+          };
+
+          setTimeout(() => {
+            if (!resolved) {
+              resolved = true;
+              resolve(false);
+            }
+          }, 500);
+        });
+
+        if (dbTest) return true;
+      } catch (e) {
+        return true;
+      }
+
+      // 4) Storage quota heuristic
+      if (navigator.storage && navigator.storage.estimate) {
+        try {
+          const estimate = await navigator.storage.estimate();
+          if (estimate && estimate.quota && estimate.quota < 120000000) {
+            return true;
+          }
+        } catch (e) {}
+      }
+
+      return false;
+    }
 
     /* ---------- Rest Timer ---------- */
     let restTimerInterval = null;
@@ -722,26 +1038,27 @@
       }
     }
 
-    function canLogAnalytics(gymId, machineId) {
-      return !!(gymId && machineId && ANALYTICS_BASE && !ANALYTICS_BASE.includes("YOUR-WORKER-DOMAIN"));
+      function canLogAnalytics(gymId, machineId) {
+      return !!(gymId && ANALYTICS_BASE && !ANALYTICS_BASE.includes("YOUR-WORKER-DOMAIN"));
     }
+    
+function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) {
+  if (!canLogAnalytics(gymId, machineId)) return;
 
-    function logEvent(gymId, machineId, machineName, userId, eventType) {
-      if (!canLogAnalytics(gymId, machineId)) return;
-
-      fetch(`${ANALYTICS_BASE}/api/event`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          gymId,
-          machineId,
-          machineName,
-          eventType,          // "scan" | "save"
-          deviceHash: userId, // anonymous per-device id
-          ts: Date.now()
-        })
-      }).catch(() => {});
-    }
+  fetch(`${ANALYTICS_BASE}/api/event`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      gymId,
+      machineId,
+      machineName,
+      eventType,
+      deviceHash: userId,
+      ts: Date.now(),
+      ...extra
+    })
+  }).catch(() => {});
+}
 
     function toNumberOrNull(v) {
       const n = parseFloat(String(v || "").replace(/[^0-9.\-]/g, ""));
@@ -770,10 +1087,15 @@
 
     /* ---------- Gym Map (display names) ---------- */
     const GYM_MAP = {
-      "pushfitness-melville": "Push Fitness",
+      "pushfitness-melville": "Push Fitness Club",
       "pushfitness-newhydepark": "Push Fitness",
       "pushfitness-collegepoint": "Push Fitness",
       "pushfitness-freshmeadows": "Push Fitness"
+    };
+
+    const BANNER_LINK_MAP = {
+      "main": "https://scanliftlog.com",
+      "pushfitness-melville": "https://www.pushfitnessclub.com/free-guest-pass-melville?utm_source=adwords&hsa_tgt=kwd-2304550438300&hsa_kw=push+fitness+of+melville&hsa_cam=21310870749&gad_campaignid=21310870749&gclid=Cj0KCQjw37nNBhDkARIsAEBGI8OeUqcsxHg78wyXI7mCnX1nPXaIHF9z5nkPiXgAg-5UWSrezgSQRaoaApmfEALw_wcB&gbraid=0AAAAACuZg8eCmeRgHHplLLp2Mct5vMpG5&hsa_mt=p&utm_campaign=Brand&hsa_src=g&hsa_acc=1770197758&gad_source=1&hsa_net=adwords&hsa_grp=163581655878&hsa_ad=700371486676&utm_medium=ppc&utm_term=push+fitness+of+melville&hsa_ver=3"
     };
 
     /* ---------- Per-gym promotional banner: images in /banners/ named <gymId>.jpg or <gymId>.png ---------- */
@@ -984,212 +1306,6 @@
         };
         reader.readAsText(file);
       });
-    }
-
-    /* ---------- Workout Report ---------- */
-    function formatSavedAtForReport(savedAt, ts) {
-      if (savedAt && typeof savedAt === "string") return savedAt;
-      if (ts != null && Number.isFinite(ts)) return new Date(ts).toLocaleString();
-      return "";
-    }
-
-    function getMachineDisplayName(mid) {
-      const clean = String(mid || "").trim().toUpperCase();
-      if (!clean) return "Unknown Machine";
-      if (window.MACHINE_MAP && window.MACHINE_MAP[clean]) return window.MACHINE_MAP[clean];
-      return clean;
-    }
-    function getGymDisplayName(gid) {
-      const clean = String(gid || "").trim().toLowerCase();
-      return GYM_MAP[clean] || (clean ? clean.toUpperCase() : "Unknown Gym");
-    }
-    function getAllWorkoutsForReport() {
-      const all = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        if (!k || !k.startsWith("scanliftlog_workouts_v1:")) continue;
-        const parts = k.split(":");
-        if (parts.length < 4) continue;
-        const keyUserId = parts[1] || "";
-        const keyOrgId = parts[2] || "";
-        const keyMachineId = parts.slice(3).join(":") || "";
-        if (keyUserId !== userId) continue;
-        const arr = safeJSONParse(localStorage.getItem(k) || "[]", []);
-        arr.forEach(w => {
-          all.push({
-            ...w,
-            orgId: keyOrgId,
-            gymName: getGymDisplayName(keyOrgId),
-            machineId: keyMachineId,
-            machineName: getMachineDisplayName(keyMachineId),
-            type: w && w.cardio ? "Cardio" : "Strength"
-          });
-        });
-      }
-      return all.sort((a, b) => (b.ts || 0) - (a.ts || 0));
-    }
-
-    function renderStrengthSetsForReport(sets) {
-      if (!sets || !sets.length) return "<p class=\"muted\">No sets.</p>";
-      const rows = sets.map((s, i) =>
-        `<tr><td>${i + 1}</td><td>${escapeHtml(s.weight || "")}</td><td>${escapeHtml(s.reps || "")}</td></tr>`
-      ).join("");
-      return `<table class="setsMini"><thead><tr><th>Set</th><th>Weight</th><th>Reps</th></tr></thead><tbody>${rows}</tbody></table>`;
-    }
-
-    function renderCardioForReport(cardio) {
-      if (!cardio || typeof cardio !== "object") return "<p class=\"muted\">No cardio details.</p>";
-      const parts = [];
-      if (cardio.minutes != null) parts.push(`Time: ${cardio.minutes} min`);
-      if (cardio.calories != null) parts.push(`Calories: ${cardio.calories}`);
-      if (cardio.distance != null) parts.push(`Distance: ${cardio.distance} mi`);
-      if (cardio.distance_m != null) parts.push(`Distance: ${cardio.distance_m} m`);
-      if (cardio.incline != null) parts.push(`Incline: ${cardio.incline}%`);
-      if (cardio.speed != null) parts.push(`Speed: ${cardio.speed} mph`);
-      if (cardio.resistance != null) parts.push(`Resistance: ${cardio.resistance}`);
-      if (cardio.level != null) parts.push(`Level: ${cardio.level}`);
-      if (cardio.pace != null) parts.push(`Pace: ${escapeHtml(String(cardio.pace))}`);
-      return parts.length ? "<p>" + parts.join(" • ") + "</p>" : "<p class=\"muted\">No cardio details.</p>";
-    }
-
-    /* Build clean PDF-only layout: white background, black text, no styling. Used only for Save as PDF. */
-    function buildPdfOnlyReportHtml(workouts) {
-      const pdfStyle = "style=\"background:#fff; color:#000; font-family: system-ui, sans-serif; font-size: 12px; margin: 0; padding: 0;\"";
-      const pdfTable = "style=\"width:100%; border-collapse:collapse; font-size:11px; margin-top:6px;\"";
-      const pdfTh = "style=\"text-align:left; padding:6px 8px; border:1px solid #333; background:#f5f5f5;\"";
-      const pdfTd = "style=\"text-align:left; padding:6px 8px; border:1px solid #333;\"";
-      let html = "<div " + pdfStyle + ">";
-      html += "<h1 style=\"font-size:18px; margin:0 0 12px 0; border-bottom:2px solid #000; padding-bottom:8px;\">Workout Report</h1>";
-      html += "<p style=\"margin:0 0 12px 0;\"><strong>User</strong> " + escapeHtml(userId.slice(0, 8)) + "… &nbsp; <strong>Total Workouts</strong> " + workouts.length + " &nbsp; <strong>Generated</strong> " + escapeHtml(nowReadable()) + "</p>";
-      if (!workouts.length) {
-        html += "<p style=\"margin:12px 0;\">No saved workouts for this user on this device.</p>";
-      } else {
-        workouts.forEach(w => {
-          const savedAt = formatSavedAtForReport(w.savedAt, w.ts);
-          html += "<div style=\"margin:16px 0; padding:12px 0; border-top:1px solid #333;\">";
-          html += "<p style=\"margin:0 0 8px 0; font-size:14px; font-weight:bold;\">" + escapeHtml(w.machineName || "—") + " &nbsp; <span style=\"font-weight:normal; font-size:11px;\">" + escapeHtml(w.type || "—") + "</span></p>";
-          html += "<table " + pdfTable + "><tr><th " + pdfTh + ">Date</th><td " + pdfTd + ">" + escapeHtml(w.date || "—") + "</td><th " + pdfTh + ">Gym</th><td " + pdfTd + ">" + escapeHtml(w.gymName || "—") + "</td></tr>";
-          html += "<tr><th " + pdfTh + ">Exercise</th><td " + pdfTd + ">" + escapeHtml(w.exercise || "—") + "</td><th " + pdfTh + ">Saved</th><td " + pdfTd + ">" + escapeHtml(savedAt || "—") + "</td></tr></table>";
-          html += "<p style=\"margin:8px 0 4px 0;\"><strong>Notes</strong></p><p style=\"margin:0 0 8px 0;\">" + escapeHtml(w.notes || "—") + "</p>";
-          if (w.type === "Cardio" && w.cardio) {
-            html += "<p style=\"margin:4px 0;\"><strong>Cardio</strong></p><table " + pdfTable + "><thead><tr><th " + pdfTh + ">Metric</th><th " + pdfTh + ">Value</th></tr></thead><tbody>";
-            const c = w.cardio;
-            ["minutes", "calories", "distance", "distance_m", "incline", "speed", "resistance", "level", "pace"].forEach(k => { if (c[k] != null && c[k] !== "") html += "<tr><td " + pdfTd + ">" + escapeHtml(k) + "</td><td " + pdfTd + ">" + escapeHtml(String(c[k])) + "</td></tr>"; });
-            html += "</tbody></table>";
-          } else if (w.sets && w.sets.length) {
-            html += "<p style=\"margin:4px 0;\"><strong>Sets</strong></p><table " + pdfTable + "><thead><tr><th " + pdfTh + ">Set</th><th " + pdfTh + ">Weight</th><th " + pdfTh + ">Reps</th></tr></thead><tbody>";
-            w.sets.forEach((s, i) => { html += "<tr><td " + pdfTd + ">" + (i + 1) + "</td><td " + pdfTd + ">" + escapeHtml(s.weight || "—") + "</td><td " + pdfTd + ">" + escapeHtml(s.reps || "—") + "</td></tr>"; });
-            html += "</tbody></table>";
-          }
-          html += "</div>";
-        });
-      }
-      html += "</div>";
-      return html;
-    }
-
-    function openWorkoutReport() {
-      const workouts = getAllWorkoutsForReport();
-      const cleanBodyHtml = buildPdfOnlyReportHtml(workouts);
-      const workoutCardsHtml = workouts.length
-        ? workouts.map(w => {
-            const savedAt = formatSavedAtForReport(w.savedAt, w.ts);
-            const body = w.type === "Cardio" ? renderCardioForReport(w.cardio) : renderStrengthSetsForReport(w.sets || []);
-            return `<div class="workoutCard">
-              <div class="topRow">
-                <div class="leftTitle">${escapeHtml(w.machineName || "—")}</div>
-                <div class="rightType">${escapeHtml(w.type || "—")}</div>
-              </div>
-              <div class="infoGrid">
-                <div class="infoBox"><div class="label">Date</div><div class="value">${escapeHtml(w.date || "—")}</div></div>
-                <div class="infoBox"><div class="label">Gym</div><div class="value">${escapeHtml(w.gymName || "—")}</div></div>
-                <div class="infoBox"><div class="label">Exercise</div><div class="value">${escapeHtml(w.exercise || "—")}</div></div>
-                <div class="infoBox"><div class="label">Saved</div><div class="value">${escapeHtml(savedAt || "—")}</div></div>
-              </div>
-              <div class="sectionTitle">Notes</div>
-              <div class="infoBox"><div class="value">${escapeHtml(w.notes || "—")}</div></div>
-              <div class="sectionTitle">${w.type === "Cardio" ? "Cardio Details" : "Sets"}</div>
-              ${body}
-            </div>`;
-          }).join("")
-        : `<div class="workoutCard"><p class="muted">No saved workouts found for this user on this device yet.</p></div>`;
-
-      const reportHtml = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Workout Report</title>
-  <style>
-    *{ box-sizing:border-box; }
-    #pdfReportRoot{ box-sizing:border-box; width:100%; max-width:720px; margin:0 auto; }
-    .wrap{ max-width:720px; margin:0 auto; }
-    body{ background:#0b0c10; color:#e9e9ee; font-family: system-ui, sans-serif; padding:16px; margin:0; }
-    .header{ background:rgba(18,19,24,.78); border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:18px; margin-bottom:16px; }
-    .title{ font-size:24px; font-weight:900; margin:0; }
-    .sub{ margin-top:8px; color:#a9a9b6; font-size:13px; line-height:1.5; }
-    .meta{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
-    .metaPill{ border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.04); padding:8px 12px; border-radius:999px; font-size:12px; color:#a9a9b6; }
-    .actions{ margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; }
-    .btn{ border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); color:#e9e9ee; border-radius:12px; padding:10px 12px; font-weight:800; cursor:pointer; }
-    .btn.primary{ border-color:rgba(139,92,246,.55); background:linear-gradient(135deg,rgba(139,92,246,.95),rgba(139,92,246,.55)); color:#fff; }
-    .workoutCard{ margin-bottom:16px; padding:16px; border:1px solid rgba(255,255,255,.1); border-radius:20px; background:rgba(18,19,24,.78); break-inside:avoid; page-break-inside:avoid; }
-    .topRow{ display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:flex-start; }
-    .leftTitle{ font-size:18px; font-weight:900; line-height:1.2; }
-    .rightType{ font-size:12px; font-weight:900; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.04); border-radius:999px; padding:6px 10px; color:#a9a9b6; }
-    .infoGrid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:14px; }
-    .infoBox{ border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.03); border-radius:14px; padding:10px 12px; }
-    .label{ font-size:11px; text-transform:uppercase; letter-spacing:.8px; color:#a9a9b6; font-weight:800; margin-bottom:6px; }
-    .value{ font-size:14px; line-height:1.4; word-break:break-word; }
-    .sectionTitle{ margin-top:16px; margin-bottom:8px; font-size:13px; font-weight:900; color:#e9e9ee; }
-    .muted{ color:#a9a9b6; font-size:12px; }
-    table{ width:100%; border-collapse:collapse; }
-    th,td{ text-align:left; padding:6px 8px; border-bottom:1px solid rgba(255,255,255,.1); font-size:12px; }
-    th{ color:#a9a9b6; }
-    @media (max-width: 640px){ .wrap{ padding:8px; } }
-    @media print{ .actions{ display:none !important; } body{ background:#0b0c10 !important; } }
-  </style>
-</head>
-<body>
-  <div id="pdfReportRoot">
-    <div class="header">
-      <h1 class="title">Workout Report</h1>
-      <div class="sub">This report is for reviewing workouts. Use <strong>Back Up Data</strong> in the app if you want a restore file for a new phone.</div>
-      <div class="meta">
-        <div class="metaPill">User: ${escapeHtml(userId.slice(0,8))}…</div>
-        <div class="metaPill">Total Workouts: ${workouts.length}</div>
-        <div class="metaPill">Generated: ${escapeHtml(nowReadable())}</div>
-      </div>
-    </div>
-    ${workoutCardsHtml}
-    <div class="actions">
-      <button class="btn primary" onclick="window.print()">Print</button>
-      <button class="btn" id="downloadReportHtmlBtn" type="button">Download report</button>
-      <button class="btn" onclick="window.close()">Close</button>
-    </div>
-  </div>
-  <div id="pdfOnlyContent" style="position:absolute; left:-9999px; top:0; width:720px; background:#fff;">${cleanBodyHtml}</div>
-  <script>
-    function downloadReportHtml() {
-      var el = document.getElementById("pdfOnlyContent");
-      if (!el || !el.innerHTML) { alert("Report content not available."); return; }
-      var doc = "<!DOCTYPE html><html lang=\\"en\\"><head><meta charset=\\"utf-8\\"><meta name=\\"viewport\\" content=\\"width=device-width,initial-scale=1\\"><title>Workout Report</title><style>body{background:#fff;color:#000;font-family:system-ui,sans-serif;font-size:12px;margin:0;padding:12px;} table{border-collapse:collapse;width:100%;} th,td{text-align:left;padding:6px 8px;border:1px solid #333;} th{background:#f5f5f5;}</style></head><body>" + el.innerHTML + "</body></html>";
-      var blob = new Blob([doc], { type: "text/html;charset=utf-8" });
-      var a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "scanliftlog_workout_report_" + new Date().toISOString().slice(0,10) + ".html";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(a.href);
-    }
-    document.getElementById("downloadReportHtmlBtn").addEventListener("click", downloadReportHtml);
-  <\/script>
-</body>
-</html>`;
-      const w = window.open("", "_blank");
-      w.document.write(reportHtml);
-      w.document.close();
     }
 
     /* ---------- DOM refs ---------- */
@@ -1467,6 +1583,11 @@
        INIT (WITH WORKING GYM GATE)
        ================================ */
     (async () => {
+      const isPrivateLikely = await detectPrivateModeLikely();
+      if (isPrivateLikely) {
+        showPrivateModeModal();
+      }
+
       // Basic header text always shows
       document.getElementById('year').textContent = String(new Date().getFullYear());
       document.getElementById('gymNameText').textContent = gymName;
@@ -1475,23 +1596,53 @@
       document.getElementById('historyScopeBadge').textContent = `Scope: ${machineId ? machineId : "No machine scanned"}`;
       dateInput.value = todayISO();
 
-      // Per-gym promotional banner: load from banners/<gymId>.jpg or .png (front-end only, no backend)
+          // Per-gym promotional banner: load from banners/<gymId>.jpg or .png (front-end only, no backend)
       const promoBannerEl = document.getElementById('promoBanner');
       const promoBannerImg = document.getElementById('promoBannerImg');
-      if (promoBannerEl && promoBannerImg && gymId && gymId !== "main") {
+      const promoBannerLink = document.getElementById('promoBannerLink');
+
+      if (promoBannerEl && promoBannerImg && promoBannerLink && gymId) {
         const base = BANNER_FOLDER + "/" + encodeURIComponent(gymId);
+
         const tryExt = (ext) => {
           promoBannerImg.onerror = () => {
-            if (ext === ".jpg") tryExt(".png");
-            else { promoBannerEl.style.display = "none"; promoBannerEl.setAttribute("aria-hidden", "true"); }
+            if (ext === ".jpg") {
+              tryExt(".png");
+            } else {
+              promoBannerEl.style.display = "none";
+              promoBannerEl.setAttribute("aria-hidden", "true");
+            }
           };
+
           promoBannerImg.onload = () => {
             promoBannerEl.style.display = "";
             promoBannerEl.setAttribute("aria-hidden", "false");
           };
+
           promoBannerImg.alt = gymName + " promotional banner";
           promoBannerImg.src = base + ext;
         };
+
+     const bannerHref = BANNER_LINK_MAP[gymId] || "";
+
+if (bannerHref) {
+  promoBannerLink.href = bannerHref;
+  promoBannerLink.style.pointerEvents = "auto";
+  promoBannerLink.style.cursor = "pointer";
+} else {
+  promoBannerLink.removeAttribute("href");
+  promoBannerLink.style.pointerEvents = "none";
+  promoBannerLink.style.cursor = "default";
+}
+
+promoBannerLink.addEventListener('click', () => {
+  if (!bannerHref) return;
+
+  logEvent(gymId, machineId || null, machineName || "PROMO_BANNER", userId, "banner_click", {
+    bannerTargetUrl: bannerHref
+  });
+});
+
         tryExt(".jpg");
       } else if (promoBannerEl) {
         promoBannerEl.style.display = "none";
@@ -1512,8 +1663,8 @@
       logEvent(gymId, machineId, machineName, userId, "scan");
 
       // Wire buttons
+      document.getElementById('resetUserBtn').addEventListener('click', resetUser);
       document.getElementById('downloadBtn').addEventListener('click', downloadData);
-      document.getElementById('reportBtn').addEventListener('click', openWorkoutReport);
 
       // Tooltip tap support (mobile): tap ⓘ to toggle
       document.querySelectorAll('.tipIcon').forEach(icon => {
