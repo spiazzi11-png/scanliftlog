@@ -722,73 +722,62 @@
     }
 
     .badge-accent-blue.badgeTile.unlocked,
-    .badge-accent-blue .badgeIconWrap {
-      border-color: rgba(96,165,250,.24);
-    }
+.badge-accent-blue .badgeIconWrap {
+  border-color: rgba(96,165,250,.24);
+}
 
-    .badge-accent-blue.badgeTile.unlocked .badgeIconWrap {
-      box-shadow: 0 0 18px rgba(96,165,250,.16);
-    }
+.badge-accent-blue.badgeTile.unlocked .badgeIconWrap {
+  box-shadow: 0 0 18px rgba(96,165,250,.16);
+}
 
-    .badge-accent-red.badgeTile.unlocked,
-    .badge-accent-red .badgeIconWrap {
-      border-color: rgba(239,68,68,.26);
-    }
+.badge-accent-red.badgeTile.unlocked,
+.badge-accent-red .badgeIconWrap {
+  border-color: rgba(239,68,68,.26);
+}
 
-    .badge-accent-red.badgeTile.unlocked .badgeIconWrap {
-      box-shadow: 0 0 18px rgba(239,68,68,.16);
-    }
+.badge-accent-red.badgeTile.unlocked .badgeIconWrap {
+  box-shadow: 0 0 18px rgba(239,68,68,.16);
+}
 
-    .badge-accent-purple.badgeTile.unlocked,
-    .badge-accent-purple .badgeIconWrap {
-      border-color: rgba(168,85,247,.28);
-    }
+.badge-accent-green.badgeTile.unlocked,
+.badge-accent-green .badgeIconWrap {
+  border-color: rgba(34,197,94,.28);
+}
 
-    .badge-accent-purple.badgeTile.unlocked .badgeIconWrap {
-      box-shadow: 0 0 18px rgba(168,85,247,.18);
-    }
+.badge-accent-green.badgeTile.unlocked .badgeIconWrap {
+  box-shadow: 0 0 18px rgba(34,197,94,.18);
+}
 
-    .badge-accent-gold.badgeTile.unlocked,
-    .badge-accent-gold .badgeIconWrap {
-      border-color: rgba(245,158,11,.32);
-    }
+.badge-accent-purple.badgeTile.unlocked,
+.badge-accent-purple .badgeIconWrap {
+  border-color: rgba(168,85,247,.28);
+}
 
-    .badge-accent-gold.badgeTile.unlocked .badgeIconWrap {
-      box-shadow: 0 0 18px rgba(245,158,11,.18);
-    }
+.badge-accent-purple.badgeTile.unlocked .badgeIconWrap {
+  box-shadow: 0 0 18px rgba(168,85,247,.18);
+}
 
-    .badge-accent-platinum.badgeTile.unlocked,
-    .badge-accent-platinum .badgeIconWrap {
-      border-color: rgba(229,231,235,.34);
-    }
+.badge-accent-gold.badgeTile.unlocked,
+.badge-accent-gold .badgeIconWrap {
+  border-color: rgba(245,158,11,.32);
+}
 
-    .badge-accent-platinum.badgeTile.unlocked .badgeIconWrap {
-      box-shadow: 0 0 18px rgba(229,231,235,.18);
-    }
+.badge-accent-gold.badgeTile.unlocked .badgeIconWrap {
+  box-shadow: 0 0 18px rgba(245,158,11,.18);
+}
 
-    .badgeProgressCard.badge-accent-steel .badgeBarFill {
-      background: linear-gradient(90deg, #9aa4ab, #d1d5db);
-    }
+.badge-accent-platinum.badgeTile.unlocked,
+.badge-accent-platinum .badgeIconWrap {
+  border-color: rgba(229,231,235,.34);
+}
 
-    .badgeProgressCard.badge-accent-blue .badgeBarFill {
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
-    }
+.badge-accent-platinum.badgeTile.unlocked .badgeIconWrap {
+  box-shadow: 0 0 18px rgba(229,231,235,.18);
+}
 
-    .badgeProgressCard.badge-accent-red .badgeBarFill {
-      background: linear-gradient(90deg, #dc2626, #ef4444);
-    }
-
-    .badgeProgressCard.badge-accent-purple .badgeBarFill {
-      background: linear-gradient(90deg, #7c3aed, #a855f7);
-    }
-
-    .badgeProgressCard.badge-accent-gold .badgeBarFill {
-      background: linear-gradient(90deg, #d97706, #f59e0b);
-    }
-
-    .badgeProgressCard.badge-accent-platinum .badgeBarFill {
-      background: linear-gradient(90deg, #9ca3af, #f3f4f6);
-    }
+.badgeProgressCard.badge-accent-green .badgeBarFill {
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+}
 
     /* ===== Private / Incognito Mode Modal ===== */
     .privateModeModal.hidden {
@@ -1727,15 +1716,15 @@
 
     /* ---------- Badges ---------- */
     const BADGES = [
-      { id: "first_rep",      name: "First Rep",            milestone: 1,    accent: "steel",    icon: "dumbbell" },
-      { id: "getting_started",name: "Getting Started",      milestone: 25,   accent: "steel",    icon: "target" },
-      { id: "on_the_board",   name: "On the Board",         milestone: 50,   accent: "blue",     icon: "clipboard" },
-      { id: "consistency",    name: "Consistency Kicks In", milestone: 100,  accent: "red",      icon: "flame" },
-      { id: "habit",          name: "Gym Habit Activated",  milestone: 250,  accent: "blue",     icon: "zap" },
-      { id: "centurion",      name: "Centurion",            milestone: 500,  accent: "purple",   icon: "trophy" },
-      { id: "iron_streak",    name: "Iron Streak",          milestone: 1000, accent: "gold",     icon: "shield" },
-      { id: "machine_legend", name: "Machine Legend",       milestone: 2500, accent: "platinum", icon: "crown" }
-    ];
+  { id: "rookie",       name: "Rookie",       milestone: 1,    accent: "steel",    icon: "dumbbell" },
+  { id: "novice",       name: "Novice",       milestone: 25,   accent: "blue",     icon: "target" },
+  { id: "intermediate", name: "Intermediate", milestone: 50,   accent: "green",    icon: "clipboard" },
+  { id: "advanced",     name: "Advanced",     milestone: 100,  accent: "red",      icon: "flame" },
+  { id: "expert",       name: "Expert",       milestone: 250,  accent: "purple",   icon: "zap" },
+  { id: "pro",          name: "Pro",          milestone: 500,  accent: "gold",     icon: "trophy" },
+  { id: "elite",        name: "Elite",        milestone: 1000, accent: "platinum", icon: "shield" },
+  { id: "legend",       name: "Legend",       milestone: 2500, accent: "platinum", icon: "crown" }
+];
 
     function badgeSvg(icon) {
       const common = 'width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
