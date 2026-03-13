@@ -562,6 +562,234 @@
       }
     }
 
+    /* ===== Badges ===== */
+    .badgeProgressCard,
+    .badgesCard {
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      padding: 14px;
+      margin: 16px 0 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    }
+
+    .badgeProgressTop {
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .badgeProgressIconWrap {
+      width:56px;
+      height:56px;
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.10);
+      flex:0 0 auto;
+    }
+
+    .badgeProgressText {
+      min-width:0;
+    }
+
+    .badgeEyebrow {
+      font-size:12px;
+      opacity:.72;
+      margin-bottom:2px;
+    }
+
+    .badgeTitle {
+      font-size:18px;
+      font-weight:800;
+      line-height:1.2;
+    }
+
+    .badgeSub {
+      font-size:13px;
+      opacity:.82;
+      margin-top:3px;
+    }
+
+    .badgeProgressLine {
+      margin-top:12px;
+      font-size:13px;
+      font-weight:600;
+    }
+
+    .badgeBar {
+      margin-top:8px;
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .badgeBarFill {
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      transition: width .25s ease;
+      background: linear-gradient(90deg, #e53e3e, #ff7a7a);
+    }
+
+    .badgesHeader {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .badgesHeaderTitle {
+      font-size:16px;
+      font-weight:800;
+    }
+
+    .badgesHeaderSub {
+      font-size:12px;
+      opacity:.72;
+    }
+
+    .badgesGrid {
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:10px;
+    }
+
+    @media (min-width: 700px) {
+      .badgesGrid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .badgeTile {
+      position:relative;
+      border-radius:18px;
+      padding:12px;
+      min-height:126px;
+      background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .badgeTile.locked {
+      opacity:.55;
+      filter: grayscale(.15);
+    }
+
+    .badgeTile.unlocked {
+      box-shadow: 0 0 0 1px rgba(255,255,255,.04), 0 10px 24px rgba(0,0,0,.22);
+    }
+
+    .badgeIconWrap {
+      width:50px;
+      height:50px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .badgeTileTitle {
+      font-size:14px;
+      font-weight:800;
+      line-height:1.2;
+    }
+
+    .badgeTileSub {
+      font-size:12px;
+      opacity:.76;
+      line-height:1.3;
+    }
+
+    .badgeLock {
+      position:absolute;
+      top:10px;
+      right:10px;
+      font-size:11px;
+      padding:4px 7px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      opacity:.9;
+    }
+
+    .badge-accent-blue.badgeTile.unlocked,
+    .badge-accent-blue .badgeIconWrap {
+      border-color: rgba(96,165,250,.24);
+    }
+
+    .badge-accent-blue.badgeTile.unlocked .badgeIconWrap {
+      box-shadow: 0 0 18px rgba(96,165,250,.16);
+    }
+
+    .badge-accent-red.badgeTile.unlocked,
+    .badge-accent-red .badgeIconWrap {
+      border-color: rgba(239,68,68,.26);
+    }
+
+    .badge-accent-red.badgeTile.unlocked .badgeIconWrap {
+      box-shadow: 0 0 18px rgba(239,68,68,.16);
+    }
+
+    .badge-accent-purple.badgeTile.unlocked,
+    .badge-accent-purple .badgeIconWrap {
+      border-color: rgba(168,85,247,.28);
+    }
+
+    .badge-accent-purple.badgeTile.unlocked .badgeIconWrap {
+      box-shadow: 0 0 18px rgba(168,85,247,.18);
+    }
+
+    .badge-accent-gold.badgeTile.unlocked,
+    .badge-accent-gold .badgeIconWrap {
+      border-color: rgba(245,158,11,.32);
+    }
+
+    .badge-accent-gold.badgeTile.unlocked .badgeIconWrap {
+      box-shadow: 0 0 18px rgba(245,158,11,.18);
+    }
+
+    .badge-accent-platinum.badgeTile.unlocked,
+    .badge-accent-platinum .badgeIconWrap {
+      border-color: rgba(229,231,235,.34);
+    }
+
+    .badge-accent-platinum.badgeTile.unlocked .badgeIconWrap {
+      box-shadow: 0 0 18px rgba(229,231,235,.18);
+    }
+
+    .badgeProgressCard.badge-accent-steel .badgeBarFill {
+      background: linear-gradient(90deg, #9aa4ab, #d1d5db);
+    }
+
+    .badgeProgressCard.badge-accent-blue .badgeBarFill {
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    }
+
+    .badgeProgressCard.badge-accent-red .badgeBarFill {
+      background: linear-gradient(90deg, #dc2626, #ef4444);
+    }
+
+    .badgeProgressCard.badge-accent-purple .badgeBarFill {
+      background: linear-gradient(90deg, #7c3aed, #a855f7);
+    }
+
+    .badgeProgressCard.badge-accent-gold .badgeBarFill {
+      background: linear-gradient(90deg, #d97706, #f59e0b);
+    }
+
+    .badgeProgressCard.badge-accent-platinum .badgeBarFill {
+      background: linear-gradient(90deg, #9ca3af, #f3f4f6);
+    }
+
     /* ===== Private / Incognito Mode Modal ===== */
     .privateModeModal.hidden {
       display: none;
@@ -748,16 +976,16 @@
 </head>
 <body>
   <div class="appNav">
-  <div class="appNavInner">
-    <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
-      <div>ScanLiftLog</div>
-    </div>
-    <div class="navLinks">
-      <a class="navLink" href="https://scanliftlog.com" target="_blank" rel="noopener">Home</a>
+    <div class="appNavInner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>ScanLiftLog</div>
+      </div>
+      <div class="navLinks">
+        <a class="navLink" href="https://scanliftlog.com" target="_blank" rel="noopener">Home</a>
+      </div>
     </div>
   </div>
-</div>
 
   <div class="promoBanner" id="promoBanner" style="display:none;" aria-hidden="true">
     <a
@@ -830,6 +1058,8 @@
         Gym ID: <span id="inactiveGymId">—</span>
       </div>
     </div>
+
+    <div id="badgeProgressCard" class="badgeProgressCard" style="display:none;"></div>
 
     <div class="card" id="logger">
       <div class="row" style="align-items:flex-end;">
@@ -950,6 +1180,8 @@
         </table>
       </div>
     </div>
+
+    <div id="badgesCard" class="badgesCard" style="display:none;"></div>
 
     <footer>
       © <span id="year"></span> ScanLiftLog •
@@ -1255,6 +1487,12 @@
       const historyCard = document.getElementById("historyCard");
       if (historyCard) historyCard.style.display = "none";
 
+      const badgeProgressCard = document.getElementById("badgeProgressCard");
+      if (badgeProgressCard) badgeProgressCard.style.display = "none";
+
+      const badgesCard = document.getElementById("badgesCard");
+      if (badgesCard) badgesCard.style.display = "none";
+
       const inactiveGate = document.getElementById("inactiveGate");
       const inactiveGymId = document.getElementById("inactiveGymId");
       if (inactiveGymId) inactiveGymId.textContent = gid || "—";
@@ -1315,7 +1553,7 @@
 
     /* ---------- Local kill switch (optional) ---------- */
     const GYM_STATUS = {
-      "main": true,
+      "main": true
     };
 
     function isGymActiveLocal(gid) {
@@ -1352,8 +1590,8 @@
 
     /* ---------- Machine Type ---------- */
     const CARDIO_MACHINE_IDS = [
-      "TRED","ELIP","STAIR","BIKE","ROW","SKIER","CURVE","STEP","SPIN","ARC","ASSLT",
-      "RECBK","UPRBK","ICLMB","JACOB","VCLMB","XTRNR","SPRBK","STRDR","ADSKI","SLDM"
+      "TRED", "ELIP", "STAIR", "BIKE", "ROW", "SKIER", "CURVE", "STEP", "SPIN", "ARC", "ASSLT",
+      "RECBK", "UPRBK", "ICLMB", "JACOB", "VCLMB", "XTRNR", "SPRBK", "STRDR", "ADSKI", "SLDM"
     ];
 
     const machineType = (machineId && CARDIO_MACHINE_IDS.includes(machineId)) ? "cardio" : "strength";
@@ -1485,6 +1723,159 @@
     function saveWorkouts(arr) {
       if (!machineId) return;
       localStorage.setItem(storageKeyFor(machineId), JSON.stringify(arr));
+    }
+
+    /* ---------- Badges ---------- */
+    const BADGES = [
+      { id: "first_rep",      name: "First Rep",            milestone: 1,    accent: "steel",    icon: "dumbbell" },
+      { id: "getting_started",name: "Getting Started",      milestone: 25,   accent: "steel",    icon: "target" },
+      { id: "on_the_board",   name: "On the Board",         milestone: 50,   accent: "blue",     icon: "clipboard" },
+      { id: "consistency",    name: "Consistency Kicks In", milestone: 100,  accent: "red",      icon: "flame" },
+      { id: "habit",          name: "Gym Habit Activated",  milestone: 250,  accent: "blue",     icon: "zap" },
+      { id: "centurion",      name: "Centurion",            milestone: 500,  accent: "purple",   icon: "trophy" },
+      { id: "iron_streak",    name: "Iron Streak",          milestone: 1000, accent: "gold",     icon: "shield" },
+      { id: "machine_legend", name: "Machine Legend",       milestone: 2500, accent: "platinum", icon: "crown" }
+    ];
+
+    function badgeSvg(icon) {
+      const common = 'width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+
+      switch (icon) {
+        case "dumbbell":
+          return `<svg ${common}><path d="M6 9v6"/><path d="M18 9v6"/><path d="M4 10v4"/><path d="M20 10v4"/><path d="M9 8v8"/><path d="M15 8v8"/><path d="M6 12h12"/></svg>`;
+        case "target":
+          return `<svg ${common}><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M22 12h-2"/><path d="M12 22v-2"/><path d="M2 12h2"/></svg>`;
+        case "clipboard":
+          return `<svg ${common}><rect x="7" y="4" width="10" height="16" rx="2"/><path d="M9 4.5h6a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1Z"/><path d="M9 12l2 2 4-4"/></svg>`;
+        case "flame":
+          return `<svg ${common}><path d="M12 3s1.8 2.4 1.8 4.1c0 1.3-.7 2.1-1.8 3.3-1.1-1.2-1.8-2-1.8-3.3C10.2 5.4 12 3 12 3Z"/><path d="M8 14a4 4 0 1 0 8 0c0-2.7-2.3-4-4-5.7-1.7 1.7-4 3-4 5.7Z"/></svg>`;
+        case "zap":
+          return `<svg ${common}><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>`;
+        case "trophy":
+          return `<svg ${common}><path d="M8 4h8v3a4 4 0 0 1-8 0V4Z"/><path d="M10 14h4"/><path d="M12 10v4"/><path d="M8 20h8"/><path d="M16 5h2a2 2 0 0 1 0 4h-2"/><path d="M8 5H6a2 2 0 0 0 0 4h2"/></svg>`;
+        case "shield":
+          return `<svg ${common}><path d="M12 3l7 3v5c0 4.5-3 7.8-7 10-4-2.2-7-5.5-7-10V6l7-3Z"/></svg>`;
+        case "crown":
+          return `<svg ${common}><path d="M3 18h18"/><path d="M5 18 4 8l5 4 3-6 3 6 5-4-1 10Z"/></svg>`;
+        default:
+          return `<svg ${common}><circle cx="12" cy="12" r="8"/></svg>`;
+      }
+    }
+
+    function getGymTotalSavedWorkouts() {
+      const prefix = `scanliftlog_workouts_v1:${userId}:${orgId}:`;
+      let total = 0;
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key || !key.startsWith(prefix)) continue;
+
+        try {
+          const arr = JSON.parse(localStorage.getItem(key) || "[]");
+          if (Array.isArray(arr)) total += arr.length;
+        } catch (e) {}
+      }
+
+      return total;
+    }
+
+    function getCurrentBadge(totalSaved) {
+      let current = BADGES[0];
+      for (const badge of BADGES) {
+        if (totalSaved >= badge.milestone) current = badge;
+        else break;
+      }
+      return current;
+    }
+
+    function getNextBadge(totalSaved) {
+      return BADGES.find(b => totalSaved < b.milestone) || null;
+    }
+
+    function getBadgeProgressPct(totalSaved) {
+      const current = getCurrentBadge(totalSaved);
+      const next = getNextBadge(totalSaved);
+
+      if (!next) return 100;
+
+      const min = current ? current.milestone : 0;
+      const max = next.milestone;
+      const raw = ((totalSaved - min) / (max - min)) * 100;
+
+      return Math.max(0, Math.min(100, raw));
+    }
+
+    function renderBadgeProgressCard() {
+      const el = document.getElementById("badgeProgressCard");
+      if (!el) return;
+
+      const totalSaved = getGymTotalSavedWorkouts();
+      const current = getCurrentBadge(totalSaved);
+      const next = getNextBadge(totalSaved);
+      const pct = getBadgeProgressPct(totalSaved);
+
+      el.style.display = "";
+      el.className = `badgeProgressCard badge-accent-${current.accent}`;
+
+      const progressText = next
+        ? `${Math.max(0, next.milestone - totalSaved)} more saves until ${next.name}`
+        : "Top badge unlocked";
+
+      const nextText = next
+        ? `Next badge: ${next.name} at ${next.milestone.toLocaleString()} saves`
+        : "You’ve unlocked every badge";
+
+      el.innerHTML = `
+        <div class="badgeProgressTop">
+          <div class="badgeProgressIconWrap">${badgeSvg(current.icon)}</div>
+          <div class="badgeProgressText">
+            <div class="badgeEyebrow">Current Badge</div>
+            <div class="badgeTitle">${current.name}</div>
+            <div class="badgeSub">${totalSaved.toLocaleString()} total saves in this gym</div>
+          </div>
+        </div>
+        <div class="badgeProgressLine">${progressText}</div>
+        <div class="badgeBar">
+          <div class="badgeBarFill" style="width:${pct}%"></div>
+        </div>
+        <div class="badgeSub" style="margin-top:8px;">${nextText}</div>
+      `;
+    }
+
+    function renderBadgesCard() {
+      const el = document.getElementById("badgesCard");
+      if (!el) return;
+
+      const totalSaved = getGymTotalSavedWorkouts();
+
+      const tiles = BADGES.map(badge => {
+        const unlocked = totalSaved >= badge.milestone;
+        return `
+          <div class="badgeTile ${unlocked ? "unlocked" : "locked"} badge-accent-${badge.accent}">
+            ${unlocked ? "" : '<div class="badgeLock">Locked</div>'}
+            <div class="badgeIconWrap">${badgeSvg(badge.icon)}</div>
+            <div class="badgeTileTitle">${badge.name}</div>
+            <div class="badgeTileSub">${badge.milestone.toLocaleString()} saves</div>
+          </div>
+        `;
+      }).join("");
+
+      el.style.display = "";
+      el.innerHTML = `
+        <div class="badgesHeader">
+          <div>
+            <div class="badgesHeaderTitle">My Badges</div>
+            <div class="badgesHeaderSub">Unlocked by total saves in this gym</div>
+          </div>
+          <div class="badgesHeaderSub">${totalSaved.toLocaleString()} saves</div>
+        </div>
+        <div class="badgesGrid">${tiles}</div>
+      `;
+    }
+
+    function renderBadgeUI() {
+      renderBadgeProgressCard();
+      renderBadgesCard();
     }
 
     /* ---------- Back Up Data ---------- */
@@ -2312,6 +2703,7 @@
           notesInput.value = "";
           clearCardioInputs();
           renderHistory();
+          renderBadgeUI();
           return;
         }
 
@@ -2339,12 +2731,14 @@
         notesInput.value = "";
         clearCurrentSets();
         renderHistory();
+        renderBadgeUI();
       });
 
       document.getElementById("clearHistoryBtn").addEventListener("click", () => {
         if (!confirm("Clear ALL history for this machine on this device?")) return;
         saveWorkouts([]);
         renderHistory();
+        renderBadgeUI();
       });
 
       setModeUI();
@@ -2353,6 +2747,7 @@
       else clearCardioInputs();
 
       renderHistory();
+      renderBadgeUI();
     })();
   </script>
 </body>
