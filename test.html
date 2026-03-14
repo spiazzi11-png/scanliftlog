@@ -1942,7 +1942,7 @@
             ${unlocked ? "" : '<div class="badgeLock">Locked</div>'}
             <div class="badgeIconWrap">${badgeSvg(badge.icon)}</div>
             <div class="badgeTileTitle">${badge.name}</div>
-            <div class="badgeTileSub">${badge.milestone.toLocaleString()} saves</div>
+            <div class="badgeTileSub">${badge.milestone.toLocaleString()} ${badge.milestone === 1 ? "save" : "saves"}</div>
           </div>
         `;
       }).join("");
