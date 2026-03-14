@@ -1229,7 +1229,7 @@
       }
 
       const gymId = normalizeGymSlug(gym) || "main";
-      const machineId = machine ? normalizeMachineId(machine) : null;
+      const machineId = machine ? normalizeMachineId(machine) : LEGPR;
       const orgId = (params.get("org") || "").trim().toLowerCase() || gymId;
 
       return { gymId, machineId, orgId };
