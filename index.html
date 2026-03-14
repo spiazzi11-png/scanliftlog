@@ -1874,30 +1874,31 @@
       }
     }
 
-    function getCurrentBadge(totalSaved) {
-      let current = BADGES[0];
-      for (const badge of BADGES) {
-        if (totalSaved >= badge.milestone) current = badge;
-        else break;
-      }
-      return current;
-    }
+ function getCurrentBadge(totalSaved) {
+  let current = null;
+  for (const badge of BADGES) {
+    if (totalSaved >= badge.milestone) current = badge;
+    else break;
+  }
+  return current;
+}
 
     function getNextBadge(totalSaved) {
       return BADGES.find(b => totalSaved < b.milestone) || null;
     }
 
-    function getBadgeProgressPct(totalSaved) {
-      const current = getCurrentBadge(totalSaved);
-      const next = getNextBadge(totalSaved);
+  function getBadgeProgressPct(totalSaved) {
+  const current = getCurrentBadge(totalSaved);
+  const next = getNextBadge(totalSaved);
 
-      if (!next) return 100;
+  if (!next) return 100;
 
-      const min = current ? current.milestone : 0;
-      const max = next.milestone;
-      const raw = ((totalSaved - min) / (max - min)) * 100;
-      return Math.max(0, Math.min(100, raw));
-    }
+  const min = current ? current.milestone : 0;
+  const max = next.milestone;
+  const raw = ((totalSaved - min) / (max - min)) * 100;
+
+  return Math.max(0, Math.min(100, raw));
+}
 
     function renderBadgeProgressCard() {
       const el = document.getElementById("badgeProgressCard");
@@ -1909,31 +1910,35 @@
       const pct = getBadgeProgressPct(totalSaved);
 
       el.style.display = "";
-      el.className = `badgeProgressCard badge-accent-${current.accent}`;
+      el.className = `badgeProgressCard badge-accent-${current ? current.accent : "steel"}`;
 
       const progressText = next
-        ? `${Math.max(0, next.milestone - totalSaved)} more ${next.milestone - totalSaved === 1 ? "save" : "saves"} until ${next.name}`
-        : "Top badge unlocked";
+  ? `${Math.max(0, next.milestone - totalSaved)} more ${next.milestone - totalSaved === 1 ? "save" : "saves"} until ${next.name}`
+  : "Top badge unlocked";
 
-      const nextText = next
-        ? `Next badge: ${next.name} at ${next.milestone.toLocaleString()} ${next.milestone === 1 ? "save" : "saves"}`
-        : "You’ve unlocked every badge";
+const nextText = next
+  ? `Next badge: ${next.name} at ${next.milestone.toLocaleString()} ${next.milestone === 1 ? "save" : "saves"}`
+  : "You’ve unlocked every badge";
 
-      el.innerHTML = `
-        <div class="badgeProgressTop">
-          <div class="badgeProgressIconWrap">${badgeSvg(current.icon)}</div>
-          <div class="badgeProgressText">
-            <div class="badgeEyebrow">Current Badge</div>
-            <div class="badgeTitle">${current.name}</div>
-            <div class="badgeSub">${totalSaved.toLocaleString()} lifetime ${totalSaved === 1 ? "save" : "saves"} in this gym</div>
-          </div>
-        </div>
-        <div class="badgeProgressLine">${progressText}</div>
-        <div class="badgeBar">
-          <div class="badgeBarFill" style="width:${pct}%"></div>
-        </div>
-        <div class="badgeSub" style="margin-top:8px;">${nextText}</div>
-      `;
+const currentTitle = current ? current.name : "No badge yet";
+const currentIcon = current ? badgeSvg(current.icon) : badgeSvg("dumbbell");
+
+el.innerHTML = `
+  <div class="badgeProgressTop">
+    <div class="badgeProgressIconWrap">${currentIcon}</div>
+    <div class="badgeProgressText">
+      <div class="badgeEyebrow">Current Badge</div>
+      <div class="badgeTitle">${currentTitle}</div>
+      <div class="badgeSub">${totalSaved.toLocaleString()} lifetime ${totalSaved === 1 ? "save" : "saves"} in this gym</div>
+    </div>
+  </div>
+  <div class="badgeProgressLine">${progressText}</div>
+  <div class="badgeBar">
+    <div class="badgeBarFill" style="width:${pct}%"></div>
+  </div>
+  <div class="badgeSub" style="margin-top:8px;">${nextText}</div>
+`;
+
     }
 
     function renderBadgesCard() {
