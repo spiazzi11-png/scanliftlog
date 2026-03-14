@@ -531,6 +531,66 @@
       }
     }
 
+    /* ===== Monthly Consistency ===== */
+    .consistencyCard{
+      margin:12px 0 16px;
+      padding:12px 14px;
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 10px 30px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.04);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+    }
+
+    .consistencyTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:8px;
+    }
+
+    .consistencyLabel{
+      font-size:.9rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .consistencyValue{
+      font-size:.95rem;
+      font-weight:800;
+      color:var(--text);
+      white-space:nowrap;
+    }
+
+    .consistencyBar{
+      height:8px;
+      width:100%;
+      border-radius:999px;
+      overflow:hidden;
+      background:rgba(255,255,255,.08);
+      box-shadow:inset 0 1px 2px rgba(0,0,0,.35);
+    }
+
+    .consistencyBarFill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg, #8b0000, #c40000, #ff2a2a);
+      box-shadow:0 0 10px rgba(255,0,0,.25);
+      transition:width .35s ease;
+    }
+
+    .consistencySubtext{
+      margin-top:8px;
+      font-size:.92rem;
+      color:var(--muted);
+      line-height:1.35;
+    }
+
     /* ===== Badges ===== */
     .badgeProgressCard,
     .badgesCard {
@@ -1052,6 +1112,16 @@
         font-size: 10px;
         line-height: 1.3;
       }
+
+      .consistencyTop {
+        align-items:flex-start;
+        flex-direction:column;
+        gap:6px;
+      }
+
+      .consistencyValue {
+        white-space:normal;
+      }
     }
   </style>
 </head>
@@ -1081,6 +1151,21 @@
   </div>
 
   <div class="wrap">
+    <div class="consistencyCard" id="consistencyCard">
+      <div class="consistencyTop">
+        <div class="consistencyLabel">Monthly Consistency</div>
+        <div class="consistencyValue" id="consistencyValue">0 / 30 days</div>
+      </div>
+
+      <div class="consistencyBar">
+        <div class="consistencyBarFill" id="consistencyBarFill"></div>
+      </div>
+
+      <div class="consistencySubtext" id="consistencySubtext">
+        You have logged a workout 0 out of 30 days this month
+      </div>
+    </div>
+
     <div class="card headerCard">
       <div class="top">
         <div></div>
@@ -1568,6 +1653,9 @@
       const historyCard = document.getElementById("historyCard");
       if (historyCard) historyCard.style.display = "none";
 
+      const consistencyCard = document.getElementById("consistencyCard");
+      if (consistencyCard) consistencyCard.style.display = "none";
+
       const badgeProgressCard = document.getElementById("badgeProgressCard");
       if (badgeProgressCard) badgeProgressCard.style.display = "none";
 
@@ -1874,31 +1962,31 @@
       }
     }
 
- function getCurrentBadge(totalSaved) {
-  let current = null;
-  for (const badge of BADGES) {
-    if (totalSaved >= badge.milestone) current = badge;
-    else break;
-  }
-  return current;
-}
+    function getCurrentBadge(totalSaved) {
+      let current = null;
+      for (const badge of BADGES) {
+        if (totalSaved >= badge.milestone) current = badge;
+        else break;
+      }
+      return current;
+    }
 
     function getNextBadge(totalSaved) {
       return BADGES.find(b => totalSaved < b.milestone) || null;
     }
 
-  function getBadgeProgressPct(totalSaved) {
-  const current = getCurrentBadge(totalSaved);
-  const next = getNextBadge(totalSaved);
+    function getBadgeProgressPct(totalSaved) {
+      const current = getCurrentBadge(totalSaved);
+      const next = getNextBadge(totalSaved);
 
-  if (!next) return 100;
+      if (!next) return 100;
 
-  const min = current ? current.milestone : 0;
-  const max = next.milestone;
-  const raw = ((totalSaved - min) / (max - min)) * 100;
+      const min = current ? current.milestone : 0;
+      const max = next.milestone;
+      const raw = ((totalSaved - min) / (max - min)) * 100;
 
-  return Math.max(0, Math.min(100, raw));
-}
+      return Math.max(0, Math.min(100, raw));
+    }
 
     function renderBadgeProgressCard() {
       const el = document.getElementById("badgeProgressCard");
@@ -1913,32 +2001,31 @@
       el.className = `badgeProgressCard badge-accent-${current ? current.accent : "steel"}`;
 
       const progressText = next
-  ? `${Math.max(0, next.milestone - totalSaved)} more ${next.milestone - totalSaved === 1 ? "save" : "saves"} until ${next.name}`
-  : "Top badge unlocked";
+        ? `${Math.max(0, next.milestone - totalSaved)} more ${next.milestone - totalSaved === 1 ? "save" : "saves"} until ${next.name}`
+        : "Top badge unlocked";
 
-const nextText = next
-  ? `Next badge: ${next.name} at ${next.milestone.toLocaleString()} ${next.milestone === 1 ? "save" : "saves"}`
-  : "You’ve unlocked every badge";
+      const nextText = next
+        ? `Next badge: ${next.name} at ${next.milestone.toLocaleString()} ${next.milestone === 1 ? "save" : "saves"}`
+        : "You’ve unlocked every badge";
 
-const currentTitle = current ? current.name : "No badge yet";
-const currentIcon = current ? badgeSvg(current.icon) : badgeSvg("dumbbell");
+      const currentTitle = current ? current.name : "No badge yet";
+      const currentIcon = current ? badgeSvg(current.icon) : badgeSvg("dumbbell");
 
-el.innerHTML = `
-  <div class="badgeProgressTop">
-    <div class="badgeProgressIconWrap">${currentIcon}</div>
-    <div class="badgeProgressText">
-      <div class="badgeEyebrow">Current Badge</div>
-      <div class="badgeTitle">${currentTitle}</div>
-      <div class="badgeSub">${totalSaved.toLocaleString()} lifetime ${totalSaved === 1 ? "save" : "saves"} in this gym</div>
-    </div>
-  </div>
-  <div class="badgeProgressLine">${progressText}</div>
-  <div class="badgeBar">
-    <div class="badgeBarFill" style="width:${pct}%"></div>
-  </div>
-  <div class="badgeSub" style="margin-top:8px;">${nextText}</div>
-`;
-
+      el.innerHTML = `
+        <div class="badgeProgressTop">
+          <div class="badgeProgressIconWrap">${currentIcon}</div>
+          <div class="badgeProgressText">
+            <div class="badgeEyebrow">Current Badge</div>
+            <div class="badgeTitle">${currentTitle}</div>
+            <div class="badgeSub">${totalSaved.toLocaleString()} lifetime ${totalSaved === 1 ? "save" : "saves"} in this gym</div>
+          </div>
+        </div>
+        <div class="badgeProgressLine">${progressText}</div>
+        <div class="badgeBar">
+          <div class="badgeBarFill" style="width:${pct}%"></div>
+        </div>
+        <div class="badgeSub" style="margin-top:8px;">${nextText}</div>
+      `;
     }
 
     function renderBadgesCard() {
@@ -1975,6 +2062,94 @@ el.innerHTML = `
     function renderBadgeUI() {
       renderBadgeProgressCard();
       renderBadgesCard();
+    }
+
+    /* ---------- Monthly Consistency ---------- */
+    function getDaysInCurrentMonth() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      return new Date(year, month + 1, 0).getDate();
+    }
+
+    function getCurrentMonthKeyLocal() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      return `${year}-${month}`;
+    }
+
+    function getMonthlyConsistencyStats() {
+      const daysInMonth = getDaysInCurrentMonth();
+      const currentMonthKey = getCurrentMonthKeyLocal();
+      const uniqueDays = new Set();
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k || !k.startsWith("scanliftlog_workouts_v1:")) continue;
+
+        const parts = k.split(":");
+        if (parts.length < 4) continue;
+
+        const keyUserId = parts[1] || "";
+        const keyOrgId = parts[2] || "";
+
+        if (keyUserId !== userId) continue;
+        if (keyOrgId !== orgId) continue;
+
+        const arr = safeJSONParse(localStorage.getItem(k) || "[]", []);
+        if (!Array.isArray(arr)) continue;
+
+        for (const workout of arr) {
+          if (!workout) continue;
+
+          let d = null;
+
+          if (workout.ts != null && Number.isFinite(Number(workout.ts))) {
+            d = new Date(Number(workout.ts));
+          } else if (workout.savedAt) {
+            d = new Date(workout.savedAt);
+          } else if (workout.date) {
+            d = new Date(workout.date);
+          }
+
+          if (!d || isNaN(d.getTime())) continue;
+
+          const year = d.getFullYear();
+          const month = String(d.getMonth() + 1).padStart(2, "0");
+          const day = String(d.getDate()).padStart(2, "0");
+          const monthKey = `${year}-${month}`;
+
+          if (monthKey !== currentMonthKey) continue;
+
+          uniqueDays.add(`${year}-${month}-${day}`);
+        }
+      }
+
+      const loggedDays = uniqueDays.size;
+      const pct = daysInMonth ? Math.max(0, Math.min(100, (loggedDays / daysInMonth) * 100)) : 0;
+
+      return {
+        loggedDays,
+        daysInMonth,
+        pct
+      };
+    }
+
+    function renderMonthlyConsistency() {
+      const cardEl = document.getElementById("consistencyCard");
+      const valueEl = document.getElementById("consistencyValue");
+      const fillEl = document.getElementById("consistencyBarFill");
+      const subtextEl = document.getElementById("consistencySubtext");
+
+      if (!cardEl || !valueEl || !fillEl || !subtextEl) return;
+
+      const stats = getMonthlyConsistencyStats();
+
+      cardEl.style.display = "";
+      valueEl.textContent = `${stats.loggedDays} / ${stats.daysInMonth} days`;
+      fillEl.style.width = `${stats.pct}%`;
+      subtextEl.textContent = `You have logged a workout ${stats.loggedDays} out of ${stats.daysInMonth} days this month`;
     }
 
     /* ---------- Back Up Data ---------- */
@@ -2811,6 +2986,7 @@ el.innerHTML = `
           clearCardioInputs();
           renderHistory();
           renderBadgeUI();
+          renderMonthlyConsistency();
           return;
         }
 
@@ -2840,6 +3016,7 @@ el.innerHTML = `
         clearCurrentSets();
         renderHistory();
         renderBadgeUI();
+        renderMonthlyConsistency();
       });
 
       document.getElementById("clearHistoryBtn").addEventListener("click", () => {
@@ -2847,6 +3024,7 @@ el.innerHTML = `
         saveWorkouts([]);
         renderHistory();
         renderBadgeUI();
+        renderMonthlyConsistency();
       });
 
       setModeUI();
@@ -2856,6 +3034,7 @@ el.innerHTML = `
 
       renderHistory();
       renderBadgeUI();
+      renderMonthlyConsistency();
     })();
   </script>
 </body>
