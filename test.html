@@ -1334,14 +1334,13 @@
           <thead>
             <tr>
               <th style="min-width:110px;">Date</th>
-              <th style="min-width:70px;">Type</th>
-              <th style="min-width:140px;">Summary</th>
+              <th style="min-width:140px;" id="historySummaryHeader">Summary</th>
               <th>Details</th>
               <th style="min-width:140px;">Saved</th>
             </tr>
           </thead>
           <tbody id="historyBody">
-            <tr><td colspan="5" class="muted">No workouts saved yet.</td></tr>
+            <tr><td colspan="4" class="muted">No workouts saved yet.</td></tr>
           </tbody>
         </table>
       </div>
@@ -2706,7 +2705,7 @@
 
       const workouts = loadWorkouts();
       if (!workouts.length) {
-        tbody.innerHTML = `<tr><td colspan="5" class="muted">No workouts saved yet.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="muted">No workouts saved yet.</td></tr>`;
         return;
       }
 
@@ -2714,7 +2713,6 @@
 
       for (const w of sorted) {
         const isCardio = !!w.cardio;
-        const typeLabel = isCardio ? "Cardio" : "Strength";
 
         let summary = "—";
         if (isCardio) {
@@ -2772,7 +2770,6 @@
 
         tr.innerHTML = `
           <td>${escapeHtml(w.date || "")}</td>
-          <td>${typeLabel}</td>
           <td>${summary}</td>
           <td>${detailsHtml}</td>
           <td class="muted">${escapeHtml(w.savedAt || "")}</td>
@@ -2805,6 +2802,12 @@
       document.getElementById("gymNameText").textContent = gymName;
       document.getElementById("machineNameText").textContent = machineName;
       document.getElementById("historyScopeBadge").textContent = `Scope: ${machineId ? machineId : "No machine scanned"}`;
+
+      const historySummaryHeader = document.getElementById("historySummaryHeader");
+      if (historySummaryHeader) {
+        historySummaryHeader.textContent = machineType === "cardio" ? "Summary" : "Top Set";
+      }
+
       dateInput.value = todayISO();
 
       const promoBannerEl = document.getElementById("promoBanner");
