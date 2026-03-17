@@ -616,11 +616,6 @@
       flex-wrap:wrap;
     }
 
-    .historyCardDate {
-      font-weight:900;
-      font-size:15px;
-    }
-
     .historyCardTopSet {
       font-size:14px;
       font-weight:800;
@@ -2873,28 +2868,29 @@
         tbody.appendChild(tr);
 
         /* Mobile card */
-        const mobileId = `historyDetails_${Math.random().toString(36).slice(2)}`;
-        const startsOpen = isMobile;
+      const mobileSummaryLabel = isCardio ? "Summary" : "Top Set";
 
-        const card = document.createElement("div");
-        card.className = "historyCardMobile";
-        card.innerHTML = `
-          <div class="historyCardTop">
-            <div>
-              <div class="historyCardDate">${escapeHtml(w.date || "")}</div>
-              <div class="historyCardSaved">Saved: ${escapeHtml(w.savedAt || "")}</div>
-            </div>
-            <div class="historyCardTopSet">${summary}</div>
-          </div>
+const card = document.createElement("div");
+card.className = "historyCardMobile";
+card.innerHTML = `
+  <div class="historyCardTop">
+    <div>
+      <div class="historyCardSaved">Saved: ${escapeHtml(w.savedAt || "")}</div>
+    </div>
+    <div>
+      <div class="historyCardLabel">${mobileSummaryLabel}</div>
+      <div class="historyCardTopSet">${summary}</div>
+    </div>
+  </div>
 
-          <button class="historyCardToggle" type="button" data-target="${mobileId}">
-            ${startsOpen ? "Hide Details" : "View Details"}
-          </button>
+  <button class="historyCardToggle" type="button" data-target="${mobileId}">
+    ${startsOpen ? "Hide Details" : "View Details"}
+  </button>
 
-          <div class="historyCardDetails ${startsOpen ? "" : "hidden"}" id="${mobileId}">
-            ${detailsHtml}
-          </div>
-        `;
+  <div class="historyCardDetails ${startsOpen ? "" : "hidden"}" id="${mobileId}">
+    ${detailsHtml}
+  </div>
+`;
         mobileWrap.appendChild(card);
       }
 
