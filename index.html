@@ -591,6 +591,75 @@
       line-height:1.35;
     }
 
+    /* ===== History: desktop table + mobile cards ===== */
+    .historyTableWrap {
+      display:block;
+    }
+
+    .historyCardsMobile {
+      display:none;
+    }
+
+    .historyCardMobile {
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius:16px;
+      padding:12px;
+      margin-top:10px;
+    }
+
+    .historyCardTop {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .historyCardTopSet {
+      font-size:14px;
+      font-weight:800;
+      color:var(--text);
+    }
+
+    .historyCardSaved {
+      margin-top:8px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .historyCardSection {
+      margin-top:10px;
+    }
+
+    .historyCardLabel {
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      font-weight:800;
+      margin-bottom:6px;
+    }
+
+    .historyCardToggle {
+      margin-top:10px;
+      border:0;
+      background:transparent;
+      color:var(--text);
+      text-decoration:underline;
+      font-weight:800;
+      padding:0;
+      cursor:pointer;
+    }
+
+    .historyCardDetails {
+      margin-top:10px;
+    }
+
+    .historyCardDetails.hidden {
+      display:none;
+    }
+
     /* ===== Badges ===== */
     .badgeProgressCard,
     .badgesCard {
@@ -1122,6 +1191,14 @@
       .consistencyValue {
         white-space:normal;
       }
+
+      .historyTableWrap {
+        display:none;
+      }
+
+      .historyCardsMobile {
+        display:block;
+      }
     }
   </style>
 </head>
@@ -1329,21 +1406,24 @@
         <div class="badge" id="historyScopeBadge">Scope: …</div>
       </div>
 
-      <div style="margin-top:10px; overflow:auto;">
+      <div class="historyTableWrap" style="margin-top:10px; overflow:auto;">
         <table>
           <thead>
             <tr>
               <th style="min-width:110px;">Date</th>
-              <th style="min-width:70px;">Type</th>
-              <th style="min-width:140px;">Summary</th>
+              <th style="min-width:140px;" id="historySummaryHeader">Summary</th>
               <th>Details</th>
               <th style="min-width:140px;">Saved</th>
             </tr>
           </thead>
           <tbody id="historyBody">
-            <tr><td colspan="5" class="muted">No workouts saved yet.</td></tr>
+            <tr><td colspan="4" class="muted">No workouts saved yet.</td></tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="historyCardsMobile" id="historyCardsMobile">
+        <div class="muted" style="margin-top:10px;">No workouts saved yet.</div>
       </div>
     </div>
 
@@ -2702,19 +2782,25 @@
 
     function renderHistory() {
       const tbody = document.getElementById("historyBody");
+      const mobileWrap = document.getElementById("historyCardsMobile");
+
+      if (!tbody || !mobileWrap) return;
+
       tbody.innerHTML = "";
+      mobileWrap.innerHTML = "";
 
       const workouts = loadWorkouts();
       if (!workouts.length) {
-        tbody.innerHTML = `<tr><td colspan="5" class="muted">No workouts saved yet.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="muted">No workouts saved yet.</td></tr>`;
+        mobileWrap.innerHTML = `<div class="muted" style="margin-top:10px;">No workouts saved yet.</div>`;
         return;
       }
 
       const sorted = workouts.slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
+      const isMobile = window.innerWidth <= 768;
 
       for (const w of sorted) {
         const isCardio = !!w.cardio;
-        const typeLabel = isCardio ? "Cardio" : "Strength";
 
         let summary = "—";
         if (isCardio) {
@@ -2724,9 +2810,7 @@
           summary = top ? `${escapeHtml(top.weight || "—")} x ${escapeHtml(top.reps || "—")}` : "—";
         }
 
-        const tr = document.createElement("tr");
-
-        let detailsHtml = `<details><summary>View</summary>`;
+        let detailsHtml = ``;
         if (w.exercise) detailsHtml += `<div class="muted" style="margin-top:6px;">Exercise: ${escapeHtml(w.exercise)}</div>`;
         if (w.notes) detailsHtml += `<div class="muted" style="margin-top:6px;">Notes: ${escapeHtml(w.notes)}</div>`;
 
@@ -2768,17 +2852,62 @@
           `;
         }
 
-        detailsHtml += `</details>`;
-
+        /* Desktop row */
+        const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${escapeHtml(w.date || "")}</td>
-          <td>${typeLabel}</td>
           <td>${summary}</td>
-          <td>${detailsHtml}</td>
+          <td>
+            <details>
+              <summary>View</summary>
+              ${detailsHtml}
+            </details>
+          </td>
           <td class="muted">${escapeHtml(w.savedAt || "")}</td>
         `;
         tbody.appendChild(tr);
+
+        /* Mobile card */
+      /* Mobile card */
+const mobileId = `historyDetails_${Math.random().toString(36).slice(2)}`;
+const startsOpen = isMobile;
+const mobileSummaryLabel = isCardio ? "Summary" : "Top Set";
+
+const card = document.createElement("div");
+card.className = "historyCardMobile";
+card.innerHTML = `
+  <div class="historyCardTop">
+    <div>
+      <div class="historyCardSaved">Saved: ${escapeHtml(w.savedAt || "")}</div>
+    </div>
+    <div>
+      <div class="historyCardLabel">${mobileSummaryLabel}</div>
+      <div class="historyCardTopSet">${summary}</div>
+    </div>
+  </div>
+
+  <button class="historyCardToggle" type="button" data-target="${mobileId}">
+    ${startsOpen ? "Hide Details" : "View Details"}
+  </button>
+
+  <div class="historyCardDetails ${startsOpen ? "" : "hidden"}" id="${mobileId}">
+    ${detailsHtml}
+  </div>
+`;
+mobileWrap.appendChild(card);
       }
+
+      mobileWrap.querySelectorAll(".historyCardToggle").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const targetId = btn.getAttribute("data-target");
+          const details = targetId ? document.getElementById(targetId) : null;
+          if (!details) return;
+
+          const isHidden = details.classList.contains("hidden");
+          details.classList.toggle("hidden");
+          btn.textContent = isHidden ? "Hide Details" : "View Details";
+        });
+      });
     }
 
     function clearCurrent() {
@@ -2805,6 +2934,12 @@
       document.getElementById("gymNameText").textContent = gymName;
       document.getElementById("machineNameText").textContent = machineName;
       document.getElementById("historyScopeBadge").textContent = `Scope: ${machineId ? machineId : "No machine scanned"}`;
+
+      const historySummaryHeader = document.getElementById("historySummaryHeader");
+      if (historySummaryHeader) {
+        historySummaryHeader.textContent = machineType === "cardio" ? "Summary" : "Top Set";
+      }
+
       dateInput.value = todayISO();
 
       const promoBannerEl = document.getElementById("promoBanner");
@@ -3035,6 +3170,8 @@
       renderHistory();
       renderBadgeUI();
       renderMonthlyConsistency();
+
+      window.addEventListener("resize", renderHistory);
     })();
   </script>
 </body>
