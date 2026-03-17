@@ -2393,7 +2393,7 @@
       if (!cardio || typeof cardio !== "object") return "<p class=\"muted\">No cardio details.</p>";
       const parts = [];
       if (cardio.minutes != null) parts.push(`Time: ${cardio.minutes} min`);
-      if (cardio.calories != null) parts.push(`Calories: ${cardio.calories}`);
+      if (cardio.calories != null) parts.push(`Calories Burned: ${cardio.calories}`);
       if (cardio.distance != null) parts.push(`Distance: ${cardio.distance} mi`);
       if (cardio.distance_m != null) parts.push(`Distance: ${cardio.distance_m} m`);
       if (cardio.incline != null) parts.push(`Incline: ${cardio.incline}%`);
@@ -2428,11 +2428,21 @@
           if (w.type === "Cardio" && w.cardio) {
             html += "<p style=\"margin:4px 0;\"><strong>Cardio</strong></p><table " + pdfTable + "><thead><tr><th " + pdfTh + ">Metric</th><th " + pdfTh + ">Value</th></tr></thead><tbody>";
             const c = w.cardio;
-            ["minutes", "calories", "distance", "distance_m", "incline", "speed", "resistance", "level", "pace"].forEach(k => {
-              if (c[k] != null && c[k] !== "") {
-                html += "<tr><td " + pdfTd + ">" + escapeHtml(k) + "</td><td " + pdfTd + ">" + escapeHtml(String(c[k])) + "</td></tr>";
-              }
-            });
+            [
+  ["minutes", "Minutes"],
+  ["calories", "Calories Burned"],
+  ["distance", "Distance"],
+  ["distance_m", "Distance (m)"],
+  ["incline", "Incline"],
+  ["speed", "Speed"],
+  ["resistance", "Resistance"],
+  ["level", "Level"],
+  ["pace", "Pace"]
+].forEach(([k, label]) => {
+  if (c[k] != null && c[k] !== "") {
+    html += "<tr><td " + pdfTd + ">" + escapeHtml(label) + "</td><td " + pdfTd + ">" + escapeHtml(String(c[k])) + "</td></tr>";
+  }
+});
             html += "</tbody></table>";
           } else if (w.sets && w.sets.length) {
             html += "<p style=\"margin:4px 0;\"><strong>Sets</strong></p><table " + pdfTable + "><thead><tr><th " + pdfTh + ">Set</th><th " + pdfTh + ">Weight</th><th " + pdfTh + ">Reps</th></tr></thead><tbody>";
