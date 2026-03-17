@@ -2868,7 +2868,10 @@
         tbody.appendChild(tr);
 
         /* Mobile card */
-      const mobileSummaryLabel = isCardio ? "Summary" : "Top Set";
+      /* Mobile card */
+const mobileId = `historyDetails_${Math.random().toString(36).slice(2)}`;
+const startsOpen = isMobile;
+const mobileSummaryLabel = isCardio ? "Summary" : "Top Set";
 
 const card = document.createElement("div");
 card.className = "historyCardMobile";
@@ -2891,7 +2894,7 @@ card.innerHTML = `
     ${detailsHtml}
   </div>
 `;
-        mobileWrap.appendChild(card);
+mobileWrap.appendChild(card);
       }
 
       mobileWrap.querySelectorAll(".historyCardToggle").forEach(btn => {
