@@ -4290,49 +4290,86 @@
       });
     }
 
-    function gwRenderPlanUI(plan) {
-      if (!plan) {
-        gwCloseGuidedWorkoutModal();
-        return;
-      }
-
-      applyPlannerMapImage(plan.gymId);
-
-      if (guidedWorkoutTitle) guidedWorkoutTitle.textContent = `Guided Workout — ${String(plan.goal || "").toUpperCase()}`;
-      if (guidedWorkoutSub) guidedWorkoutSub.textContent = `${plan.duration} min • ${plan.level} • ${plan.style}`;
-      if (plannerAIText) plannerAIText.textContent = plan.aiExplanation || "Your guided workout explanation will appear here.";
-
- function gwOpenCurrentStepLogging() {
-  const plan = gwLoadActivePlan(gymId, userId);
-  if (!plan) return;
-
-  if (plan.status === "completed") {
-    gwExitGuidedWorkout();
-    return;
-  }
-
-  const current = gwGetCurrentStep(plan);
-  if (!current) return;
-
-  const targetMachine = String(current.machineCode || "").toUpperCase();
-  const currentMachine = String(machineId || "").toUpperCase();
-
-  if (targetMachine === currentMachine) {
+   function gwRenderPlanUI(plan) {
+  if (!plan || !Array.isArray(plan.steps) || !plan.steps.length) {
     gwCloseGuidedWorkoutModal();
     return;
   }
 
-  sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
+  applyPlannerMapImage(plan.gymId);
 
-  gwSetParamAndNavigate({
-    gym: gymId,
-    machine: targetMachine
-  });
-}
-      gwRenderMarkers(plan);
-      gwRenderSteps(plan);
-      gwOpenGuidedWorkoutModal();
+  if (guidedWorkoutTitle) {
+    guidedWorkoutTitle.textContent = `Guided Workout — ${String(plan.goal || "").toUpperCase()}`;
+  }
+
+  if (guidedWorkoutSub) {
+    guidedWorkoutSub.textContent = `${plan.duration} min • ${plan.level} • ${plan.style}`;
+  }
+
+  if (plannerAIText) {
+    plannerAIText.textContent = plan.aiExplanation || "Your guided workout explanation will appear here.";
+  }
+
+  if (
+    !Number.isInteger(plan.currentStepIndex) ||
+    plan.currentStepIndex < 0 ||
+    plan.currentStepIndex >= plan.steps.length
+  ) {
+    const firstUpcomingIndex = plan.steps.findIndex(step => step.status === "upcoming");
+    plan.currentStepIndex = firstUpcomingIndex >= 0 ? firstUpcomingIndex : 0;
+  }
+
+  let current = plan.steps[plan.currentStepIndex] || null;
+
+  if (plan.status === "completed") {
+    if (plannerStepKicker) plannerStepKicker.textContent = "Workout Complete";
+    if (plannerCurrentTitle) plannerCurrentTitle.textContent = "Nice work";
+    if (plannerCurrentMeta) plannerCurrentMeta.textContent = "All planned steps are finished.";
+    if (plannerCurrentHint) plannerCurrentHint.textContent = "Tap Done to exit guided workout and return to the machine page.";
+
+    if (openLoggingBtn) {
+      openLoggingBtn.disabled = false;
+      openLoggingBtn.textContent = "Done";
     }
+  } else {
+    if (!current) {
+      const firstUpcomingIndex = plan.steps.findIndex(step => step.status === "upcoming");
+      if (firstUpcomingIndex >= 0) {
+        plan.currentStepIndex = firstUpcomingIndex;
+        current = plan.steps[firstUpcomingIndex];
+      } else {
+        plan.currentStepIndex = 0;
+        current = plan.steps[0];
+      }
+    }
+
+    if (plannerStepKicker) {
+      plannerStepKicker.textContent = `Step ${plan.currentStepIndex + 1} of ${plan.steps.length}`;
+    }
+
+    if (plannerCurrentTitle) {
+      plannerCurrentTitle.textContent = `Machine ${current.machineNumber} — ${current.machineName}`;
+    }
+
+    if (plannerCurrentMeta) {
+      plannerCurrentMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
+    }
+
+    if (plannerCurrentHint) {
+      plannerCurrentHint.textContent = "Find the highlighted machine number on the map, then log your workout.";
+    }
+
+    if (openLoggingBtn) {
+      openLoggingBtn.disabled = false;
+      openLoggingBtn.textContent = "Log This Machine";
+    }
+  }
+
+  gwSaveActivePlan(plan);
+  gwRenderMarkers(plan);
+  gwRenderSteps(plan);
+  gwOpenGuidedWorkoutModal();
+}
 
     function gwGeneratePlanFromForm() {
       const goalEl = document.getElementById("plannerGoal");
