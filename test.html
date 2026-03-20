@@ -1334,16 +1334,15 @@
       flex-wrap:wrap;
     }
 
-    .plannerMapLayout {
-      display:grid;
-      grid-template-columns:minmax(0,1.35fr) minmax(320px,.65fr);
-      gap:18px;
-    }
+ .plannerStackLayout {
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
 
-    .plannerMapPanel,
-    .plannerSidebar {
-      min-width:0;
-    }
+.plannerMapPanel {
+  min-width:0;
+}
 
     .plannerMapWrap {
       position:relative;
@@ -1784,10 +1783,6 @@
         grid-template-columns:1fr;
       }
 
-      .plannerMapLayout {
-        grid-template-columns:1fr;
-      }
-
       .plannerMapWrap,
       .plannerMapImage {
         min-height:320px;
@@ -1903,9 +1898,9 @@
 
     <div id="badgeProgressCard" class="badgeProgressCard" style="display:none;"></div>
 
-    <div class="plannerEntryWrap">
-      <button id="planWorkoutBtn" class="primary" type="button">Plan My Workout</button>
-    </div>
+   <div class="plannerEntryWrap">
+  <button id="planWorkoutBtn" class="primary" type="button">AI Guided Workout</button>
+</div>
 
     <div class="card" id="logger">
       <div class="row" style="align-items:flex-end;">
@@ -2060,7 +2055,7 @@
     <div class="plannerModalCard plannerSetupCard">
       <div class="plannerModalHeader">
         <div>
-          <h2>Plan My Workout</h2>
+          <h2>AI Guided Workout</h2>
           <div class="plannerSubText">
             Build a guided 3–4 machine workout for this gym. The map will highlight each machine number one step at a time.
           </div>
@@ -2132,72 +2127,66 @@
     </div>
   </div>
 
-  <!-- ===== Guided Workout Modal ===== -->
-  <div id="guidedWorkoutModal" class="plannerModal hidden" aria-hidden="true">
-    <div class="plannerModalCard">
-      <div class="plannerModalHeader">
-        <div>
-          <h2 id="guidedWorkoutTitle">Guided Workout</h2>
-          <div id="guidedWorkoutSub" class="plannerSubText">
-            Follow the highlighted machine numbers on the map.
-          </div>
-        </div>
-        <button id="closeGuidedWorkoutBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
-      </div>
-
-      <div class="plannerMapLayout">
-        <div class="plannerMapPanel">
-          <div class="plannerMapWrap" id="plannerMapWrap">
-            <img
-              id="plannerMapImage"
-              class="plannerMapImage"
-              src=""
-              alt="Gym map"
-            />
-            <div id="plannerMapPlaceholder" class="plannerMapPlaceholder">
-              Add your top-down Push Fitness Melville map image by setting the correct image path in the code.
-            </div>
-            <div id="plannerMapMarkers"></div>
-          </div>
-        </div>
-
-        <div class="plannerSidebar">
-          <div class="plannerAICard">
-            <div class="plannerAICardTitle">AI Assistant</div>
-            <div id="plannerAIText" class="plannerAIText">
-              Your guided workout explanation will appear here.
-            </div>
-          </div>
-
-          <div class="plannerCurrentCard">
-            <div class="plannerStepKicker" id="plannerStepKicker">Step 1 of 4</div>
-            <div class="plannerCurrentTitle" id="plannerCurrentTitle">Machine 1 — Chest Press</div>
-            <div class="plannerCurrentMeta" id="plannerCurrentMeta">3 sets × 10 reps</div>
-            <div class="plannerCurrentHint" id="plannerCurrentHint">
-              Find the highlighted number on the map, then log your workout.
-            </div>
-
-            <div class="plannerCurrentActions">
-              <button id="openLoggingBtn" class="primary" type="button">Log This Machine</button>
-              <button id="markCompleteBtn" type="button">Mark Complete</button>
-              <button id="skipStepBtn" type="button">Skip</button>
-            </div>
-          </div>
-
-          <div class="plannerStepsCard">
-            <div class="plannerStepsTitle">Workout Steps</div>
-            <div id="plannerStepsList" class="plannerStepsList"></div>
-          </div>
-
-          <div class="plannerBottomActions">
-            <button id="finishWorkoutBtn" type="button">Finish Workout</button>
-            <button id="clearWorkoutPlanBtn" class="danger" type="button">Clear Plan</button>
-          </div>
+<!-- ===== Guided Workout Modal ===== -->
+<div id="guidedWorkoutModal" class="plannerModal hidden" aria-hidden="true">
+  <div class="plannerModalCard">
+    <div class="plannerModalHeader">
+      <div>
+        <h2 id="guidedWorkoutTitle">Guided Workout</h2>
+        <div id="guidedWorkoutSub" class="plannerSubText">
+          Follow the highlighted machine numbers on the map.
         </div>
       </div>
-    </div> 
-  </div> 
+      <button id="closeGuidedWorkoutBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
+    </div>
 
+    <div class="plannerStackLayout">
+      <div class="plannerMapPanel">
+        <div class="plannerMapWrap" id="plannerMapWrap">
+          <img
+            id="plannerMapImage"
+            class="plannerMapImage"
+            src=""
+            alt="Gym map"
+          />
+          <div id="plannerMapPlaceholder" class="plannerMapPlaceholder">
+            Add your top-down Push Fitness Melville map image by setting the correct image path in the code.
+          </div>
+          <div id="plannerMapMarkers"></div>
+        </div>
+      </div>
+
+      <div class="plannerStepsCard">
+        <div class="plannerStepsTitle">Workout Steps</div>
+        <div id="plannerStepsList" class="plannerStepsList"></div>
+      </div>
+
+      <div class="plannerCurrentCard">
+        <div class="plannerStepKicker" id="plannerStepKicker">Step 1 of 4</div>
+        <div class="plannerCurrentTitle" id="plannerCurrentTitle">Machine 1 — Chest Press</div>
+        <div class="plannerCurrentMeta" id="plannerCurrentMeta">3 sets × 10 reps</div>
+        <div class="plannerCurrentHint" id="plannerCurrentHint">
+          Find the highlighted machine number on the map, then log your workout.
+        </div>
+
+        <div class="plannerCurrentActions">
+          <button id="openLoggingBtn" class="primary" type="button">Log This Machine</button>
+        </div>
+      </div>
+
+      <div class="plannerAICard">
+        <div class="plannerAICardTitle">Workout Guidance</div>
+        <div id="plannerAIText" class="plannerAIText">
+          Your guided workout explanation will appear here.
+        </div>
+      </div>
+
+      <div class="plannerBottomActions">
+        <button id="exitGuidedWorkoutBtn" type="button">Exit Guided Workout</button>
+      </div>
+    </div>
+  </div>
+</div>
   <!-- ===== AI Guided Workout Disclaimer Modal ===== -->
   <div id="aiDisclaimerModal" class="aiDisclaimerModal hidden" aria-hidden="true">
     <div class="aiDisclaimerCard" role="dialog" aria-modal="true" aria-labelledby="aiDisclaimerTitle">
@@ -3424,10 +3413,7 @@
     const plannerAIText = document.getElementById("plannerAIText");
     const plannerAIPrompt = document.getElementById("plannerAIPrompt");
     const openLoggingBtn = document.getElementById("openLoggingBtn");
-    const markCompleteBtn = document.getElementById("markCompleteBtn");
-    const skipStepBtn = document.getElementById("skipStepBtn");
-    const finishWorkoutBtn = document.getElementById("finishWorkoutBtn");
-    const clearWorkoutPlanBtn = document.getElementById("clearWorkoutPlanBtn");
+    const exitGuidedWorkoutBtn = document.getElementById("exitGuidedWorkoutBtn");
     const aiDisclaimerModal = document.getElementById("aiDisclaimerModal");
     const closeAiDisclaimerBtn = document.getElementById("closeAiDisclaimerBtn");
     const cancelAiDisclaimerBtn = document.getElementById("cancelAiDisclaimerBtn");
@@ -4164,33 +4150,6 @@
       return plan;
     }
 
-       function gwSkipCurrentStep(plan) {
-      if (!plan) return null;
-      const current = gwGetCurrentStep(plan);
-      if (current) current.status = "skipped";
-
-      let nextIndex = -1;
-      for (let i = plan.currentStepIndex + 1; i < plan.steps.length; i++) {
-        if (plan.steps[i].status === "upcoming") {
-          nextIndex = i;
-          break;
-        }
-      }
-
-      if (nextIndex === -1) {
-        const anyRemaining = plan.steps.findIndex(s => s.status === "upcoming");
-        if (anyRemaining === -1) {
-          plan.status = "completed";
-          return plan;
-        }
-        plan.currentStepIndex = anyRemaining;
-        return plan;
-      }
-
-      plan.currentStepIndex = nextIndex;
-      return plan;
-    }
-
     const AI_DISCLAIMER_SESSION_KEY = "scanliftlog_ai_disclaimer_ack_v1";
 
     function aiHasAcceptedDisclaimerThisSession() {
@@ -4343,26 +4302,22 @@
       if (guidedWorkoutSub) guidedWorkoutSub.textContent = `${plan.duration} min • ${plan.level} • ${plan.style}`;
       if (plannerAIText) plannerAIText.textContent = plan.aiExplanation || "Your guided workout explanation will appear here.";
 
-      if (plan.status === "completed") {
-        if (plannerStepKicker) plannerStepKicker.textContent = "Workout Complete";
-        if (plannerCurrentTitle) plannerCurrentTitle.textContent = "Nice work";
-        if (plannerCurrentMeta) plannerCurrentMeta.textContent = "All planned steps are finished.";
-        if (plannerCurrentHint) plannerCurrentHint.textContent = "You can close this workout or clear the plan.";
-        if (openLoggingBtn) openLoggingBtn.disabled = true;
-        if (markCompleteBtn) markCompleteBtn.disabled = true;
-        if (skipStepBtn) skipStepBtn.disabled = true;
-      } else {
-        const current = gwGetCurrentStep(plan);
-        if (current) {
-          if (plannerStepKicker) plannerStepKicker.textContent = `Step ${plan.currentStepIndex + 1} of ${plan.steps.length}`;
-          if (plannerCurrentTitle) plannerCurrentTitle.textContent = `Machine ${current.machineNumber} — ${current.machineName}`;
-          if (plannerCurrentMeta) plannerCurrentMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
-          if (plannerCurrentHint) plannerCurrentHint.textContent = "Find the highlighted machine number on the map, then log your workout.";
-          if (openLoggingBtn) openLoggingBtn.disabled = false;
-          if (markCompleteBtn) markCompleteBtn.disabled = false;
-          if (skipStepBtn) skipStepBtn.disabled = false;
-        }
-      }
+     if (plan.status === "completed") {
+  if (plannerStepKicker) plannerStepKicker.textContent = "Workout Complete";
+  if (plannerCurrentTitle) plannerCurrentTitle.textContent = "Nice work";
+  if (plannerCurrentMeta) plannerCurrentMeta.textContent = "All planned steps are finished.";
+  if (plannerCurrentHint) plannerCurrentHint.textContent = "You can exit guided workout and return to the machine page.";
+  if (openLoggingBtn) openLoggingBtn.disabled = true;
+} else {
+  const current = gwGetCurrentStep(plan);
+  if (current) {
+    if (plannerStepKicker) plannerStepKicker.textContent = `Step ${plan.currentStepIndex + 1} of ${plan.steps.length}`;
+    if (plannerCurrentTitle) plannerCurrentTitle.textContent = `Machine ${current.machineNumber} — ${current.machineName}`;
+    if (plannerCurrentMeta) plannerCurrentMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
+    if (plannerCurrentHint) plannerCurrentHint.textContent = "Find the highlighted machine number on the map, then log your workout.";
+    if (openLoggingBtn) openLoggingBtn.disabled = false;
+  }
+}
 
       gwRenderMarkers(plan);
       gwRenderSteps(plan);
@@ -4430,56 +4385,14 @@
     machine: targetMachine
   });
 }
+   
 
-    function gwMarkCurrentStepComplete() {
-      const plan = gwLoadActivePlan(gymId, userId);
-      if (!plan) return;
-
-      const current = gwGetCurrentStep(plan);
-      if (current && current.status === "upcoming") current.status = "completed";
-      gwAdvancePlan(plan);
-
-      if (plan.status === "completed") {
-        gwSaveCompletedPlanHistory(plan);
-      }
-
-      gwSaveActivePlan(plan);
-      gwRenderPlanUI(plan);
-    }
-
-    function gwSkipCurrentStepAction() {
-      const plan = gwLoadActivePlan(gymId, userId);
-      if (!plan) return;
-
-      gwSkipCurrentStep(plan);
-
-      if (plan.status === "completed") {
-        gwSaveCompletedPlanHistory(plan);
-      }
-
-      gwSaveActivePlan(plan);
-      gwRenderPlanUI(plan);
-    }
-
-function gwFinishWorkoutEarly() {
-  const plan = gwLoadActivePlan(gymId, userId);
-  if (!plan) {
-    gwCloseGuidedWorkoutModal();
-    return;
-  }
-
-  plan.status = "completed";
-  gwSaveCompletedPlanHistory(plan);
+function gwExitGuidedWorkout() {
   gwClearActivePlan(gymId, userId);
   gwCloseGuidedWorkoutModal();
 }
 
-    function gwClearCurrentPlan() {
-      const ok = confirm("Clear the current guided workout plan?");
-      if (!ok) return;
-      gwClearActivePlan(gymId, userId);
-      gwCloseGuidedWorkoutModal();
-    }
+
     function gwInitPlanner() {
       if (planWorkoutBtn) {
         planWorkoutBtn.addEventListener("click", aiHandlePlanWorkoutEntry);
@@ -4523,30 +4436,16 @@ function gwFinishWorkoutEarly() {
       if (generateWorkoutBtn) {
         generateWorkoutBtn.addEventListener("click", gwGeneratePlanFromForm);
       }
+if (closeGuidedWorkoutBtn) {
+  closeGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
+}
+if (openLoggingBtn) {
+  openLoggingBtn.addEventListener("click", gwOpenCurrentStepLogging);
+}
 
-      if (closeGuidedWorkoutBtn) {
-        closeGuidedWorkoutBtn.addEventListener("click", gwCloseGuidedWorkoutModal);
-      }
-
-      if (openLoggingBtn) {
-        openLoggingBtn.addEventListener("click", gwOpenCurrentStepLogging);
-      }
-
-      if (markCompleteBtn) {
-        markCompleteBtn.addEventListener("click", gwMarkCurrentStepComplete);
-      }
-
-      if (skipStepBtn) {
-        skipStepBtn.addEventListener("click", gwSkipCurrentStepAction);
-      }
-
-      if (finishWorkoutBtn) {
-        finishWorkoutBtn.addEventListener("click", gwFinishWorkoutEarly);
-      }
-
-      if (clearWorkoutPlanBtn) {
-        clearWorkoutPlanBtn.addEventListener("click", gwClearCurrentPlan);
-      }
+if (exitGuidedWorkoutBtn) {
+  exitGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
+}
     }
     /* ================================
        INIT
