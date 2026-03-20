@@ -4302,23 +4302,33 @@
       if (guidedWorkoutSub) guidedWorkoutSub.textContent = `${plan.duration} min • ${plan.level} • ${plan.style}`;
       if (plannerAIText) plannerAIText.textContent = plan.aiExplanation || "Your guided workout explanation will appear here.";
 
-     if (plan.status === "completed") {
-  if (plannerStepKicker) plannerStepKicker.textContent = "Workout Complete";
-  if (plannerCurrentTitle) plannerCurrentTitle.textContent = "Nice work";
-  if (plannerCurrentMeta) plannerCurrentMeta.textContent = "All planned steps are finished.";
-  if (plannerCurrentHint) plannerCurrentHint.textContent = "You can exit guided workout and return to the machine page.";
-  if (openLoggingBtn) openLoggingBtn.disabled = true;
-} else {
-  const current = gwGetCurrentStep(plan);
-  if (current) {
-    if (plannerStepKicker) plannerStepKicker.textContent = `Step ${plan.currentStepIndex + 1} of ${plan.steps.length}`;
-    if (plannerCurrentTitle) plannerCurrentTitle.textContent = `Machine ${current.machineNumber} — ${current.machineName}`;
-    if (plannerCurrentMeta) plannerCurrentMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
-    if (plannerCurrentHint) plannerCurrentHint.textContent = "Find the highlighted machine number on the map, then log your workout.";
-    if (openLoggingBtn) openLoggingBtn.disabled = false;
-  }
-}
+ function gwOpenCurrentStepLogging() {
+  const plan = gwLoadActivePlan(gymId, userId);
+  if (!plan) return;
 
+  if (plan.status === "completed") {
+    gwExitGuidedWorkout();
+    return;
+  }
+
+  const current = gwGetCurrentStep(plan);
+  if (!current) return;
+
+  const targetMachine = String(current.machineCode || "").toUpperCase();
+  const currentMachine = String(machineId || "").toUpperCase();
+
+  if (targetMachine === currentMachine) {
+    gwCloseGuidedWorkoutModal();
+    return;
+  }
+
+  sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
+
+  gwSetParamAndNavigate({
+    gym: gymId,
+    machine: targetMachine
+  });
+}
       gwRenderMarkers(plan);
       gwRenderSteps(plan);
       gwOpenGuidedWorkoutModal();
