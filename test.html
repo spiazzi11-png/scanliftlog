@@ -4407,9 +4407,14 @@
       window.location.href = url.toString();
     }
 
-   function gwOpenCurrentStepLogging() {
+ function gwOpenCurrentStepLogging() {
   const plan = gwLoadActivePlan(gymId, userId);
-  if (!plan || plan.status !== "active") return;
+  if (!plan) return;
+
+  if (plan.status === "completed") {
+    gwExitGuidedWorkout();
+    return;
+  }
 
   const current = gwGetCurrentStep(plan);
   if (!current) return;
@@ -4417,14 +4422,11 @@
   const targetMachine = String(current.machineCode || "").toUpperCase();
   const currentMachine = String(machineId || "").toUpperCase();
 
-  // If user is already on the correct machine, just close the modal
-  // and let them use the normal logging screen underneath.
   if (targetMachine === currentMachine) {
     gwCloseGuidedWorkoutModal();
     return;
   }
 
-  // If navigating to a different machine, suppress auto-reopen of planner once.
   sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
 
   gwSetParamAndNavigate({
