@@ -3941,18 +3941,20 @@
 
         usedMachineCodes.add(machine.machineCode);
 
-        chosenSteps.push({
-          stepId: "step_" + Math.random().toString(36).slice(2),
-          exerciseName: tplItem.exercise,
-          machineCode: machine.machineCode,
-          machineNumber: machine.machineNumber,
-          machineName: machine.label,
-          type: machine.type,
-          sets: tplItem.sets[level] || 3,
-          reps: tplItem.reps[level] || 10,
-          repUnit: "reps",
-          status: "upcoming"
-        });
+       chosenSteps.push({
+  stepId: "step_" + Math.random().toString(36).slice(2),
+  exerciseName: tplItem.exercise,
+  machineCode: machine.machineCode,
+  machineNumber: machine.machineNumber,
+  machineName: machine.label,
+  type: machine.type,
+  markerLeft: machine.markerLeft,
+  markerTop: machine.markerTop,
+  sets: tplItem.sets[level] || 3,
+  reps: tplItem.reps[level] || 10,
+  repUnit: "reps",
+  status: "upcoming"
+});
 
         if (chosenSteps.length >= desiredCount) break;
       }
@@ -4058,11 +4060,38 @@
       guidedWorkoutModal.setAttribute("aria-hidden", "true");
     }
         function gwRenderMarkers(plan) {
-      if (!plannerMapMarkers) return;
-      const machines = gwGetGymMachines(plan.gymId);
-      plannerMapMarkers.innerHTML = "";
+  if (!plannerMapMarkers) return;
+  plannerMapMarkers.innerHTML = "";
 
-      machines.forEach(machine => {
+  plan.steps.forEach((step, stepIndex) => {
+    const el = document.createElement("button");
+    el.type = "button";
+    el.className = "plannerMarker upcoming";
+    el.style.left = `${step.markerLeft}%`;
+    el.style.top = `${step.markerTop}%`;
+    el.textContent = step.machineNumber;
+    el.title = `Machine ${step.machineNumber} — ${step.machineName}`;
+
+    if (step.status === "completed") {
+      el.className = "plannerMarker completed";
+    } else if (step.status === "skipped") {
+      el.className = "plannerMarker skipped";
+    } else if (stepIndex === plan.currentStepIndex && plan.status === "active") {
+      el.className = "plannerMarker active";
+    } else {
+      el.className = "plannerMarker upcoming";
+    }
+
+    el.addEventListener("click", () => {
+      if (plan.status !== "active") return;
+      plan.currentStepIndex = stepIndex;
+      gwSaveActivePlan(plan);
+      gwRenderPlanUI(plan);
+    });
+
+    plannerMapMarkers.appendChild(el);
+  });
+}
         const el = document.createElement("button");
         el.type = "button";
         el.className = "plannerMarker upcoming";
