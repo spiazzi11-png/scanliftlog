@@ -4552,18 +4552,19 @@
           renderBadgeUI();
           renderMonthlyConsistency();
 
-          const activePlan = gwLoadActivePlan(gymId, userId);
-          if (activePlan && activePlan.status === "active") {
-            const current = gwGetCurrentStep(activePlan);
-            if (current && current.machineCode === machineId) {
-              current.status = "completed";
-              gwAdvancePlan(activePlan);
-              if (activePlan.status === "completed") gwSaveCompletedPlanHistory(activePlan);
-              gwSaveActivePlan(activePlan);
-            }
-          }
+      const activePlan = gwLoadActivePlan(gymId, userId);
+if (activePlan && activePlan.status === "active") {
+  const current = gwGetCurrentStep(activePlan);
+  if (current && String(current.machineCode || "").toUpperCase() === String(machineId || "").toUpperCase()) {
+    current.status = "completed";
+    gwAdvancePlan(activePlan);
+    if (activePlan.status === "completed") gwSaveCompletedPlanHistory(activePlan);
+    gwSaveActivePlan(activePlan);
+    gwRenderPlanUI(activePlan);
+  }
+}
 
-          return;
+return;
         }
 
         const sets = readCurrentSets();
@@ -4594,16 +4595,17 @@
         renderBadgeUI();
         renderMonthlyConsistency();
 
-        const activePlan = gwLoadActivePlan(gymId, userId);
-        if (activePlan && activePlan.status === "active") {
-          const current = gwGetCurrentStep(activePlan);
-          if (current && current.machineCode === machineId) {
-            current.status = "completed";
-            gwAdvancePlan(activePlan);
-            if (activePlan.status === "completed") gwSaveCompletedPlanHistory(activePlan);
-            gwSaveActivePlan(activePlan);
-          }
-        }
+      const activePlan = gwLoadActivePlan(gymId, userId);
+if (activePlan && activePlan.status === "active") {
+  const current = gwGetCurrentStep(activePlan);
+  if (current && String(current.machineCode || "").toUpperCase() === String(machineId || "").toUpperCase()) {
+    current.status = "completed";
+    gwAdvancePlan(activePlan);
+    if (activePlan.status === "completed") gwSaveCompletedPlanHistory(activePlan);
+    gwSaveActivePlan(activePlan);
+    gwRenderPlanUI(activePlan);
+  }
+}
       });
 
       document.getElementById("clearHistoryBtn").addEventListener("click", () => {
