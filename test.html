@@ -4227,18 +4227,31 @@
       window.location.href = url.toString();
     }
 
-    function gwOpenCurrentStepLogging() {
-      const plan = gwLoadActivePlan(gymId, userId);
-      if (!plan || plan.status !== "active") return;
+   function gwOpenCurrentStepLogging() {
+  const plan = gwLoadActivePlan(gymId, userId);
+  if (!plan || plan.status !== "active") return;
 
-      const current = gwGetCurrentStep(plan);
-      if (!current) return;
+  const current = gwGetCurrentStep(plan);
+  if (!current) return;
 
-      gwSetParamAndNavigate({
-        gym: gymId,
-        machine: current.machineCode
-      });
-    }
+  const targetMachine = String(current.machineCode || "").toUpperCase();
+  const currentMachine = String(machineId || "").toUpperCase();
+
+  // If user is already on the correct machine, just close the modal
+  // and let them use the normal logging screen underneath.
+  if (targetMachine === currentMachine) {
+    gwCloseGuidedWorkoutModal();
+    return;
+  }
+
+  // If navigating to a different machine, suppress auto-reopen of planner once.
+  sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
+
+  gwSetParamAndNavigate({
+    gym: gymId,
+    machine: targetMachine
+  });
+}
 
     function gwMarkCurrentStepComplete() {
       const plan = gwLoadActivePlan(gymId, userId);
@@ -4611,10 +4624,15 @@
       renderMonthlyConsistency();
       gwInitPlanner();
 
-      const existingPlan = gwLoadActivePlan(gymId, userId);
-      if (existingPlan && existingPlan.status === "active") {
-        gwRenderPlanUI(existingPlan);
-      }
+    const suppressReopen = sessionStorage.getItem("scanliftlog_guided_suppress_reopen") === "1";
+if (suppressReopen) {
+  sessionStorage.removeItem("scanliftlog_guided_suppress_reopen");
+} else {
+  const existingPlan = gwLoadActivePlan(gymId, userId);
+  if (existingPlan && existingPlan.status === "active") {
+    gwRenderPlanUI(existingPlan);
+  }
+}
 
       window.addEventListener("resize", renderHistory);
     })();
