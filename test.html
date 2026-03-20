@@ -1542,6 +1542,114 @@
       flex-wrap:wrap;
     }
 
+    .plannerStepTapHint {
+      margin-top:8px;
+      font-size:11px;
+      color:var(--muted);
+      font-weight:800;
+      letter-spacing:.02em;
+    }
+
+    .plannerStepItem.active .plannerStepTapHint {
+      color:#fecaca;
+    }
+
+    /* ===== AI Guided Workout Disclaimer Modal ===== */
+    .aiDisclaimerModal {
+      position: fixed;
+      inset: 0;
+      z-index: 10020;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(0,0,0,.76);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .aiDisclaimerModal.hidden {
+      display: none;
+    }
+
+    .aiDisclaimerCard {
+      width: min(760px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      background: linear-gradient(180deg, rgba(18,19,24,.98), rgba(15,16,21,.98));
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      padding: 20px;
+      color: var(--text);
+    }
+
+    .aiDisclaimerHeader {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .aiDisclaimerHeader h2 {
+      margin:0;
+      font-size:1.3rem;
+      line-height:1.2;
+    }
+
+    .aiDisclaimerSub {
+      color:var(--muted);
+      margin-top:6px;
+      font-size:.95rem;
+      line-height:1.5;
+    }
+
+    .aiDisclaimerAlert {
+      margin-top:14px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(239,68,68,.26);
+      background: rgba(239,68,68,.10);
+      color: #f3f4f6;
+      line-height:1.55;
+      font-size:.94rem;
+    }
+
+    .aiDisclaimerList {
+      margin:14px 0 0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:.94rem;
+    }
+
+    .aiDisclaimerCheckRow {
+      margin-top:16px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      background: rgba(255,255,255,.04);
+    }
+
+    .aiDisclaimerCheckRow input {
+      width:auto;
+      min-width:auto;
+      margin-top:2px;
+      transform: scale(1.08);
+    }
+
+    .aiDisclaimerActions {
+      margin-top:18px;
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
     /* ===== Mobile ===== */
     @media (max-width: 768px) {
       .card.headerCard {
@@ -2086,6 +2194,43 @@
             <button id="clearWorkoutPlanBtn" class="danger" type="button">Clear Plan</button>
           </div>
         </div>
+      </div>
+    </div> 
+
+  <!-- ===== AI Guided Workout Disclaimer Modal ===== -->
+  <div id="aiDisclaimerModal" class="aiDisclaimerModal hidden" aria-hidden="true">
+    <div class="aiDisclaimerCard" role="dialog" aria-modal="true" aria-labelledby="aiDisclaimerTitle">
+      <div class="aiDisclaimerHeader">
+        <div>
+          <h2 id="aiDisclaimerTitle">Before starting an AI-guided workout</h2>
+          <div class="aiDisclaimerSub">
+            This planner is intended to help organize a workout flow. It is not medical advice, treatment, diagnosis, physical therapy guidance, or a substitute for a qualified trainer or healthcare professional.
+          </div>
+        </div>
+        <button id="closeAiDisclaimerBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div class="aiDisclaimerAlert">
+        You are responsible for selecting safe resistance, using proper form, understanding your own limitations, and stopping immediately if you feel pain, dizziness, discomfort, or any unusual symptoms.
+      </div>
+
+      <ul class="aiDisclaimerList">
+        <li>Use this feature at your own risk.</li>
+        <li>Always adjust weight, reps, and effort to your fitness level.</li>
+        <li>Consult a qualified professional before using this feature if you have injuries, medical concerns, or exercise restrictions.</li>
+        <li>ScanLiftLog does not supervise your workout and cannot verify proper technique or safe machine use.</li>
+      </ul>
+
+      <div class="aiDisclaimerCheckRow">
+        <input type="checkbox" id="aiDisclaimerAgree" />
+        <label for="aiDisclaimerAgree" style="margin:0; color:var(--text); line-height:1.5;">
+          I understand this guided workout feature is only a general workout aid, not medical or professional training advice, and I accept responsibility for how I use it during this session.
+        </label>
+      </div>
+
+      <div class="aiDisclaimerActions">
+        <button id="cancelAiDisclaimerBtn" type="button">Cancel</button>
+        <button id="acceptAiDisclaimerBtn" class="primary" type="button" disabled>I Understand & Continue</button>
       </div>
     </div>
   </div>
@@ -3282,6 +3427,11 @@
     const skipStepBtn = document.getElementById("skipStepBtn");
     const finishWorkoutBtn = document.getElementById("finishWorkoutBtn");
     const clearWorkoutPlanBtn = document.getElementById("clearWorkoutPlanBtn");
+    const aiDisclaimerModal = document.getElementById("aiDisclaimerModal");
+    const closeAiDisclaimerBtn = document.getElementById("closeAiDisclaimerBtn");
+    const cancelAiDisclaimerBtn = document.getElementById("cancelAiDisclaimerBtn");
+    const acceptAiDisclaimerBtn = document.getElementById("acceptAiDisclaimerBtn");
+    const aiDisclaimerAgree = document.getElementById("aiDisclaimerAgree");
 
     let cardioInputs = {};
 
@@ -4013,7 +4163,7 @@
       return plan;
     }
 
-    function gwSkipCurrentStep(plan) {
+       function gwSkipCurrentStep(plan) {
       if (!plan) return null;
       const current = gwGetCurrentStep(plan);
       if (current) current.status = "skipped";
@@ -4038,6 +4188,39 @@
 
       plan.currentStepIndex = nextIndex;
       return plan;
+    }
+
+    const AI_DISCLAIMER_SESSION_KEY = "scanliftlog_ai_disclaimer_ack_v1";
+
+    function aiHasAcceptedDisclaimerThisSession() {
+      return sessionStorage.getItem(AI_DISCLAIMER_SESSION_KEY) === "1";
+    }
+
+    function aiSetAcceptedDisclaimerThisSession() {
+      sessionStorage.setItem(AI_DISCLAIMER_SESSION_KEY, "1");
+    }
+
+    function aiOpenDisclaimerModal() {
+      if (!aiDisclaimerModal) return;
+      aiDisclaimerModal.classList.remove("hidden");
+      aiDisclaimerModal.setAttribute("aria-hidden", "false");
+
+      if (aiDisclaimerAgree) aiDisclaimerAgree.checked = false;
+      if (acceptAiDisclaimerBtn) acceptAiDisclaimerBtn.disabled = true;
+    }
+
+    function aiCloseDisclaimerModal() {
+      if (!aiDisclaimerModal) return;
+      aiDisclaimerModal.classList.add("hidden");
+      aiDisclaimerModal.setAttribute("aria-hidden", "true");
+    }
+
+    function aiHandlePlanWorkoutEntry() {
+      if (aiHasAcceptedDisclaimerThisSession()) {
+        gwOpenSetupModal();
+        return;
+      }
+      aiOpenDisclaimerModal();
     }
 
     function gwOpenSetupModal() {
@@ -4096,7 +4279,7 @@
     plannerMapMarkers.appendChild(el);
   });
 }
-    function gwRenderSteps(plan) {
+      function gwRenderSteps(plan) {
       if (!plannerStepsList) return;
       plannerStepsList.innerHTML = "";
 
@@ -4114,6 +4297,9 @@
           </div>
           <div class="plannerStepRow2">
             ${step.exerciseName} • ${step.sets} set${step.sets > 1 ? "s" : ""} × ${step.reps} ${step.repUnit}
+          </div>
+          <div class="plannerStepTapHint">
+            Tap this step tile to make it your active machine
           </div>
         `;
 
@@ -4277,10 +4463,40 @@ function gwFinishWorkoutEarly() {
       gwClearActivePlan(gymId, userId);
       gwCloseGuidedWorkoutModal();
     }
-
     function gwInitPlanner() {
       if (planWorkoutBtn) {
-        planWorkoutBtn.addEventListener("click", gwOpenSetupModal);
+        planWorkoutBtn.addEventListener("click", aiHandlePlanWorkoutEntry);
+      }
+
+      if (closeAiDisclaimerBtn) {
+        closeAiDisclaimerBtn.addEventListener("click", aiCloseDisclaimerModal);
+      }
+
+      if (cancelAiDisclaimerBtn) {
+        cancelAiDisclaimerBtn.addEventListener("click", aiCloseDisclaimerModal);
+      }
+
+      if (aiDisclaimerAgree && acceptAiDisclaimerBtn) {
+        aiDisclaimerAgree.addEventListener("change", () => {
+          acceptAiDisclaimerBtn.disabled = !aiDisclaimerAgree.checked;
+        });
+      }
+
+      if (acceptAiDisclaimerBtn) {
+        acceptAiDisclaimerBtn.addEventListener("click", () => {
+          if (!aiDisclaimerAgree || !aiDisclaimerAgree.checked) return;
+          aiSetAcceptedDisclaimerThisSession();
+          aiCloseDisclaimerModal();
+          gwOpenSetupModal();
+        });
+      }
+
+      if (aiDisclaimerModal) {
+        aiDisclaimerModal.addEventListener("click", (e) => {
+          if (e.target === aiDisclaimerModal) {
+            aiCloseDisclaimerModal();
+          }
+        });
       }
 
       if (closePlannerSetupBtn) {
@@ -4315,7 +4531,6 @@ function gwFinishWorkoutEarly() {
         clearWorkoutPlanBtn.addEventListener("click", gwClearCurrentPlan);
       }
     }
-
     /* ================================
        INIT
        ================================ */
