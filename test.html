@@ -4096,39 +4096,6 @@
     plannerMapMarkers.appendChild(el);
   });
 }
-        const el = document.createElement("button");
-        el.type = "button";
-        el.className = "plannerMarker upcoming";
-        el.style.left = `${machine.markerLeft}%`;
-        el.style.top = `${machine.markerTop}%`;
-        el.textContent = machine.machineNumber;
-        el.title = `Machine ${machine.machineNumber} — ${machine.label}`;
-
-        const stepIndex = plan.steps.findIndex(s => s.machineCode === machine.machineCode);
-        if (stepIndex > -1) {
-          const step = plan.steps[stepIndex];
-
-          if (step.status === "completed") el.className = "plannerMarker completed";
-          else if (step.status === "skipped") el.className = "plannerMarker skipped";
-          else if (stepIndex === plan.currentStepIndex && plan.status === "active") el.className = "plannerMarker active";
-          else el.className = "plannerMarker upcoming";
-        } else {
-          el.style.opacity = ".45";
-        }
-
-        el.addEventListener("click", () => {
-          const idx = plan.steps.findIndex(s => s.machineCode === machine.machineCode);
-          if (idx > -1 && plan.status === "active") {
-            plan.currentStepIndex = idx;
-            gwSaveActivePlan(plan);
-            gwRenderPlanUI(plan);
-          }
-        });
-
-        plannerMapMarkers.appendChild(el);
-      });
-    }
-
     function gwRenderSteps(plan) {
       if (!plannerStepsList) return;
       plannerStepsList.innerHTML = "";
