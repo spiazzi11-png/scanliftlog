@@ -2392,42 +2392,17 @@
     /* ---------- Analytics ---------- */
     const ANALYTICS_BASE = "";
 
-    async function checkGymStatusOrGate(gid) {
-      try {
-        const r = await fetch(`${ANALYTICS_BASE}/api/gym-status?gym=${encodeURIComponent(gid)}`, { cache: "no-store" });
-        const j = await r.json();
-        if (!j || j.active !== true) {
-          showInactiveGate(gid);
-          return false;
-        }
-        return true;
-      } catch (e) {
-        showInactiveGate(gid);
-        return false;
-      }
-    }
+   async function checkGymStatusOrGate(gid) {
+  return true;
+}
 
     function canLogAnalytics(gymId, machineId) {
       return !!(gymId && ANALYTICS_BASE && !ANALYTICS_BASE.includes("YOUR-WORKER-DOMAIN"));
     }
 
-    function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) {
-      if (!canLogAnalytics(gymId, machineId)) return;
-
-      fetch(`${ANALYTICS_BASE}/api/event`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          gymId,
-          machineId,
-          machineName,
-          eventType,
-          deviceHash: userId,
-          ts: Date.now(),
-          ...extra
-        })
-      }).catch(() => {});
-    }
+  function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) {
+  return;
+}
 
     function toNumberOrNull(v) {
       const n = parseFloat(String(v || "").replace(/[^0-9.\-]/g, ""));
