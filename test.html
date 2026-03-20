@@ -4258,15 +4258,18 @@
       gwRenderPlanUI(plan);
     }
 
-    function gwFinishWorkoutEarly() {
-      const plan = gwLoadActivePlan(gymId, userId);
-      if (!plan) return;
+function gwFinishWorkoutEarly() {
+  const plan = gwLoadActivePlan(gymId, userId);
+  if (!plan) {
+    gwCloseGuidedWorkoutModal();
+    return;
+  }
 
-      plan.status = "completed";
-      gwSaveCompletedPlanHistory(plan);
-      gwSaveActivePlan(plan);
-      gwRenderPlanUI(plan);
-    }
+  plan.status = "completed";
+  gwSaveCompletedPlanHistory(plan);
+  gwClearActivePlan(gymId, userId);
+  gwCloseGuidedWorkoutModal();
+}
 
     function gwClearCurrentPlan() {
       const ok = confirm("Clear the current guided workout plan?");
