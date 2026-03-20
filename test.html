@@ -4304,12 +4304,28 @@
           </div>
         `;
 
-        div.addEventListener("click", () => {
-          if (plan.status !== "active") return;
-          plan.currentStepIndex = idx;
-          gwSaveActivePlan(plan);
-          gwRenderPlanUI(plan);
-        });
+    div.addEventListener("click", () => {
+  if (plan.status !== "active") return;
+
+  plan.currentStepIndex = idx;
+  gwSaveActivePlan(plan);
+
+  const targetMachine = String(step.machineCode || "").toUpperCase();
+  const currentMachine = String(machineId || "").toUpperCase();
+
+  if (targetMachine === currentMachine) {
+    gwRenderPlanUI(plan);
+    gwCloseGuidedWorkoutModal();
+    return;
+  }
+
+  sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
+
+  gwSetParamAndNavigate({
+    gym: gymId,
+    machine: targetMachine
+  });
+});
 
         plannerStepsList.appendChild(div);
       });
