@@ -3206,90 +3206,129 @@
       });
     }
 
-    /* ---------- Add to Home Screen ---------- */
-    let deferredA2hsPrompt = null;
+   /* ---------- Add to Home Screen ---------- */
+let deferredA2hsPrompt = null;
+const A2HS_REDIRECT_INSTALL_KEY = "scanliftlog_a2hs_redirect_pending";
 
-    function openA2hsModal() {
-      const modal = document.getElementById("a2hsModal");
-      const note = document.getElementById("a2hsCurrentUrlNote");
-      const subText = document.getElementById("a2hsSubText");
-      const confirmBtn = document.getElementById("confirmA2hsBtn");
-      const androidList = document.getElementById("a2hsAndroidList");
+function openA2hsModal() {
+  const modal = document.getElementById("a2hsModal");
+  const note = document.getElementById("a2hsCurrentUrlNote");
+  const subText = document.getElementById("a2hsSubText");
+  const confirmBtn = document.getElementById("confirmA2hsBtn");
+  const androidList = document.getElementById("a2hsAndroidList");
 
-      if (!modal) return;
+  if (!modal) return;
 
-      if (note) {
-        note.textContent = machineId
-          ? "You are currently on a machine page. The saved home screen shortcut should point to the gym-level page so members can choose any machine later."
-          : "You are already on the gym-level page. This is the correct home screen target.";
-      }
+  if (note) {
+    note.textContent = machineId
+      ? "You are currently on a machine page. The shortcut should point to the gym-level page so members can choose any machine later."
+      : "You are already on the gym-level page. This is the correct home screen target.";
+  }
 
-      if (subText) {
-        subText.textContent = deferredA2hsPrompt
-          ? "Android can use the browser’s native Add to Home Screen prompt from here."
-          : "Save ScanLiftLog to your phone’s home screen for quick access.";
-      }
+  if (subText) {
+    subText.textContent = deferredA2hsPrompt
+      ? "Tap the purple button below to open your phone’s native install prompt."
+      : "Your browser did not expose the native install prompt yet. If needed, use your browser menu to add this page to your home screen.";
+  }
 
-      if (confirmBtn) {
-        confirmBtn.textContent = deferredA2hsPrompt ? "Add to Home Screen" : "Got It";
-      }
+  if (confirmBtn) {
+    confirmBtn.textContent = deferredA2hsPrompt ? "Add to Home Screen" : "Try Again";
+  }
 
-      if (androidList) {
-        androidList.innerHTML = deferredA2hsPrompt
-          ? `
-            <li>Tap the button below</li>
-            <li>Confirm <strong>Add to Home Screen</strong></li>
-            <li>Your shortcut will open the gym-level page</li>
-          `
-          : `
-            <li>If your browser does not show the native prompt, open the gym-level page first</li>
-            <li>Then use your browser menu and tap <strong>Add to Home Screen</strong></li>
-            <li>Your shortcut should open the gym-level page</li>
-          `;
-      }
+  if (androidList) {
+    androidList.innerHTML = deferredA2hsPrompt
+      ? `
+        <li>Tap the purple button below</li>
+        <li>Confirm <strong>Add to Home Screen</strong></li>
+        <li>Your shortcut will open the gym-level page</li>
+      `
+      : `
+        <li>If the native install prompt does not appear, open your browser menu</li>
+        <li>Tap <strong>Add to Home Screen</strong> or <strong>Install app</strong></li>
+        <li>Your shortcut should open the gym-level page</li>
+      `;
+  }
 
-      modal.classList.remove("hidden");
-      modal.setAttribute("aria-hidden", "false");
+  modal.classList.remove("hidden");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function closeA2hsModal() {
+  const modal = document.getElementById("a2hsModal");
+  if (!modal) return;
+  modal.classList.add("hidden");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+function goToGymHomeVersion() {
+  sessionStorage.setItem(A2HS_REDIRECT_INSTALL_KEY, "1");
+  window.location.href = buildGymOnlyUrl(gymId);
+}
+
+async function waitForDeferredA2hsPrompt(maxWaitMs = 1800) {
+  const start = Date.now();
+
+  while (!deferredA2hsPrompt && (Date.now() - start) < maxWaitMs) {
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+
+  return deferredA2hsPrompt;
+}
+
+async function showNativeA2hsPrompt() {
+  const promptEvent = deferredA2hsPrompt;
+  if (!promptEvent) return false;
+
+  deferredA2hsPrompt = null;
+
+  try {
+    closeA2hsModal();
+    promptEvent.prompt();
+    await promptEvent.userChoice;
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function startAddToHomeScreenFlow({ autoAfterRedirect = false } = {}) {
+  if (isInStandaloneMode()) return true;
+
+  if (machineId) {
+    sessionStorage.setItem(A2HS_REDIRECT_INSTALL_KEY, "1");
+    window.location.href = buildGymOnlyUrl(gymId);
+    return true;
+  }
+
+  if (!isIosLike() && !deferredA2hsPrompt && autoAfterRedirect) {
+    await waitForDeferredA2hsPrompt(1800);
+  }
+
+  if (!isIosLike()) {
+    const didShowPrompt = await showNativeA2hsPrompt();
+    if (didShowPrompt) {
+      sessionStorage.removeItem(A2HS_REDIRECT_INSTALL_KEY);
+      return true;
     }
+  }
 
-    function closeA2hsModal() {
-      const modal = document.getElementById("a2hsModal");
-      if (!modal) return;
-      modal.classList.add("hidden");
-      modal.setAttribute("aria-hidden", "true");
-    }
+  sessionStorage.removeItem(A2HS_REDIRECT_INSTALL_KEY);
+  openA2hsModal();
+  return false;
+}
 
-    function goToGymHomeVersion() {
-      window.location.href = buildGymOnlyUrl(gymId);
-    }
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredA2hsPrompt = e;
+});
 
-    async function confirmAddToHomeScreen() {
-      if (machineId) {
-        window.location.href = buildGymOnlyUrl(gymId);
-        return;
-      }
+window.addEventListener("appinstalled", () => {
+  deferredA2hsPrompt = null;
+  sessionStorage.removeItem(A2HS_REDIRECT_INSTALL_KEY);
 
-      if (deferredA2hsPrompt) {
-        try {
-          deferredA2hsPrompt.prompt();
-          await deferredA2hsPrompt.userChoice;
-        } catch (e) {}
-        deferredA2hsPrompt = null;
-      }
-
-      closeA2hsModal();
-    }
-
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredA2hsPrompt = e;
-    });
-
-    window.addEventListener("appinstalled", () => {
-      deferredA2hsPrompt = null;
-      const btn = document.getElementById("addToHomeScreenBtn");
-      if (btn) btn.classList.add("hidden");
-    });
+  const btn = document.getElementById("addToHomeScreenBtn");
+  if (btn) btn.classList.add("hidden");
+});
 
     /* ---------- Cardio Field Definitions ---------- */
     function getCardioFieldDefs(mid) {
@@ -5301,55 +5340,65 @@
       // Guided workout should not add browser history entries.
     }
 
-    function initA2hsUi() {
-      const addBtn = document.getElementById("addToHomeScreenBtn");
-      const closeBtn = document.getElementById("closeA2hsBtn");
-      const modal = document.getElementById("a2hsModal");
-      const openGymHomeBtn = document.getElementById("openGymHomeBtn");
-      const confirmBtn = document.getElementById("confirmA2hsBtn");
-      const iosSection = document.getElementById("a2hsIosSection");
-      const androidSection = document.getElementById("a2hsAndroidSection");
+ function initA2hsUi() {
+  const addBtn = document.getElementById("addToHomeScreenBtn");
+  const closeBtn = document.getElementById("closeA2hsBtn");
+  const modal = document.getElementById("a2hsModal");
+  const openGymHomeBtn = document.getElementById("openGymHomeBtn");
+  const confirmBtn = document.getElementById("confirmA2hsBtn");
+  const iosSection = document.getElementById("a2hsIosSection");
+  const androidSection = document.getElementById("a2hsAndroidSection");
 
-      if (isInStandaloneMode() && addBtn) {
-        addBtn.classList.add("hidden");
-      }
+  if (isInStandaloneMode() && addBtn) {
+    addBtn.classList.add("hidden");
+  }
 
-      if (iosSection) {
-        iosSection.style.display = isIosLike() ? "" : "none";
-      }
+  if (iosSection) {
+    iosSection.style.display = isIosLike() ? "" : "none";
+  }
 
-      if (androidSection) {
-        androidSection.style.display = isIosLike() ? "none" : "";
-      }
+  if (androidSection) {
+    androidSection.style.display = isIosLike() ? "none" : "";
+  }
 
-      if (addBtn) {
-        addBtn.addEventListener("click", () => {
-          openA2hsModal();
-        });
-      }
+  if (addBtn) {
+    addBtn.addEventListener("click", async () => {
+      await startAddToHomeScreenFlow();
+    });
+  }
 
-      if (closeBtn) {
-        closeBtn.addEventListener("click", closeA2hsModal);
-      }
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeA2hsModal);
+  }
 
-      if (modal) {
-        modal.addEventListener("click", (e) => {
-          if (e.target === modal || e.target.classList.contains("a2hsBackdrop")) {
-            closeA2hsModal();
-          }
-        });
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal || e.target.classList.contains("a2hsBackdrop")) {
+        closeA2hsModal();
       }
+    });
+  }
 
-      if (openGymHomeBtn) {
-        openGymHomeBtn.addEventListener("click", goToGymHomeVersion);
-      }
+  if (openGymHomeBtn) {
+    openGymHomeBtn.addEventListener("click", () => {
+      goToGymHomeVersion();
+    });
+  }
 
-      if (confirmBtn) {
-        confirmBtn.addEventListener("click", async () => {
-          await confirmAddToHomeScreen();
-        });
-      }
-    }
+  if (confirmBtn) {
+    confirmBtn.addEventListener("click", async () => {
+      await startAddToHomeScreenFlow();
+    });
+  }
+
+  const pendingAutoInstall = sessionStorage.getItem(A2HS_REDIRECT_INSTALL_KEY) === "1";
+
+  if (pendingAutoInstall && !machineId && !isIosLike()) {
+    setTimeout(() => {
+      startAddToHomeScreenFlow({ autoAfterRedirect: true });
+    }, 350);
+  }
+}
 
     function initMachineDropdown() {
       populateMachineDropdown();
