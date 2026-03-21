@@ -5381,14 +5381,18 @@ window.addEventListener("appinstalled", () => {
       }
     }
 
-    function setupGuidedWorkoutBackHandler() {
-      // Intentionally disabled for now.
-      // Guided workout should not add browser history entries.
-    }
-
+ function setupGuidedWorkoutBackHandler() {
+  // Intentionally disabled for now.
+  // Guided workout should not add browser history entries.
 }
-    function initA2hsUi() {
+
+function initA2hsUi() {
   const addBtn = document.getElementById("addToHomeScreenBtn");
+  const closeBtn = document.getElementById("closeA2hsBtn");
+  const modal = document.getElementById("a2hsModal");
+  const openGymHomeBtn = document.getElementById("openGymHomeBtn");
+  const confirmBtn = document.getElementById("confirmA2hsBtn");
+
   if (!addBtn) return;
 
   if (isInStandaloneMode()) {
@@ -5397,22 +5401,42 @@ window.addEventListener("appinstalled", () => {
   }
 
   addBtn.addEventListener("click", async () => {
-    // Android / Chromium: keep native install prompt behavior
-    if (!isIosLike() && deferredA2hsPrompt) {
-      const promptEvent = deferredA2hsPrompt;
-      deferredA2hsPrompt = null;
-
-      try {
-        promptEvent.prompt();
-        await promptEvent.userChoice;
-      } catch (e) {}
-
-      return;
-    }
-
-    // iPhone / iPad fallback: send to gym install page
-    window.location.href = `/install/${gymId}.html`;
+    await startAddToHomeScreenFlow();
   });
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeA2hsModal);
+  }
+
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal || e.target.classList.contains("a2hsBackdrop")) {
+        closeA2hsModal();
+      }
+    });
+  }
+
+  if (openGymHomeBtn) {
+    openGymHomeBtn.addEventListener("click", () => {
+      goToGymHomeVersion();
+    });
+  }
+
+  if (confirmBtn) {
+    confirmBtn.addEventListener("click", async () => {
+      await confirmAddToHomeScreen();
+    });
+  }
+}
+
+function initMachineDropdown() {
+  populateMachineDropdown();
+
+  if (machineSelect) {
+    machineSelect.addEventListener("change", () => {
+      handleMachineDropdownChange(machineSelect.value);
+    });
+  }
 }
 
     function updateHeaderContext() {
