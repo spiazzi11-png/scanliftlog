@@ -4418,15 +4418,7 @@
   guidedWorkoutModal.setAttribute("aria-hidden", "false");
 }
 
-  const state = window.history.state || {};
-  if (!state.scanliftlogGuidedOpen) {
-    window.history.pushState(
-      { ...state, scanliftlogGuidedOpen: true },
-      "",
-      window.location.href
-    );
-  }
-}
+
     function gwCloseGuidedWorkoutModal() {
       if (!guidedWorkoutModal) return;
       guidedWorkoutModal.classList.add("hidden");
@@ -4721,12 +4713,6 @@ function gwExitGuidedWorkout() {
       history.back();
     }
   }
-}
-
-  const aiEntryWrap = document.querySelector(".plannerEntryWrap");
-  if (aiEntryWrap) aiEntryWrap.style.display = "";
-
-  renderGuidedStepBanner();
 }
 
 
