@@ -3092,11 +3092,27 @@
   const path = getCurrentPagePath();
   const startUrl = `${origin}${path}?gym=${encodeURIComponent(gymId)}`;
 
-  return {
-    id: `/scanliftlog/${encodeURIComponent(gymId)}`,
+  const INSTALL_BRANDING = {
+    "pushfitness-melville": {
+      name: "Push Fitness Club",
+      shortName: "Push Fitness",
+      icon192: "/icons/pushfitness-192.png",
+      icon512: "/icons/pushfitness-512.png"
+    }
+  };
+
+  const brand = INSTALL_BRANDING[gymId] || {
     name: `${gymName} - ScanLiftLog`,
-    short_name: "ScanLiftLog",
-    description: `Quick workout logging for ${gymName}`,
+    shortName: "ScanLiftLog",
+    icon192: "/icons/icon-192.png",
+    icon512: "/icons/icon-512.png"
+  };
+
+  return {
+    id: `/install/${encodeURIComponent(gymId)}`,
+    name: brand.name,
+    short_name: brand.shortName,
+    description: `QR-based gym workout logging for ${gymName}`,
     start_url: startUrl,
     scope: `${origin}/`,
     display: "standalone",
@@ -3104,16 +3120,16 @@
     theme_color: "#0b0c10",
     icons: [
       {
-        src: "/icons/icon-192.png",
+        src: brand.icon192,
         sizes: "192x192",
         type: "image/png",
-        purpose: "any maskable"
+        purpose: "any"
       },
       {
-        src: "/icons/icon-512.png",
+        src: brand.icon512,
         sizes: "512x512",
         type: "image/png",
-        purpose: "any maskable"
+        purpose: "any"
       }
     ]
   };
@@ -5370,7 +5386,8 @@ window.addEventListener("appinstalled", () => {
       // Guided workout should not add browser history entries.
     }
 
-function initA2hsUi() {
+}
+    function initA2hsUi() {
   const addBtn = document.getElementById("addToHomeScreenBtn");
   if (!addBtn) return;
 
@@ -5379,20 +5396,24 @@ function initA2hsUi() {
     return;
   }
 
-  addBtn.addEventListener("click", () => {
+  addBtn.addEventListener("click", async () => {
+    // Android / Chromium: keep native install prompt behavior
+    if (!isIosLike() && deferredA2hsPrompt) {
+      const promptEvent = deferredA2hsPrompt;
+      deferredA2hsPrompt = null;
+
+      try {
+        promptEvent.prompt();
+        await promptEvent.userChoice;
+      } catch (e) {}
+
+      return;
+    }
+
+    // iPhone / iPad fallback: send to gym install page
     window.location.href = `/install/${gymId}.html`;
   });
 }
-
-    function initMachineDropdown() {
-      populateMachineDropdown();
-
-      if (machineSelect) {
-        machineSelect.addEventListener("change", () => {
-          handleMachineDropdownChange(machineSelect.value);
-        });
-      }
-    }
 
     function updateHeaderContext() {
       const gymNameText = document.getElementById("gymNameText");
