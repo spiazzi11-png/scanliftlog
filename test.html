@@ -3087,63 +3087,36 @@
     }
 
     /* ---------- Dynamic manifest / icons ---------- */
-  function buildManifestObject() {
-  const origin = window.location.origin;
-  const path = getCurrentPagePath();
-  const startUrl = `${origin}${path}?gym=${encodeURIComponent(gymId)}`;
-
   const INSTALL_BRANDING = {
-    "pushfitness-melville": {
-      name: "Push Fitness Club",
-      shortName: "Push Fitness",
-      icon192: "/icons/pushfitness-192.png",
-      icon512: "/icons/pushfitness-512.png"
-    }
-  };
+  "pushfitness-melville": {
+    pageTitle: "Push Fitness Club",
+    appleTitle: "Push Fitness",
+    appleTouchIcon: "/icons/pushfitness-192.png",
+    manifest: "/manifests/pushfitness-melville.webmanifest"
+  }
+};
 
-  const brand = INSTALL_BRANDING[gymId] || {
-    name: `${gymName} - ScanLiftLog`,
-    shortName: "ScanLiftLog",
-    icon192: "/icons/icon-192.png",
-    icon512: "/icons/icon-512.png"
-  };
+function applyInstallBranding() {
+  const brand = INSTALL_BRANDING[gymId];
+  if (!brand) return;
 
-  return {
-    id: `/install/${encodeURIComponent(gymId)}`,
-    name: brand.name,
-    short_name: brand.shortName,
-    description: `QR-based gym workout logging for ${gymName}`,
-    start_url: startUrl,
-    scope: `${origin}/`,
-    display: "standalone",
-    background_color: "#0b0c10",
-    theme_color: "#0b0c10",
-    icons: [
-      {
-        src: brand.icon192,
-        sizes: "192x192",
-        type: "image/png",
-        purpose: "any"
-      },
-      {
-        src: brand.icon512,
-        sizes: "512x512",
-        type: "image/png",
-        purpose: "any"
-      }
-    ]
-  };
+  document.title = brand.pageTitle || document.title;
+
+  const manifestLink = document.getElementById("dynamicManifestLink");
+  if (manifestLink && brand.manifest) {
+    manifestLink.setAttribute("href", brand.manifest);
+  }
+
+  const appleTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+  if (appleTitleMeta && brand.appleTitle) {
+    appleTitleMeta.setAttribute("content", brand.appleTitle);
+  }
+
+  const appleTouchIconLink = document.querySelector('link[rel="apple-touch-icon"]');
+  if (appleTouchIconLink && brand.appleTouchIcon) {
+    appleTouchIconLink.setAttribute("href", brand.appleTouchIcon);
+  }
 }
-
-    function applyDynamicManifest() {
-      const link = document.getElementById("dynamicManifestLink");
-      if (!link) return;
-
-      const manifest = buildManifestObject();
-      const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: "application/manifest+json" });
-      const manifestUrl = URL.createObjectURL(blob);
-      link.href = manifestUrl;
-    }
 
     /* ---------- Machine Name ---------- */
     const key = machineId ? String(machineId).trim().toUpperCase() : "";
@@ -5477,7 +5450,7 @@ function initMachineDropdown() {
        INIT
        ================================ */
     (async () => {
-      applyDynamicManifest();
+      applyInstallBranding();
 
       const isPrivateLikely = await detectPrivateModeLikely();
       if (isPrivateLikely) {
