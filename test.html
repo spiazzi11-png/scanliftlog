@@ -3581,7 +3581,7 @@
 
     let cardioInputs = {};
 
-    /* ---------- Guided Focus Helpers ---------- */
+      /* ---------- Guided Focus Helpers ---------- */
     const gwUiHomes = {};
 
     function gwRememberHome(key, node) {
@@ -3592,8 +3592,23 @@
       };
     }
 
+    function gwIsEditingGuidedStrengthFields() {
+      const ae = document.activeElement;
+      if (!ae) return false;
+
+      const tag = String(ae.tagName || "").toUpperCase();
+      if (!["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return false;
+
+      return !!ae.closest("#guidedSetsPanel, #setsContainer, .setRow");
+    }
+
     function gwMoveNodeTo(key, node, newParent) {
       if (!node || !newParent) return;
+
+      // Important: do nothing if the node is already in the right place.
+      // Re-appending an already-focused input container on mobile can kill focus.
+      if (node.parentNode === newParent) return;
+
       gwRememberHome(key, node);
       newParent.appendChild(node);
     }
@@ -3601,6 +3616,9 @@
     function gwRestoreNode(key, node) {
       const home = gwUiHomes[key];
       if (!node || !home || !home.parent) return;
+
+      // If already back in its original parent, leave it alone.
+      if (node.parentNode === home.parent) return;
 
       if (home.next && home.next.parentNode === home.parent) {
         home.parent.insertBefore(node, home.next);
@@ -3610,6 +3628,9 @@
     }
 
     function gwSyncFocusedGuidedUI() {
+      // Do not reshuffle the guided UI while the user is actively typing.
+      if (gwIsEditingGuidedStrengthFields()) return;
+
       const activePlan = gwLoadActivePlan(gymId, userId);
       const focusModeActive = !!(activePlan && activePlan.status === "active" && machineType === "strength");
 
@@ -3639,7 +3660,6 @@
         }
       }
     }
-
     /* ---------- Strength: Sets UI ---------- */
     function createSetRow(setIndex, weight = "", reps = "") {
       const row = document.createElement("div");
@@ -4526,7 +4546,7 @@
       gwSyncFocusedGuidedUI();
     }
 
-    function renderGuidedStepBanner() {
+     function renderGuidedStepBanner() {
       if (!guidedStepBanner) return;
 
       const activePlan = gwLoadActivePlan(gymId, userId);
@@ -4535,7 +4555,7 @@
       if (!activePlan || activePlan.status !== "active") {
         guidedStepBanner.style.display = "none";
         if (aiEntryWrap) aiEntryWrap.style.display = "";
-        gwSyncFocusedGuidedUI();
+        if (!gwIsEditingGuidedStrengthFields()) gwSyncFocusedGuidedUI();
         return;
       }
 
@@ -4545,7 +4565,7 @@
 
       if (!current) {
         guidedStepBanner.style.display = "none";
-        gwSyncFocusedGuidedUI();
+        if (!gwIsEditingGuidedStrengthFields()) gwSyncFocusedGuidedUI();
         return;
       }
 
@@ -4554,7 +4574,7 @@
 
       if (currentMachine !== targetMachine) {
         guidedStepBanner.style.display = "none";
-        gwSyncFocusedGuidedUI();
+        if (!gwIsEditingGuidedStrengthFields()) gwSyncFocusedGuidedUI();
         return;
       }
 
@@ -4572,7 +4592,7 @@
         guidedStepBannerHint.textContent = "Finish this machine, then tap Save Workout to move to the next step.";
       }
 
-      gwSyncFocusedGuidedUI();
+      if (!gwIsEditingGuidedStrengthFields()) gwSyncFocusedGuidedUI();
     }
 
     function gwRenderPlanUI(plan) {
@@ -5116,9 +5136,8 @@
         }
       }
 
-      window.addEventListener("focus", () => {
-        renderGuidedStepBanner();
-        gwSyncFocusedGuidedUI();
+           window.addEventListener("resize", () => {
+        renderHistory();
       });
 
       window.addEventListener("resize", () => {
