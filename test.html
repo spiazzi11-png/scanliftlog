@@ -534,6 +534,60 @@
       }
     }
 
+    /* ===== Guided Focus Layout ===== */
+    #guidedTopFocusSlot {
+      display:none;
+      margin:0 0 14px;
+    }
+
+    #guidedTopFocusSlot[hidden] {
+      display:none !important;
+    }
+
+    body.guided-focus-active #guidedTopFocusSlot {
+      display:block;
+    }
+
+    #guidedTopFocusSlot > * {
+      margin-top:0 !important;
+      margin-bottom:14px;
+    }
+
+    #guidedTopFocusSlot > *:last-child {
+      margin-bottom:0;
+    }
+
+    body.guided-focus-active [data-ui="monthly-consistency"],
+    body.guided-focus-active [data-ui="gym-machine-pill"],
+    body.guided-focus-active [data-ui="current-badge"] {
+      display:none !important;
+    }
+
+    .guidedSetsPanel {
+      margin-top:18px;
+    }
+
+    #logger .guidedSetsPanel {
+      background:transparent;
+      border:0;
+      border-radius:0;
+      padding:0;
+      box-shadow:none;
+    }
+
+    body.guided-focus-active #guidedTopFocusSlot .guidedSetsPanel {
+      margin-top:0;
+      background: rgba(18,19,24,.78);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      box-shadow: var(--shadow);
+    }
+
+    body.guided-focus-active #guidedTopFocusSlot .guidedStepBanner {
+      margin:0;
+    }
+
     /* ===== Monthly Consistency ===== */
     .consistencyCard{
       margin:12px 0 16px;
@@ -663,63 +717,65 @@
       display:none;
     }
 
+    /* ===== Guided Step Banner ===== */
+    .guidedStepBanner {
+      margin-top:14px;
+      padding:14px;
+      border-radius:18px;
+      background: linear-gradient(180deg, rgba(59,130,246,.16), rgba(37,99,235,.10));
+      border:1px solid rgba(96,165,250,.30);
+      box-shadow: 0 10px 28px rgba(0,0,0,.18);
+    }
+
+    .guidedStepBannerTop {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:8px;
+    }
+
+    .guidedStepBannerEyebrow {
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#bfdbfe;
+    }
+
+    .guidedStepBannerPill {
+      font-size:11px;
+      font-weight:900;
+      color:#fff;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:999px;
+      padding:6px 10px;
+    }
+
+    .guidedStepBannerTitle {
+      font-size:1.05rem;
+      font-weight:900;
+      color:var(--text);
+      line-height:1.3;
+    }
+
+    .guidedStepBannerMeta {
+      margin-top:6px;
+      font-size:.98rem;
+      font-weight:800;
+      color:#dbeafe;
+    }
+
+    .guidedStepBannerHint {
+      margin-top:8px;
+      font-size:.92rem;
+      line-height:1.45;
+      color:rgba(233,233,238,.88);
+    }
+
     /* ===== Badges ===== */
-    .guidedStepBanner{
-  background: linear-gradient(180deg, rgba(59,130,246,.12), rgba(37,99,235,.08));
-  border: 1px solid rgba(59,130,246,.28);
-  border-radius: 18px;
-  padding: 14px;
-  margin: 16px 0 0;
-  box-shadow: 0 10px 30px rgba(0,0,0,.18);
-}
-
-.guidedStepBannerTop{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.guidedStepBannerEyebrow{
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  color:#bfdbfe;
-  font-weight:900;
-}
-
-.guidedStepBannerPill{
-  font-size:11px;
-  padding:6px 10px;
-  border-radius:999px;
-  background: rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
-  color:var(--text);
-  font-weight:900;
-}
-
-.guidedStepBannerTitle{
-  margin-top:10px;
-  font-size:18px;
-  font-weight:900;
-  line-height:1.25;
-  color:var(--text);
-}
-
-.guidedStepBannerMeta{
-  margin-top:6px;
-  font-size:14px;
-  font-weight:800;
-  color:#dbeafe;
-}
-
-.guidedStepBannerHint{
-  margin-top:8px;
-  font-size:13px;
-  line-height:1.45;
-  color:var(--muted);
-}
     .badgeProgressCard,
     .badgesCard {
       background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
@@ -1251,16 +1307,16 @@
       justify-content:center;
     }
 
-.plannerEntryWrap .primary{
-  width:auto;
-  min-width:220px;
-  padding:10px 16px;
-  font-size:15px;
-  font-weight:900;
-  border-color: rgba(59,130,246,.55);
-  background: linear-gradient(135deg, rgba(59,130,246,.95), rgba(37,99,235,.65));
-  color:#fff;
-}
+    .plannerEntryWrap .primary{
+      width:auto;
+      min-width:220px;
+      padding:10px 16px;
+      font-size:15px;
+      font-weight:900;
+      border-color: rgba(59,130,246,.55);
+      background: linear-gradient(135deg, rgba(59,130,246,.95), rgba(37,99,235,.65));
+      color:#fff;
+    }
 
     .plannerModal {
       position:fixed;
@@ -1390,15 +1446,15 @@
       flex-wrap:wrap;
     }
 
- .plannerStackLayout {
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-}
+    .plannerStackLayout {
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
 
-.plannerMapPanel {
-  min-width:0;
-}
+    .plannerMapPanel {
+      min-width:0;
+    }
 
     .plannerMapWrap {
       position:relative;
@@ -1494,7 +1550,7 @@
     }
 
     .plannerAICard {
-      margin-bottom:14px;
+      margin-bottom:0;
     }
 
     .plannerAICardTitle {
@@ -1607,118 +1663,6 @@
 
     .plannerStepItem.active .plannerStepTapHint {
       color:#fecaca;
-    }
-    .guidedStepBanner {
-  margin-top:14px;
-  padding:14px;
-  border-radius:18px;
-  background:linear-gradient(180deg, rgba(59,130,246,.16), rgba(37,99,235,.10));
-  border:1px solid rgba(59,130,246,.30);
-  box-shadow:0 10px 30px rgba(0,0,0,.18);
-}
-
-.guidedStepBannerTop {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.guidedStepBannerEyebrow {
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:#bfdbfe;
-}
-
-.guidedStepBannerPill {
-  font-size:11px;
-  font-weight:900;
-  padding:6px 10px;
-  border-radius:999px;
-  background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.14);
-  color:#fff;
-}
-
-.guidedStepBannerTitle {
-  margin-top:10px;
-  font-size:1.05rem;
-  font-weight:900;
-  line-height:1.25;
-  color:var(--text);
-}
-
-.guidedStepBannerMeta {
-  margin-top:6px;
-  font-size:.98rem;
-  font-weight:800;
-  color:#dbeafe;
-}
-
-.guidedStepBannerHint {
-  margin-top:8px;
-  font-size:.92rem;
-  line-height:1.45;
-  color:var(--muted);
-}
-        .guidedStepBanner {
-      margin-bottom:14px;
-      padding:14px;
-      border-radius:18px;
-      background: linear-gradient(180deg, rgba(59,130,246,.16), rgba(37,99,235,.10));
-      border:1px solid rgba(96,165,250,.30);
-      box-shadow: 0 10px 28px rgba(0,0,0,.18);
-    }
-
-    .guidedStepBannerTop {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:8px;
-    }
-
-    .guidedStepBannerEyebrow {
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:#bfdbfe;
-    }
-
-    .guidedStepBannerPill {
-      font-size:11px;
-      font-weight:900;
-      color:#fff;
-      background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.16);
-      border-radius:999px;
-      padding:6px 10px;
-    }
-
-    .guidedStepBannerTitle {
-      font-size:1.05rem;
-      font-weight:900;
-      color:var(--text);
-      line-height:1.3;
-    }
-
-    .guidedStepBannerMeta {
-      margin-top:6px;
-      font-size:.98rem;
-      font-weight:800;
-      color:#dbeafe;
-    }
-
-    .guidedStepBannerHint {
-      margin-top:8px;
-      font-size:.92rem;
-      line-height:1.45;
-      color:rgba(233,233,238,.88);
     }
 
     /* ===== AI Guided Workout Disclaimer Modal ===== */
@@ -1961,18 +1905,23 @@
         height:30px;
         font-size:.78rem;
       }
+
       .guidedStepBanner {
-  padding:12px;
-}
+        padding:12px;
+      }
 
-.guidedStepBannerTitle {
-  font-size:.98rem;
-}
+      .guidedStepBannerTitle {
+        font-size:.98rem;
+      }
 
-.guidedStepBannerMeta,
-.guidedStepBannerHint {
-  font-size:.9rem;
-}
+      .guidedStepBannerMeta,
+      .guidedStepBannerHint {
+        font-size:.9rem;
+      }
+
+      #guidedTopFocusSlot {
+        margin-bottom:12px;
+      }
     }
   </style>
 </head>
@@ -2002,7 +1951,9 @@
   </div>
 
   <div class="wrap">
-    <div class="consistencyCard" id="consistencyCard">
+    <div id="guidedTopFocusSlot" hidden></div>
+
+    <div class="consistencyCard" id="consistencyCard" data-ui="monthly-consistency">
       <div class="consistencyTop">
         <div class="consistencyLabel">Monthly Consistency</div>
         <div class="consistencyValue" id="consistencyValue">0 / 30 days</div>
@@ -2051,7 +2002,7 @@
         </div>
       </div>
 
-      <div class="contextBar">
+      <div class="contextBar" data-ui="gym-machine-pill">
         <div class="contextItem">
           <div class="contextLabel">Gym Name</div>
           <div class="contextValue" id="gymNameText">…</div>
@@ -2076,16 +2027,13 @@
       </div>
     </div>
 
-    <div id="badgeProgressCard" class="badgeProgressCard" style="display:none;"></div>
-   
+    <div id="badgeProgressCard" class="badgeProgressCard" style="display:none;" data-ui="current-badge"></div>
 
-   <div class="plannerEntryWrap">
-  <button id="planWorkoutBtn" class="primary" type="button">AI Guided Workout</button>
-</div>
-
+    <div class="plannerEntryWrap">
+      <button id="planWorkoutBtn" class="primary" type="button">AI Guided Workout</button>
+    </div>
 
     <div class="card" id="logger">
-     
       <div class="row" style="align-items:flex-end;">
         <div class="col">
           <label>Date</label>
@@ -2114,7 +2062,6 @@
       </div>
 
       <div class="hr"></div>
- 
 
       <div id="strengthSection">
         <div class="row" style="align-items:flex-end; margin-top:12px;">
@@ -2137,40 +2084,43 @@
             </div>
           </div>
         </div>
-               <div id="guidedStepBanner" class="guidedStepBanner" style="display:none;">
-        <div class="guidedStepBannerTop">
-          <div class="guidedStepBannerEyebrow">AI Guided Workout Active</div>
-          <div id="guidedStepBannerPill" class="guidedStepBannerPill">Step 1 of 4</div>
+
+        <div id="guidedStepBanner" class="guidedStepBanner" style="display:none;">
+          <div class="guidedStepBannerTop">
+            <div class="guidedStepBannerEyebrow">AI Guided Workout Active</div>
+            <div id="guidedStepBannerPill" class="guidedStepBannerPill">Step 1 of 4</div>
+          </div>
+
+          <div id="guidedStepBannerTitle" class="guidedStepBannerTitle">
+            Machine 1 — Chest Press
+          </div>
+
+          <div id="guidedStepBannerMeta" class="guidedStepBannerMeta">
+            3 sets × 10 reps
+          </div>
+
+          <div id="guidedStepBannerHint" class="guidedStepBannerHint">
+            Complete this machine, then save your workout to continue your guided plan.
+          </div>
         </div>
 
-        <div id="guidedStepBannerTitle" class="guidedStepBannerTitle">
-          Machine 1 — Chest Press
-        </div>
+        <div id="guidedSetsPanel" class="guidedSetsPanel" data-ui="guided-sets-panel">
+          <div style="font-weight:900;">Sets</div>
+          <div class="muted" style="margin-top:6px;">Use + to add sets. Each set stores weight and reps.</div>
 
-        <div id="guidedStepBannerMeta" class="guidedStepBannerMeta">
-          3 sets × 10 reps
-        </div>
+          <div class="setsHeader">
+            <div class="muted">Set</div>
+            <div class="muted">Weight</div>
+            <div class="muted">Reps</div>
+            <div class="muted">Del</div>
+          </div>
 
-        <div id="guidedStepBannerHint" class="guidedStepBannerHint">
-          Complete this machine, then save your workout to continue your guided plan.
-        </div>
-      </div>
+          <div id="setsContainer"></div>
 
-        <div style="font-weight:900; margin-top:18px;">Sets</div>
-        <div class="muted" style="margin-top:6px;">Use + to add sets. Each set stores weight and reps.</div>
-
-        <div class="setsHeader">
-          <div class="muted">Set</div>
-          <div class="muted">Weight</div>
-          <div class="muted">Reps</div>
-          <div class="muted">Del</div>
-        </div>
-
-        <div id="setsContainer"></div>
-
-        <div class="btnrow" style="margin-top:12px;">
-          <button class="iconBtn primary" id="addSetBtn" type="button">+</button>
-          <div class="muted">Add set</div>
+          <div class="btnrow" style="margin-top:12px;">
+            <button class="iconBtn primary" id="addSetBtn" type="button">+</button>
+            <div class="muted">Add set</div>
+          </div>
         </div>
       </div>
 
@@ -2328,67 +2278,67 @@
       </div>
     </div>
   </div>
-
-<!-- ===== Guided Workout Modal ===== -->
-<div id="guidedWorkoutModal" class="plannerModal hidden" aria-hidden="true">
-  <div class="plannerModalCard">
-    <div class="plannerModalHeader">
-      <div>
-        <h2 id="guidedWorkoutTitle">Guided Workout</h2>
-        <div id="guidedWorkoutSub" class="plannerSubText">
-          Follow the highlighted machine numbers on the map.
-        </div>
-      </div>
-      <button id="closeGuidedWorkoutBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
-    </div>
-
-    <div class="plannerStackLayout">
-      <div class="plannerMapPanel">
-        <div class="plannerMapWrap" id="plannerMapWrap">
-          <img
-            id="plannerMapImage"
-            class="plannerMapImage"
-            src=""
-            alt="Gym map"
-          />
-          <div id="plannerMapPlaceholder" class="plannerMapPlaceholder">
-            Add your top-down Push Fitness Melville map image by setting the correct image path in the code.
+    <!-- ===== Guided Workout Modal ===== -->
+  <div id="guidedWorkoutModal" class="plannerModal hidden" aria-hidden="true">
+    <div class="plannerModalCard">
+      <div class="plannerModalHeader">
+        <div>
+          <h2 id="guidedWorkoutTitle">Guided Workout</h2>
+          <div id="guidedWorkoutSub" class="plannerSubText">
+            Follow the highlighted machine numbers on the map.
           </div>
-          <div id="plannerMapMarkers"></div>
         </div>
+        <button id="closeGuidedWorkoutBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
       </div>
 
-      <div class="plannerStepsCard">
-        <div class="plannerStepsTitle">Workout Steps</div>
-        <div id="plannerStepsList" class="plannerStepsList"></div>
-      </div>
-
-      <div class="plannerCurrentCard">
-        <div class="plannerStepKicker" id="plannerStepKicker">Step 1 of 4</div>
-        <div class="plannerCurrentTitle" id="plannerCurrentTitle">Machine 1 — Chest Press</div>
-        <div class="plannerCurrentMeta" id="plannerCurrentMeta">3 sets × 10 reps</div>
-        <div class="plannerCurrentHint" id="plannerCurrentHint">
-          Find the highlighted machine number on the map, then log your workout.
+      <div class="plannerStackLayout">
+        <div class="plannerAICard" data-ui="planner-guidance">
+          <div class="plannerAICardTitle">Workout Guidance</div>
+          <div id="plannerAIText" class="plannerAIText">
+            Your guided workout explanation will appear here.
+          </div>
         </div>
 
-        <div class="plannerCurrentActions">
-          <button id="openLoggingBtn" class="primary" type="button">Log This Machine</button>
+        <div class="plannerMapPanel" data-ui="planner-map">
+          <div class="plannerMapWrap" id="plannerMapWrap">
+            <img
+              id="plannerMapImage"
+              class="plannerMapImage"
+              src=""
+              alt="Gym map"
+            />
+            <div id="plannerMapPlaceholder" class="plannerMapPlaceholder">
+              Add your top-down Push Fitness Melville map image by setting the correct image path in the code.
+            </div>
+            <div id="plannerMapMarkers"></div>
+          </div>
         </div>
-      </div>
 
-      <div class="plannerAICard">
-        <div class="plannerAICardTitle">Workout Guidance</div>
-        <div id="plannerAIText" class="plannerAIText">
-          Your guided workout explanation will appear here.
+        <div class="plannerStepsCard">
+          <div class="plannerStepsTitle">Workout Steps</div>
+          <div id="plannerStepsList" class="plannerStepsList"></div>
         </div>
-      </div>
 
-      <div class="plannerBottomActions">
-        <button id="exitGuidedWorkoutBtn" type="button">Exit Guided Workout</button>
+        <div class="plannerCurrentCard">
+          <div class="plannerStepKicker" id="plannerStepKicker">Step 1 of 4</div>
+          <div class="plannerCurrentTitle" id="plannerCurrentTitle">Machine 1 — Chest Press</div>
+          <div class="plannerCurrentMeta" id="plannerCurrentMeta">3 sets × 10 reps</div>
+          <div class="plannerCurrentHint" id="plannerCurrentHint">
+            Find the highlighted machine number on the map, then log your workout.
+          </div>
+
+          <div class="plannerCurrentActions">
+            <button id="openLoggingBtn" class="primary" type="button">Log This Machine</button>
+          </div>
+        </div>
+
+        <div class="plannerBottomActions">
+          <button id="exitGuidedWorkoutBtn" type="button">Exit Guided Workout</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
   <!-- ===== AI Guided Workout Disclaimer Modal ===== -->
   <div id="aiDisclaimerModal" class="aiDisclaimerModal hidden" aria-hidden="true">
     <div class="aiDisclaimerCard" role="dialog" aria-modal="true" aria-labelledby="aiDisclaimerTitle">
@@ -2430,7 +2380,7 @@
   <script src="/machine-map.js"></script>
 
   <script>
-        /* ================================
+    /* ================================
        IMPORTANT DEPLOYMENT NOTE
        ================================
        For deep links like /m/legpr to work on GitHub Pages, you MUST create 404.html in this repo
@@ -2733,17 +2683,17 @@
     /* ---------- Analytics ---------- */
     const ANALYTICS_BASE = "";
 
-   async function checkGymStatusOrGate(gid) {
-  return true;
-}
+    async function checkGymStatusOrGate(gid) {
+      return true;
+    }
 
     function canLogAnalytics(gymId, machineId) {
       return !!(gymId && ANALYTICS_BASE && !ANALYTICS_BASE.includes("YOUR-WORKER-DOMAIN"));
     }
 
-  function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) {
-  return;
-}
+    function logEvent(gymId, machineId, machineName, userId, eventType, extra = {}) {
+      return;
+    }
 
     function toNumberOrNull(v) {
       const n = parseFloat(String(v || "").replace(/[^0-9.\-]/g, ""));
@@ -3154,13 +3104,12 @@
       `;
     }
 
-  function renderBadgeUI() {
-  renderBadgeProgressCard();
-  renderBadgesCard();
-  renderGuidedStepBanner();
-}
-
-    /* ---------- Monthly Consistency ---------- */
+    function renderBadgeUI() {
+      renderBadgeProgressCard();
+      renderBadgesCard();
+      renderGuidedStepBanner();
+    }
+        /* ---------- Monthly Consistency ---------- */
     function getDaysInCurrentMonth() {
       const now = new Date();
       const year = now.getFullYear();
@@ -3627,9 +3576,69 @@
     const cancelAiDisclaimerBtn = document.getElementById("cancelAiDisclaimerBtn");
     const acceptAiDisclaimerBtn = document.getElementById("acceptAiDisclaimerBtn");
     const aiDisclaimerAgree = document.getElementById("aiDisclaimerAgree");
-   
+    const guidedTopFocusSlot = document.getElementById("guidedTopFocusSlot");
+    const guidedSetsPanel = document.getElementById("guidedSetsPanel");
 
     let cardioInputs = {};
+
+    /* ---------- Guided Focus Helpers ---------- */
+    const gwUiHomes = {};
+
+    function gwRememberHome(key, node) {
+      if (!node || gwUiHomes[key]) return;
+      gwUiHomes[key] = {
+        parent: node.parentNode,
+        next: node.nextSibling
+      };
+    }
+
+    function gwMoveNodeTo(key, node, newParent) {
+      if (!node || !newParent) return;
+      gwRememberHome(key, node);
+      newParent.appendChild(node);
+    }
+
+    function gwRestoreNode(key, node) {
+      const home = gwUiHomes[key];
+      if (!node || !home || !home.parent) return;
+
+      if (home.next && home.next.parentNode === home.parent) {
+        home.parent.insertBefore(node, home.next);
+      } else {
+        home.parent.appendChild(node);
+      }
+    }
+
+    function gwSyncFocusedGuidedUI() {
+      const activePlan = gwLoadActivePlan(gymId, userId);
+      const focusModeActive = !!(activePlan && activePlan.status === "active" && machineType === "strength");
+
+      document.body.classList.toggle("guided-focus-active", focusModeActive);
+
+      if (!guidedTopFocusSlot) return;
+
+      if (focusModeActive) {
+        guidedTopFocusSlot.hidden = false;
+
+        if (guidedStepBanner) {
+          gwMoveNodeTo("guidedStepBanner", guidedStepBanner, guidedTopFocusSlot);
+        }
+
+        if (guidedSetsPanel) {
+          gwMoveNodeTo("guidedSetsPanel", guidedSetsPanel, guidedTopFocusSlot);
+        }
+      } else {
+        guidedTopFocusSlot.hidden = true;
+
+        if (guidedStepBanner) {
+          gwRestoreNode("guidedStepBanner", guidedStepBanner);
+        }
+
+        if (guidedSetsPanel) {
+          gwRestoreNode("guidedSetsPanel", guidedSetsPanel);
+        }
+      }
+    }
 
     /* ---------- Strength: Sets UI ---------- */
     function createSetRow(setIndex, weight = "", reps = "") {
@@ -4040,7 +4049,7 @@
       });
     }
 
-        function clearCurrent() {
+    function clearCurrent() {
       if (machineType === "cardio") {
         clearCardioInputs();
         if (notesInput) notesInput.value = "";
@@ -4293,20 +4302,20 @@
 
         usedMachineCodes.add(machine.machineCode);
 
-       chosenSteps.push({
-  stepId: "step_" + Math.random().toString(36).slice(2),
-  exerciseName: tplItem.exercise,
-  machineCode: machine.machineCode,
-  machineNumber: machine.machineNumber,
-  machineName: machine.label,
-  type: machine.type,
-  markerLeft: machine.markerLeft,
-  markerTop: machine.markerTop,
-  sets: tplItem.sets[level] || 3,
-  reps: tplItem.reps[level] || 10,
-  repUnit: "reps",
-  status: "upcoming"
-});
+        chosenSteps.push({
+          stepId: "step_" + Math.random().toString(36).slice(2),
+          exerciseName: tplItem.exercise,
+          machineCode: machine.machineCode,
+          machineNumber: machine.machineNumber,
+          machineName: machine.label,
+          type: machine.type,
+          markerLeft: machine.markerLeft,
+          markerTop: machine.markerTop,
+          sets: tplItem.sets[level] || 3,
+          reps: tplItem.reps[level] || 10,
+          repUnit: "reps",
+          status: "upcoming"
+        });
 
         if (chosenSteps.length >= desiredCount) break;
       }
@@ -4406,11 +4415,11 @@
       plannerSetupModal.setAttribute("aria-hidden", "true");
     }
 
-  function gwOpenGuidedWorkoutModal() {
-  if (!guidedWorkoutModal) return;
-  guidedWorkoutModal.classList.remove("hidden");
-  guidedWorkoutModal.setAttribute("aria-hidden", "false");
-}
+    function gwOpenGuidedWorkoutModal() {
+      if (!guidedWorkoutModal) return;
+      guidedWorkoutModal.classList.remove("hidden");
+      guidedWorkoutModal.setAttribute("aria-hidden", "false");
+    }
 
     function gwCloseGuidedWorkoutModal() {
       if (!guidedWorkoutModal) return;
@@ -4418,39 +4427,40 @@
       guidedWorkoutModal.setAttribute("aria-hidden", "true");
     }
         function gwRenderMarkers(plan) {
-  if (!plannerMapMarkers) return;
-  plannerMapMarkers.innerHTML = "";
+      if (!plannerMapMarkers) return;
+      plannerMapMarkers.innerHTML = "";
 
-  plan.steps.forEach((step, stepIndex) => {
-    const el = document.createElement("button");
-    el.type = "button";
-    el.className = "plannerMarker upcoming";
-    el.style.left = `${step.markerLeft}%`;
-    el.style.top = `${step.markerTop}%`;
-    el.textContent = step.machineNumber;
-    el.title = `Machine ${step.machineNumber} — ${step.machineName}`;
+      plan.steps.forEach((step, stepIndex) => {
+        const el = document.createElement("button");
+        el.type = "button";
+        el.className = "plannerMarker upcoming";
+        el.style.left = `${step.markerLeft}%`;
+        el.style.top = `${step.markerTop}%`;
+        el.textContent = step.machineNumber;
+        el.title = `Machine ${step.machineNumber} — ${step.machineName}`;
 
-    if (step.status === "completed") {
-      el.className = "plannerMarker completed";
-    } else if (step.status === "skipped") {
-      el.className = "plannerMarker skipped";
-    } else if (stepIndex === plan.currentStepIndex && plan.status === "active") {
-      el.className = "plannerMarker active";
-    } else {
-      el.className = "plannerMarker upcoming";
+        if (step.status === "completed") {
+          el.className = "plannerMarker completed";
+        } else if (step.status === "skipped") {
+          el.className = "plannerMarker skipped";
+        } else if (stepIndex === plan.currentStepIndex && plan.status === "active") {
+          el.className = "plannerMarker active";
+        } else {
+          el.className = "plannerMarker upcoming";
+        }
+
+        el.addEventListener("click", () => {
+          if (plan.status !== "active") return;
+          plan.currentStepIndex = stepIndex;
+          gwSaveActivePlan(plan);
+          gwRenderPlanUI(plan);
+        });
+
+        plannerMapMarkers.appendChild(el);
+      });
     }
 
-    el.addEventListener("click", () => {
-      if (plan.status !== "active") return;
-      plan.currentStepIndex = stepIndex;
-      gwSaveActivePlan(plan);
-      gwRenderPlanUI(plan);
-    });
-
-    plannerMapMarkers.appendChild(el);
-  });
-}
-      function gwRenderSteps(plan) {
+    function gwRenderSteps(plan) {
       if (!plannerStepsList) return;
       plannerStepsList.innerHTML = "";
 
@@ -4474,160 +4484,181 @@
           </div>
         `;
 
-    div.addEventListener("click", () => {
-  if (plan.status !== "active") return;
+        div.addEventListener("click", () => {
+          if (plan.status !== "active") return;
 
-  plan.currentStepIndex = idx;
-  gwSaveActivePlan(plan);
+          plan.currentStepIndex = idx;
+          gwSaveActivePlan(plan);
 
-  const targetMachine = String(step.machineCode || "").toUpperCase();
-  const currentMachine = String(machineId || "").toUpperCase();
+          const targetMachine = String(step.machineCode || "").toUpperCase();
+          const currentMachine = String(machineId || "").toUpperCase();
 
-  if (targetMachine === currentMachine) {
-    gwRenderPlanUI(plan);
-    gwCloseGuidedWorkoutModal();
-    return;
-  }
+          if (targetMachine === currentMachine) {
+            gwRenderPlanUI(plan);
+            gwCloseGuidedWorkoutModal();
+            return;
+          }
 
-  sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
+          sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
 
-  gwSetParamAndNavigate({
-    gym: gymId,
-    machine: targetMachine
-  });
-});
+          gwSetParamAndNavigate({
+            gym: gymId,
+            machine: targetMachine
+          });
+        });
+
         plannerStepsList.appendChild(div);
       });
     }
-            function gwExitGuidedWorkout() {
-  gwClearActivePlan(gymId, userId);
-  gwCloseGuidedWorkoutModal();
-  renderGuidedStepBanner();
-}
-function renderGuidedStepBanner() {
-  if (!guidedStepBanner) return;
 
-  const activePlan = gwLoadActivePlan(gymId, userId);
-  const aiEntryWrap = document.querySelector(".plannerEntryWrap");
+    function gwExitGuidedWorkout() {
+      gwClearActivePlan(gymId, userId);
+      gwCloseGuidedWorkoutModal();
 
-  if (!activePlan || activePlan.status !== "active") {
-    guidedStepBanner.style.display = "none";
-    if (aiEntryWrap) aiEntryWrap.style.display = "";
-    return;
-  }
+      const url = new URL(window.location.href);
+      url.searchParams.delete("gw");
+      url.searchParams.delete("guided");
+      url.searchParams.delete("plan");
+      url.searchParams.delete("step");
+      window.history.replaceState(null, "", url.toString());
 
-  if (aiEntryWrap) aiEntryWrap.style.display = "none";
-
-  const current = gwGetCurrentStep(activePlan);
-
-  if (!current) {
-    guidedStepBanner.style.display = "none";
-    return;
-  }
-
-  const currentMachine = String(machineId || "").toUpperCase();
-  const targetMachine = String(current.machineCode || "").toUpperCase();
-
-  if (currentMachine !== targetMachine) {
-    guidedStepBanner.style.display = "none";
-    return;
-  }
-
-  guidedStepBanner.style.display = "";
-  if (guidedStepBannerPill) {
-    guidedStepBannerPill.textContent = `Step ${activePlan.currentStepIndex + 1} of ${activePlan.steps.length}`;
-  }
-  if (guidedStepBannerTitle) {
-    guidedStepBannerTitle.textContent = `Machine ${current.machineNumber} — ${current.machineName}`;
-  }
-  if (guidedStepBannerMeta) {
-    guidedStepBannerMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
-  }
-  if (guidedStepBannerHint) {
-    guidedStepBannerHint.textContent = "Finish this machine, then tap Save Workout to move to the next step.";
-  }
-}
-
-   function gwRenderPlanUI(plan) {
-  if (!plan || !Array.isArray(plan.steps) || !plan.steps.length) {
-    gwCloseGuidedWorkoutModal();
-    return;
-  }
-
-  applyPlannerMapImage(plan.gymId);
-
-  if (guidedWorkoutTitle) {
-    guidedWorkoutTitle.textContent = `Guided Workout — ${String(plan.goal || "").toUpperCase()}`;
-  }
-
-  if (guidedWorkoutSub) {
-    guidedWorkoutSub.textContent = `${plan.duration} min • ${plan.level} • ${plan.style}`;
-  }
-
-  if (plannerAIText) {
-    plannerAIText.textContent = plan.aiExplanation || "Your guided workout explanation will appear here.";
-  }
-
-  if (
-    !Number.isInteger(plan.currentStepIndex) ||
-    plan.currentStepIndex < 0 ||
-    plan.currentStepIndex >= plan.steps.length
-  ) {
-    const firstUpcomingIndex = plan.steps.findIndex(step => step.status === "upcoming");
-    plan.currentStepIndex = firstUpcomingIndex >= 0 ? firstUpcomingIndex : 0;
-  }
-
-  let current = plan.steps[plan.currentStepIndex] || null;
-
-  if (plan.status === "completed") {
-    if (plannerStepKicker) plannerStepKicker.textContent = "Workout Complete";
-    if (plannerCurrentTitle) plannerCurrentTitle.textContent = "Nice work";
-    if (plannerCurrentMeta) plannerCurrentMeta.textContent = "All planned steps are finished.";
-    if (plannerCurrentHint) plannerCurrentHint.textContent = "Tap Done to exit guided workout and return to the machine page.";
-
-    if (openLoggingBtn) {
-      openLoggingBtn.disabled = false;
-      openLoggingBtn.textContent = "Done";
+      renderGuidedStepBanner();
+      gwSyncFocusedGuidedUI();
     }
-  } else {
-    if (!current) {
-      const firstUpcomingIndex = plan.steps.findIndex(step => step.status === "upcoming");
-      if (firstUpcomingIndex >= 0) {
-        plan.currentStepIndex = firstUpcomingIndex;
-        current = plan.steps[firstUpcomingIndex];
-      } else {
-        plan.currentStepIndex = 0;
-        current = plan.steps[0];
+
+    function renderGuidedStepBanner() {
+      if (!guidedStepBanner) return;
+
+      const activePlan = gwLoadActivePlan(gymId, userId);
+      const aiEntryWrap = document.querySelector(".plannerEntryWrap");
+
+      if (!activePlan || activePlan.status !== "active") {
+        guidedStepBanner.style.display = "none";
+        if (aiEntryWrap) aiEntryWrap.style.display = "";
+        gwSyncFocusedGuidedUI();
+        return;
       }
+
+      if (aiEntryWrap) aiEntryWrap.style.display = "none";
+
+      const current = gwGetCurrentStep(activePlan);
+
+      if (!current) {
+        guidedStepBanner.style.display = "none";
+        gwSyncFocusedGuidedUI();
+        return;
+      }
+
+      const currentMachine = String(machineId || "").toUpperCase();
+      const targetMachine = String(current.machineCode || "").toUpperCase();
+
+      if (currentMachine !== targetMachine) {
+        guidedStepBanner.style.display = "none";
+        gwSyncFocusedGuidedUI();
+        return;
+      }
+
+      guidedStepBanner.style.display = "";
+      if (guidedStepBannerPill) {
+        guidedStepBannerPill.textContent = `Step ${activePlan.currentStepIndex + 1} of ${activePlan.steps.length}`;
+      }
+      if (guidedStepBannerTitle) {
+        guidedStepBannerTitle.textContent = `Machine ${current.machineNumber} — ${current.machineName}`;
+      }
+      if (guidedStepBannerMeta) {
+        guidedStepBannerMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
+      }
+      if (guidedStepBannerHint) {
+        guidedStepBannerHint.textContent = "Finish this machine, then tap Save Workout to move to the next step.";
+      }
+
+      gwSyncFocusedGuidedUI();
     }
 
-    if (plannerStepKicker) {
-      plannerStepKicker.textContent = `Step ${plan.currentStepIndex + 1} of ${plan.steps.length}`;
-    }
+    function gwRenderPlanUI(plan) {
+      if (!plan || !Array.isArray(plan.steps) || !plan.steps.length) {
+        gwCloseGuidedWorkoutModal();
+        renderGuidedStepBanner();
+        gwSyncFocusedGuidedUI();
+        return;
+      }
 
-    if (plannerCurrentTitle) {
-      plannerCurrentTitle.textContent = `Machine ${current.machineNumber} — ${current.machineName}`;
-    }
+      applyPlannerMapImage(plan.gymId);
 
-    if (plannerCurrentMeta) {
-      plannerCurrentMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
-    }
+      if (guidedWorkoutTitle) {
+        guidedWorkoutTitle.textContent = `Guided Workout — ${String(plan.goal || "").toUpperCase()}`;
+      }
 
-    if (plannerCurrentHint) {
-      plannerCurrentHint.textContent = "Find the highlighted machine number on the map, then log your workout.";
-    }
+      if (guidedWorkoutSub) {
+        guidedWorkoutSub.textContent = `${plan.duration} min • ${plan.level} • ${plan.style}`;
+      }
 
-    if (openLoggingBtn) {
-      openLoggingBtn.disabled = false;
-      openLoggingBtn.textContent = "Log This Machine";
-    }
-  }
+      if (plannerAIText) {
+        plannerAIText.textContent = plan.aiExplanation || "Your guided workout explanation will appear here.";
+      }
 
-  gwSaveActivePlan(plan);
-  gwRenderMarkers(plan);
-  gwRenderSteps(plan);
-  gwOpenGuidedWorkoutModal();
-}
+      if (
+        !Number.isInteger(plan.currentStepIndex) ||
+        plan.currentStepIndex < 0 ||
+        plan.currentStepIndex >= plan.steps.length
+      ) {
+        const firstUpcomingIndex = plan.steps.findIndex(step => step.status === "upcoming");
+        plan.currentStepIndex = firstUpcomingIndex >= 0 ? firstUpcomingIndex : 0;
+      }
+
+      let current = plan.steps[plan.currentStepIndex] || null;
+
+      if (plan.status === "completed") {
+        if (plannerStepKicker) plannerStepKicker.textContent = "Workout Complete";
+        if (plannerCurrentTitle) plannerCurrentTitle.textContent = "Nice work";
+        if (plannerCurrentMeta) plannerCurrentMeta.textContent = "All planned steps are finished.";
+        if (plannerCurrentHint) plannerCurrentHint.textContent = "Tap Done to exit guided workout and return to the machine page.";
+
+        if (openLoggingBtn) {
+          openLoggingBtn.disabled = false;
+          openLoggingBtn.textContent = "Done";
+        }
+      } else {
+        if (!current) {
+          const firstUpcomingIndex = plan.steps.findIndex(step => step.status === "upcoming");
+          if (firstUpcomingIndex >= 0) {
+            plan.currentStepIndex = firstUpcomingIndex;
+            current = plan.steps[firstUpcomingIndex];
+          } else {
+            plan.currentStepIndex = 0;
+            current = plan.steps[0];
+          }
+        }
+
+        if (plannerStepKicker) {
+          plannerStepKicker.textContent = `Step ${plan.currentStepIndex + 1} of ${plan.steps.length}`;
+        }
+
+        if (plannerCurrentTitle) {
+          plannerCurrentTitle.textContent = `Machine ${current.machineNumber} — ${current.machineName}`;
+        }
+
+        if (plannerCurrentMeta) {
+          plannerCurrentMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
+        }
+
+        if (plannerCurrentHint) {
+          plannerCurrentHint.textContent = "Find the highlighted machine number on the map, then log your workout.";
+        }
+
+        if (openLoggingBtn) {
+          openLoggingBtn.disabled = false;
+          openLoggingBtn.textContent = "Log This Machine";
+        }
+      }
+
+      gwSaveActivePlan(plan);
+      gwRenderMarkers(plan);
+      gwRenderSteps(plan);
+      gwOpenGuidedWorkoutModal();
+      renderGuidedStepBanner();
+      gwSyncFocusedGuidedUI();
+    }
 
     function gwGeneratePlanFromForm() {
       const goalEl = document.getElementById("plannerGoal");
@@ -4656,53 +4687,50 @@ function renderGuidedStepBanner() {
       gwRenderPlanUI(plan);
     }
 
+    function gwOpenCurrentStepLogging() {
+      const plan = gwLoadActivePlan(gymId, userId);
+      if (!plan) return;
 
- function gwOpenCurrentStepLogging() {
-  const plan = gwLoadActivePlan(gymId, userId);
-  if (!plan) return;
-   
-if (plan.status === "completed") {
-  gwExitGuidedWorkout();
-  return;
-}
+      if (plan.status === "completed") {
+        gwExitGuidedWorkout();
+        return;
+      }
 
-  const current = gwGetCurrentStep(plan);
-  if (!current) return;
+      const current = gwGetCurrentStep(plan);
+      if (!current) return;
 
-  const targetMachine = String(current.machineCode || "").toUpperCase();
-  const currentMachine = String(machineId || "").toUpperCase();
+      const targetMachine = String(current.machineCode || "").toUpperCase();
+      const currentMachine = String(machineId || "").toUpperCase();
 
-  if (targetMachine === currentMachine) {
-    gwCloseGuidedWorkoutModal();
-    return;
-  }
+      if (targetMachine === currentMachine) {
+        gwCloseGuidedWorkoutModal();
+        renderGuidedStepBanner();
+        gwSyncFocusedGuidedUI();
+        return;
+      }
 
-  sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
+      sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
 
-  gwSetParamAndNavigate({
-    gym: gymId,
-    machine: targetMachine
-  });
-}
-   
-
-function gwSetParamAndNavigate(params) {
-  const url = new URL(window.location.href);
-
-  // IMPORTANT: do not carry #guided into the next machine page
-  url.hash = "";
-
-  Object.keys(params).forEach((k) => {
-    if (params[k] == null || params[k] === "") {
-      url.searchParams.delete(k);
-    } else {
-      url.searchParams.set(k, params[k]);
+      gwSetParamAndNavigate({
+        gym: gymId,
+        machine: targetMachine
+      });
     }
-  });
 
-  window.location.replace(url.toString());
-}
+    function gwSetParamAndNavigate(params) {
+      const url = new URL(window.location.href);
+      url.hash = "";
 
+      Object.keys(params).forEach((k) => {
+        if (params[k] == null || params[k] === "") {
+          url.searchParams.delete(k);
+        } else {
+          url.searchParams.set(k, params[k]);
+        }
+      });
+
+      window.location.replace(url.toString());
+    }
 
     function gwInitPlanner() {
       if (planWorkoutBtn) {
@@ -4747,21 +4775,25 @@ function gwSetParamAndNavigate(params) {
       if (generateWorkoutBtn) {
         generateWorkoutBtn.addEventListener("click", gwGeneratePlanFromForm);
       }
-if (closeGuidedWorkoutBtn) {
-  closeGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
-}
-if (openLoggingBtn) {
-  openLoggingBtn.addEventListener("click", gwOpenCurrentStepLogging);
-}
 
-if (exitGuidedWorkoutBtn) {
-  exitGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
-}
+      if (closeGuidedWorkoutBtn) {
+        closeGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
+      }
+
+      if (openLoggingBtn) {
+        openLoggingBtn.addEventListener("click", gwOpenCurrentStepLogging);
+      }
+
+      if (exitGuidedWorkoutBtn) {
+        exitGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
+      }
     }
-function setupGuidedWorkoutBackHandler() {
-  // Intentionally disabled for now.
-  // Guided workout should not add browser history entries.
-}
+
+    function setupGuidedWorkoutBackHandler() {
+      // Intentionally disabled for now.
+      // Guided workout should not add browser history entries.
+    }
+
     /* ================================
        INIT
        ================================ */
@@ -4885,10 +4917,10 @@ function setupGuidedWorkoutBackHandler() {
       });
 
       document.getElementById("addSetBtn").addEventListener("click", () => addSet("", ""));
-     document.getElementById("clearCurrentBtn").addEventListener("click", () => {
-  clearCurrent();
-  renderGuidedStepBanner();
-});
+      document.getElementById("clearCurrentBtn").addEventListener("click", () => {
+        clearCurrent();
+        renderGuidedStepBanner();
+      });
 
       if (useLastCardioBtn) {
         useLastCardioBtn.addEventListener("click", () => {
@@ -4934,7 +4966,6 @@ function setupGuidedWorkoutBackHandler() {
       }
 
       document.getElementById("saveWorkoutBtn").addEventListener("click", () => {
-       
         if (!machineId) {
           alert("Scan a machine QR code before saving a workout.");
           return;
@@ -4980,26 +5011,27 @@ function setupGuidedWorkoutBackHandler() {
           renderBadgeUI();
           renderMonthlyConsistency();
           renderGuidedStepBanner();
+          gwSyncFocusedGuidedUI();
 
-const activePlan = gwLoadActivePlan(gymId, userId);
-if (activePlan && activePlan.status === "active") {
-  const current = gwGetCurrentStep(activePlan);
-  if (current && String(current.machineCode || "").toUpperCase() === String(machineId || "").toUpperCase()) {
-    current.status = "completed";
-    gwAdvancePlan(activePlan);
+          const activePlan = gwLoadActivePlan(gymId, userId);
+          if (activePlan && activePlan.status === "active") {
+            const current = gwGetCurrentStep(activePlan);
+            if (current && String(current.machineCode || "").toUpperCase() === String(machineId || "").toUpperCase()) {
+              current.status = "completed";
+              gwAdvancePlan(activePlan);
 
-    if (activePlan.status === "completed") {
-  gwSaveCompletedPlanHistory(activePlan);
-  gwSaveActivePlan(activePlan);
-  renderGuidedStepBanner();
-} else {
-  gwSaveActivePlan(activePlan);
-  gwRenderPlanUI(activePlan);
-    }
-  }
-}
+              if (activePlan.status === "completed") {
+                gwSaveCompletedPlanHistory(activePlan);
+                gwSaveActivePlan(activePlan);
+                gwRenderPlanUI(activePlan);
+              } else {
+                gwSaveActivePlan(activePlan);
+                gwRenderPlanUI(activePlan);
+              }
+            }
+          }
 
-return;
+          return;
         }
 
         const sets = readCurrentSets();
@@ -5029,25 +5061,26 @@ return;
         renderHistory();
         renderBadgeUI();
         renderMonthlyConsistency();
-          renderGuidedStepBanner();
+        renderGuidedStepBanner();
+        gwSyncFocusedGuidedUI();
 
-const activePlan = gwLoadActivePlan(gymId, userId);
-if (activePlan && activePlan.status === "active") {
-  const current = gwGetCurrentStep(activePlan);
-  if (current && String(current.machineCode || "").toUpperCase() === String(machineId || "").toUpperCase()) {
-    current.status = "completed";
-    gwAdvancePlan(activePlan);
+        const activePlan = gwLoadActivePlan(gymId, userId);
+        if (activePlan && activePlan.status === "active") {
+          const current = gwGetCurrentStep(activePlan);
+          if (current && String(current.machineCode || "").toUpperCase() === String(machineId || "").toUpperCase()) {
+            current.status = "completed";
+            gwAdvancePlan(activePlan);
 
-    if (activePlan.status === "completed") {
-      gwSaveCompletedPlanHistory(activePlan);
-      gwSaveActivePlan(activePlan);
-      gwRenderPlanUI(activePlan);
-    } else {
-      gwSaveActivePlan(activePlan);
-      gwRenderPlanUI(activePlan);
-    }
-  }
-}
+            if (activePlan.status === "completed") {
+              gwSaveCompletedPlanHistory(activePlan);
+              gwSaveActivePlan(activePlan);
+              gwRenderPlanUI(activePlan);
+            } else {
+              gwSaveActivePlan(activePlan);
+              gwRenderPlanUI(activePlan);
+            }
+          }
+        }
       });
 
       document.getElementById("clearHistoryBtn").addEventListener("click", () => {
@@ -5057,10 +5090,11 @@ if (activePlan && activePlan.status === "active") {
         renderBadgeUI();
         renderMonthlyConsistency();
         renderGuidedStepBanner();
+        gwSyncFocusedGuidedUI();
       });
 
       setModeUI();
-       renderGuidedStepBanner();
+      renderGuidedStepBanner();
 
       if (machineType !== "cardio") clearCurrentSets();
       else clearCardioInputs();
@@ -5072,19 +5106,25 @@ if (activePlan && activePlan.status === "active") {
       gwInitPlanner();
       setupGuidedWorkoutBackHandler();
 
-    const suppressReopen = sessionStorage.getItem("scanliftlog_guided_suppress_reopen") === "1";
-if (suppressReopen) {
-  sessionStorage.removeItem("scanliftlog_guided_suppress_reopen");
-} else {
-  const existingPlan = gwLoadActivePlan(gymId, userId);
-  if (existingPlan && existingPlan.status === "active") {
-    gwRenderPlanUI(existingPlan);
-  }
-}
-window.addEventListener("focus", renderGuidedStepBanner);
-            window.addEventListener("resize", () => {
+      const suppressReopen = sessionStorage.getItem("scanliftlog_guided_suppress_reopen") === "1";
+      if (suppressReopen) {
+        sessionStorage.removeItem("scanliftlog_guided_suppress_reopen");
+      } else {
+        const existingPlan = gwLoadActivePlan(gymId, userId);
+        if (existingPlan && existingPlan.status === "active") {
+          gwRenderPlanUI(existingPlan);
+        }
+      }
+
+      window.addEventListener("focus", () => {
+        renderGuidedStepBanner();
+        gwSyncFocusedGuidedUI();
+      });
+
+      window.addEventListener("resize", () => {
         renderHistory();
         renderGuidedStepBanner();
+        gwSyncFocusedGuidedUI();
       });
     })();
   </script>
