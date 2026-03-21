@@ -4409,8 +4409,14 @@
   function gwOpenGuidedWorkoutModal() {
   if (!guidedWorkoutModal) return;
 
+  if (!window.__sllGuidedBackArmed) {
+    history.pushState({ guidedWorkout: true }, "", "#guided");
+    window.__sllGuidedBackArmed = true;
+  }
+
   guidedWorkoutModal.classList.remove("hidden");
   guidedWorkoutModal.setAttribute("aria-hidden", "false");
+}
 
   const state = window.history.state || {};
   if (!state.scanliftlogGuidedOpen) {
@@ -4707,6 +4713,15 @@ function gwSetParamAndNavigate(params) {
 function gwExitGuidedWorkout() {
   gwClearActivePlan(gymId, userId);
   gwCloseGuidedWorkoutModal();
+  renderGuidedStepBanner();
+
+  if (window.__sllGuidedBackArmed) {
+    window.__sllGuidedBackArmed = false;
+    if (location.hash === "#guided") {
+      history.back();
+    }
+  }
+}
 
   const aiEntryWrap = document.querySelector(".plannerEntryWrap");
   if (aiEntryWrap) aiEntryWrap.style.display = "";
@@ -4769,12 +4784,20 @@ if (exitGuidedWorkoutBtn) {
   exitGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
 }
     }
-    function setupGuidedWorkoutBackHandler() {
+function setupGuidedWorkoutBackHandler() {
+  if (window.__sllGuidedBackHandlerAttached) return;
+  window.__sllGuidedBackHandlerAttached = true;
+  window.__sllGuidedBackArmed = false;
+
   window.addEventListener("popstate", () => {
     const activePlan = gwLoadActivePlan(gymId, userId);
+    const modalOpen = guidedWorkoutModal && !guidedWorkoutModal.classList.contains("hidden");
 
-    if (activePlan && activePlan.status === "active") {
-      gwExitGuidedWorkout();
+    if (modalOpen && activePlan) {
+      gwCloseGuidedWorkoutModal();
+      renderGuidedStepBanner();
+      window.__sllGuidedBackArmed = false;
+      return;
     }
   });
 }
@@ -5057,7 +5080,7 @@ if (activePlan && activePlan.status === "active") {
     if (activePlan.status === "completed") {
       gwSaveCompletedPlanHistory(activePlan);
       gwSaveActivePlan(activePlan);
-      renderGuidedStepBanner();
+      gwRenderPlanUI(activePlan);
     } else {
       gwSaveActivePlan(activePlan);
       gwRenderPlanUI(activePlan);
