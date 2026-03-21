@@ -3087,36 +3087,37 @@
     }
 
     /* ---------- Dynamic manifest / icons ---------- */
-    function buildManifestObject() {
-      const path = getCurrentPagePath();
-      const startUrl = `${path}?gym=${encodeURIComponent(gymId)}`;
+  function buildManifestObject() {
+  const origin = window.location.origin;
+  const path = getCurrentPagePath();
+  const startUrl = `${origin}${path}?gym=${encodeURIComponent(gymId)}`;
 
-      return {
-        id: `scanliftlog-${gymId}`,
-        name: `${gymName} - ScanLiftLog`,
-        short_name: "ScanLiftLog",
-        description: `Quick workout logging for ${gymName}`,
-        start_url: startUrl,
-        scope: path,
-        display: "standalone",
-        background_color: "#0b0c10",
-        theme_color: "#0b0c10",
-        icons: [
-          {
-            src: "/icons/icon-192.png",
-            sizes: "192x192",
-            type: "image/png",
-            purpose: "any maskable"
-          },
-          {
-            src: "/icons/icon-512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "any maskable"
-          }
-        ]
-      };
-    }
+  return {
+    id: `/scanliftlog/${encodeURIComponent(gymId)}`,
+    name: `${gymName} - ScanLiftLog`,
+    short_name: "ScanLiftLog",
+    description: `Quick workout logging for ${gymName}`,
+    start_url: startUrl,
+    scope: `${origin}/`,
+    display: "standalone",
+    background_color: "#0b0c10",
+    theme_color: "#0b0c10",
+    icons: [
+      {
+        src: "/icons/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any maskable"
+      },
+      {
+        src: "/icons/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any maskable"
+      }
+    ]
+  };
+}
 
     function applyDynamicManifest() {
       const link = document.getElementById("dynamicManifestLink");
