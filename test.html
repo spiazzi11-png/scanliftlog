@@ -4408,16 +4408,9 @@
 
   function gwOpenGuidedWorkoutModal() {
   if (!guidedWorkoutModal) return;
-
-  if (!window.__sllGuidedBackArmed) {
-    history.pushState({ guidedWorkout: true }, "", "#guided");
-    window.__sllGuidedBackArmed = true;
-  }
-
   guidedWorkoutModal.classList.remove("hidden");
   guidedWorkoutModal.setAttribute("aria-hidden", "false");
 }
-
 
     function gwCloseGuidedWorkoutModal() {
       if (!guidedWorkoutModal) return;
@@ -4659,28 +4652,15 @@ function renderGuidedStepBanner() {
       gwRenderPlanUI(plan);
     }
 
-function gwSetParamAndNavigate(params) {
-  const url = new URL(window.location.href);
-
-  Object.keys(params).forEach((k) => {
-    if (params[k] == null || params[k] === "") {
-      url.searchParams.delete(k);
-    } else {
-      url.searchParams.set(k, params[k]);
-    }
-  });
-
-  window.location.replace(url.toString());
-}
 
  function gwOpenCurrentStepLogging() {
   const plan = gwLoadActivePlan(gymId, userId);
   if (!plan) return;
-
-  if (plan.status === "completed") {
-    gwExitGuidedWorkout();
-    return;
-  }
+   
+if (plan.status === "completed") {
+  gwExitGuidedWorkout();
+  return;
+}
 
   const current = gwGetCurrentStep(plan);
   if (!current) return;
@@ -4702,17 +4682,21 @@ function gwSetParamAndNavigate(params) {
 }
    
 
-function gwExitGuidedWorkout() {
-  gwClearActivePlan(gymId, userId);
-  gwCloseGuidedWorkoutModal();
-  renderGuidedStepBanner();
+function gwSetParamAndNavigate(params) {
+  const url = new URL(window.location.href);
 
-  if (window.__sllGuidedBackArmed) {
-    window.__sllGuidedBackArmed = false;
-    if (location.hash === "#guided") {
-      history.back();
+  // IMPORTANT: do not carry #guided into the next machine page
+  url.hash = "";
+
+  Object.keys(params).forEach((k) => {
+    if (params[k] == null || params[k] === "") {
+      url.searchParams.delete(k);
+    } else {
+      url.searchParams.set(k, params[k]);
     }
-  }
+  });
+
+  window.location.replace(url.toString());
 }
 
 
@@ -4771,21 +4755,8 @@ if (exitGuidedWorkoutBtn) {
 }
     }
 function setupGuidedWorkoutBackHandler() {
-  if (window.__sllGuidedBackHandlerAttached) return;
-  window.__sllGuidedBackHandlerAttached = true;
-  window.__sllGuidedBackArmed = false;
-
-  window.addEventListener("popstate", () => {
-    const activePlan = gwLoadActivePlan(gymId, userId);
-    const modalOpen = guidedWorkoutModal && !guidedWorkoutModal.classList.contains("hidden");
-
-    if (modalOpen && activePlan) {
-      gwCloseGuidedWorkoutModal();
-      renderGuidedStepBanner();
-      window.__sllGuidedBackArmed = false;
-      return;
-    }
-  });
+  // Intentionally disabled for now.
+  // Guided workout should not add browser history entries.
 }
     /* ================================
        INIT
