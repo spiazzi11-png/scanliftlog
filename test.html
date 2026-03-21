@@ -4496,10 +4496,14 @@
     machine: targetMachine
   });
 });
-
         plannerStepsList.appendChild(div);
       });
     }
+            function gwExitGuidedWorkout() {
+  gwClearActivePlan(gymId, userId);
+  gwCloseGuidedWorkoutModal();
+  renderGuidedStepBanner();
+}
 function renderGuidedStepBanner() {
   if (!guidedStepBanner) return;
 
