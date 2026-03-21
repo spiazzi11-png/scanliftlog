@@ -5372,54 +5372,16 @@ window.addEventListener("appinstalled", () => {
 
 function initA2hsUi() {
   const addBtn = document.getElementById("addToHomeScreenBtn");
-  const closeBtn = document.getElementById("closeA2hsBtn");
-  const modal = document.getElementById("a2hsModal");
-  const openGymHomeBtn = document.getElementById("openGymHomeBtn");
-  const confirmBtn = document.getElementById("confirmA2hsBtn");
-  const iosSection = document.getElementById("a2hsIosSection");
-  const androidSection = document.getElementById("a2hsAndroidSection");
+  if (!addBtn) return;
 
-  if (isInStandaloneMode() && addBtn) {
+  if (isInStandaloneMode()) {
     addBtn.classList.add("hidden");
+    return;
   }
 
-  if (iosSection) {
-    iosSection.style.display = isIosLike() ? "" : "none";
-  }
-
-  if (androidSection) {
-    androidSection.style.display = isIosLike() ? "none" : "";
-  }
-
-  if (addBtn) {
-    addBtn.addEventListener("click", async () => {
-      await startAddToHomeScreenFlow();
-    });
-  }
-
-  if (closeBtn) {
-    closeBtn.addEventListener("click", closeA2hsModal);
-  }
-
-  if (modal) {
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal || e.target.classList.contains("a2hsBackdrop")) {
-        closeA2hsModal();
-      }
-    });
-  }
-
-  if (openGymHomeBtn) {
-    openGymHomeBtn.addEventListener("click", () => {
-      goToGymHomeVersion();
-    });
-  }
-
-  if (confirmBtn) {
-    confirmBtn.addEventListener("click", async () => {
-      await confirmAddToHomeScreen();
-    });
-  }
+  addBtn.addEventListener("click", () => {
+    window.location.href = `/install/${gymId}.html`;
+  });
 }
 
     function initMachineDropdown() {
