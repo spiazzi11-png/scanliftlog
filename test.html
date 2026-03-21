@@ -2135,7 +2135,7 @@
         <div id="cardioFieldsGrid" class="cardioFieldGrid"></div>
       </div>
 
-      <div style="margin-top:14px;">
+           <div id="loggerActionPanel" class="loggerActionPanel" style="margin-top:14px;">
         <div class="btnrow" style="margin-bottom:10px;">
           <button
             class="primary"
@@ -2152,7 +2152,6 @@
           <button class="danger" id="clearHistoryBtn" type="button" style="flex:1; min-width:0;">Clear All History</button>
         </div>
       </div>
-    </div>
 
     <div class="card" id="historyCard">
       <div class="row" style="align-items:center; justify-content:space-between;">
@@ -3578,6 +3577,7 @@
     const aiDisclaimerAgree = document.getElementById("aiDisclaimerAgree");
     const guidedTopFocusSlot = document.getElementById("guidedTopFocusSlot");
     const guidedSetsPanel = document.getElementById("guidedSetsPanel");
+   const loggerActionPanel = document.getElementById("loggerActionPanel");
 
     let cardioInputs = {};
 
@@ -3627,10 +3627,7 @@
       }
     }
 
-    function gwSyncFocusedGuidedUI() {
-      // Do not reshuffle the guided UI while the user is actively typing.
-      if (gwIsEditingGuidedStrengthFields()) return;
-
+       function gwSyncFocusedGuidedUI() {
       const activePlan = gwLoadActivePlan(gymId, userId);
       const focusModeActive = !!(activePlan && activePlan.status === "active" && machineType === "strength");
 
@@ -3648,6 +3645,10 @@
         if (guidedSetsPanel) {
           gwMoveNodeTo("guidedSetsPanel", guidedSetsPanel, guidedTopFocusSlot);
         }
+
+        if (loggerActionPanel) {
+          gwMoveNodeTo("loggerActionPanel", loggerActionPanel, guidedTopFocusSlot);
+        }
       } else {
         guidedTopFocusSlot.hidden = true;
 
@@ -3657,6 +3658,10 @@
 
         if (guidedSetsPanel) {
           gwRestoreNode("guidedSetsPanel", guidedSetsPanel);
+        }
+
+        if (loggerActionPanel) {
+          gwRestoreNode("loggerActionPanel", loggerActionPanel);
         }
       }
     }
