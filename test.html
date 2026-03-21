@@ -4398,14 +4398,19 @@
       gwRenderPlanUI(plan);
     }
 
-    function gwSetParamAndNavigate(params) {
-      const url = new URL(window.location.href);
-      Object.keys(params).forEach((k) => {
-        if (params[k] == null || params[k] === "") url.searchParams.delete(k);
-        else url.searchParams.set(k, params[k]);
-      });
-      window.location.href = url.toString();
+function gwSetParamAndNavigate(params) {
+  const url = new URL(window.location.href);
+
+  Object.keys(params).forEach((k) => {
+    if (params[k] == null || params[k] === "") {
+      url.searchParams.delete(k);
+    } else {
+      url.searchParams.set(k, params[k]);
     }
+  });
+
+  window.location.replace(url.toString());
+}
 
  function gwOpenCurrentStepLogging() {
   const plan = gwLoadActivePlan(gymId, userId);
