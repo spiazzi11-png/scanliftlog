@@ -4,6 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ScanLiftLog</title>
+
+  <meta name="theme-color" content="#0b0c10" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ScanLiftLog" />
+
+  <link id="dynamicManifestLink" rel="manifest" href="" />
+
   <style>
     :root {
       --bg:#0b0c10;
@@ -257,6 +265,27 @@
       background: rgba(255,255,255,.04);
     }
 
+    .headerActionBtn {
+      border:1px solid rgba(139,92,246,.45);
+      background: linear-gradient(135deg, rgba(139,92,246,.22), rgba(34,197,94,.12));
+      color:#fff;
+      font-weight:900;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:12px;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    .headerActionBtn:hover {
+      border-color: rgba(139,92,246,.65);
+      background: linear-gradient(135deg, rgba(139,92,246,.30), rgba(34,197,94,.16));
+    }
+
+    .headerActionBtn.hidden {
+      display:none !important;
+    }
+
     .contextBar {
       display:flex;
       gap:14px;
@@ -315,27 +344,6 @@
       color:var(--muted);
       font-size:12px;
       line-height:1.4;
-    }
-
-    .headerActionBtn {
-      border:1px solid rgba(139,92,246,.45);
-      background: linear-gradient(135deg, rgba(139,92,246,.22), rgba(34,197,94,.12));
-      color:#fff;
-      font-weight:900;
-      padding:10px 14px;
-      border-radius:999px;
-      font-size:12px;
-      line-height:1;
-      white-space:nowrap;
-    }
-
-    .headerActionBtn:hover {
-      border-color: rgba(139,92,246,.65);
-      background: linear-gradient(135deg, rgba(139,92,246,.30), rgba(34,197,94,.16));
-    }
-
-    .headerActionBtn.hidden {
-      display:none !important;
     }
 
     .setsHeader {
@@ -2127,17 +2135,17 @@
       <div class="a2hsTop">
         <div>
           <h2 id="a2hsTitle" class="a2hsTitle">Add to Home Screen</h2>
-          <div class="a2hsSub">
-            Save ScanLiftLog to your phone’s home screen for quick access without scanning every time.
+          <div class="a2hsSub" id="a2hsSubText">
+            Save ScanLiftLog to your phone’s home screen for quick access.
           </div>
         </div>
         <button id="closeA2hsBtn" class="a2hsCloseBtn" type="button" aria-label="Close">✕</button>
       </div>
 
       <div class="a2hsSection">
-        <div class="a2hsSectionTitle">Important</div>
+        <div class="a2hsSectionTitle">Home Screen Target</div>
         <div class="a2hsNote" id="a2hsCurrentUrlNote">
-          Save the gym home screen version, not a single machine page, so you can choose any machine later.
+          This will save the gym home screen version so you can choose any machine later.
         </div>
       </div>
 
@@ -2154,9 +2162,9 @@
       <div class="a2hsSection" id="a2hsAndroidSection">
         <div class="a2hsSectionTitle">Android</div>
         <ol class="a2hsList" id="a2hsAndroidList">
-          <li>Tap the browser menu</li>
-          <li>Tap <strong>Add to Home Screen</strong></li>
-          <li>Confirm to save it</li>
+          <li>Tap the button below</li>
+          <li>Confirm <strong>Add to Home Screen</strong></li>
+          <li>Your shortcut will open the gym home screen version</li>
         </ol>
       </div>
 
@@ -2856,6 +2864,19 @@
       return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
     }
 
+    function getCurrentPagePath() {
+      return window.location.pathname || "/";
+    }
+
+    function buildGymOnlyUrl(gid) {
+      const url = new URL(window.location.href);
+      url.pathname = getCurrentPagePath();
+      url.search = "";
+      url.searchParams.set("gym", gid);
+      url.hash = "";
+      return url.toString();
+    }
+
     /* ---------- URL Parsing (robust) ---------- */
     function parseContextFromUrl() {
       const url = new URL(window.location.href);
@@ -2895,15 +2916,6 @@
       const orgId = (params.get("org") || "").trim().toLowerCase() || gymId;
 
       return { gymId, machineId, orgId };
-    }
-
-    function buildGymHomeUrl(gid) {
-      const url = new URL(window.location.href);
-      url.searchParams.set("gym", gid);
-      url.searchParams.delete("machine");
-      url.searchParams.delete("m");
-      url.hash = "";
-      return url.toString();
     }
 
     /* ---------- User ID (device-local) ---------- */
@@ -3073,6 +3085,48 @@
       return (GYM_MACHINE_CATALOG[gid] || []).slice();
     }
 
+    /* ---------- Dynamic manifest / icons ---------- */
+    function buildManifestObject() {
+      const path = getCurrentPagePath();
+      const startUrl = `${path}?gym=${encodeURIComponent(gymId)}`;
+
+      return {
+        id: `scanliftlog-${gymId}`,
+        name: `${gymName} - ScanLiftLog`,
+        short_name: "ScanLiftLog",
+        description: `Quick workout logging for ${gymName}`,
+        start_url: startUrl,
+        scope: path,
+        display: "standalone",
+        background_color: "#0b0c10",
+        theme_color: "#0b0c10",
+        icons: [
+          {
+            src: "/icons/icon-192.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any maskable"
+          },
+          {
+            src: "/icons/icon-512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any maskable"
+          }
+        ]
+      };
+    }
+
+    function applyDynamicManifest() {
+      const link = document.getElementById("dynamicManifestLink");
+      if (!link) return;
+
+      const manifest = buildManifestObject();
+      const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: "application/manifest+json" });
+      const manifestUrl = URL.createObjectURL(blob);
+      link.href = manifestUrl;
+    }
+
     /* ---------- Machine Name ---------- */
     const key = machineId ? String(machineId).trim().toUpperCase() : "";
     const machineName = key
@@ -3157,6 +3211,7 @@
     function openA2hsModal() {
       const modal = document.getElementById("a2hsModal");
       const note = document.getElementById("a2hsCurrentUrlNote");
+      const subText = document.getElementById("a2hsSubText");
       const confirmBtn = document.getElementById("confirmA2hsBtn");
       const androidList = document.getElementById("a2hsAndroidList");
 
@@ -3164,8 +3219,14 @@
 
       if (note) {
         note.textContent = machineId
-          ? "You are currently on a machine page. For the best experience, save the gym home screen version so you can choose any machine later."
-          : "You are already on the gym home screen version. Save this page so you can choose any machine later.";
+          ? "You are currently on a machine page. The saved home screen shortcut should point to the gym-level page so members can choose any machine later."
+          : "You are already on the gym-level page. This is the correct home screen target.";
+      }
+
+      if (subText) {
+        subText.textContent = deferredA2hsPrompt
+          ? "Android can use the browser’s native Add to Home Screen prompt from here."
+          : "Save ScanLiftLog to your phone’s home screen for quick access.";
       }
 
       if (confirmBtn) {
@@ -3177,12 +3238,12 @@
           ? `
             <li>Tap the button below</li>
             <li>Confirm <strong>Add to Home Screen</strong></li>
-            <li>Your shortcut will be saved</li>
+            <li>Your shortcut will open the gym-level page</li>
           `
           : `
-            <li>Tap the browser menu</li>
-            <li>Tap <strong>Add to Home Screen</strong></li>
-            <li>Confirm to save it</li>
+            <li>If your browser does not show the native prompt, open the gym-level page first</li>
+            <li>Then use your browser menu and tap <strong>Add to Home Screen</strong></li>
+            <li>Your shortcut should open the gym-level page</li>
           `;
       }
 
@@ -3198,10 +3259,15 @@
     }
 
     function goToGymHomeVersion() {
-      window.location.href = buildGymHomeUrl(gymId);
+      window.location.href = buildGymOnlyUrl(gymId);
     }
 
     async function confirmAddToHomeScreen() {
+      if (machineId) {
+        window.location.href = buildGymOnlyUrl(gymId);
+        return;
+      }
+
       if (deferredA2hsPrompt) {
         try {
           deferredA2hsPrompt.prompt();
@@ -3209,6 +3275,7 @@
         } catch (e) {}
         deferredA2hsPrompt = null;
       }
+
       closeA2hsModal();
     }
 
@@ -4978,7 +5045,7 @@
         return;
       }
 
-      if (aiEntryWrap) aiEntryWrap.style.display = machineId ? "none" : "none";
+      if (aiEntryWrap) aiEntryWrap.style.display = "none";
 
       const current = gwGetCurrentStep(activePlan);
 
@@ -5158,6 +5225,7 @@
 
     function gwSetParamAndNavigate(params) {
       const url = new URL(window.location.href);
+      url.pathname = getCurrentPagePath();
       url.hash = "";
 
       Object.keys(params).forEach((k) => {
@@ -5238,13 +5306,25 @@
       const modal = document.getElementById("a2hsModal");
       const openGymHomeBtn = document.getElementById("openGymHomeBtn");
       const confirmBtn = document.getElementById("confirmA2hsBtn");
+      const iosSection = document.getElementById("a2hsIosSection");
+      const androidSection = document.getElementById("a2hsAndroidSection");
 
       if (isInStandaloneMode() && addBtn) {
         addBtn.classList.add("hidden");
       }
 
+      if (iosSection) {
+        iosSection.style.display = isIosLike() ? "" : "none";
+      }
+
+      if (androidSection) {
+        androidSection.style.display = isIosLike() ? "none" : "";
+      }
+
       if (addBtn) {
-        addBtn.addEventListener("click", openA2hsModal);
+        addBtn.addEventListener("click", () => {
+          openA2hsModal();
+        });
       }
 
       if (closeBtn) {
@@ -5318,6 +5398,8 @@
        INIT
        ================================ */
     (async () => {
+      applyDynamicManifest();
+
       const isPrivateLikely = await detectPrivateModeLikely();
       if (isPrivateLikely) {
         showPrivateModeModal();
@@ -5617,16 +5699,8 @@
 
       setModeUI();
 
-      if (machineId) {
-        if (machineType !== "cardio") clearCurrentSets();
-        else clearCardioInputs();
-
-        hideMachineSelectionGate();
-        renderHistory();
-        renderBadgeUI();
-      } else {
-        showMachineSelectionGate();
-      }
+      if (machineType !== "cardio") clearCurrentSets();
+      else clearCardioInputs();
 
       renderMonthlyConsistency();
       renderGuidedStepBanner();
@@ -5643,6 +5717,16 @@
         }
       }
 
+      if (machineId) {
+        hideMachineSelectionGate();
+        renderHistory();
+        renderBadgeUI();
+      } else {
+        showMachineSelectionGate();
+      }
+
+      applyMachineSelectedState();
+
       window.addEventListener("resize", () => {
         if (machineId) renderHistory();
       });
@@ -5652,8 +5736,6 @@
         renderGuidedStepBanner();
         gwSyncFocusedGuidedUI();
       });
-
-      applyMachineSelectedState();
     })();
   </script>
 </body>
