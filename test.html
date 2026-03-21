@@ -289,6 +289,55 @@
       color:var(--text);
     }
 
+    .contextSelectWrap {
+      margin-top:8px;
+    }
+
+    .contextSelect {
+      width:100%;
+      font-size:18px;
+      font-weight:800;
+      line-height:1.2;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+    }
+
+    .contextSelect option {
+      background:#121318;
+      color:var(--text);
+    }
+
+    .contextHint {
+      margin-top:8px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.4;
+    }
+
+    .headerActionBtn {
+      border:1px solid rgba(139,92,246,.45);
+      background: linear-gradient(135deg, rgba(139,92,246,.22), rgba(34,197,94,.12));
+      color:#fff;
+      font-weight:900;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:12px;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    .headerActionBtn:hover {
+      border-color: rgba(139,92,246,.65);
+      background: linear-gradient(135deg, rgba(139,92,246,.30), rgba(34,197,94,.16));
+    }
+
+    .headerActionBtn.hidden {
+      display:none !important;
+    }
+
     .setsHeader {
       display:grid;
       grid-template-columns: 52px 1fr 1fr 60px;
@@ -532,6 +581,121 @@
       .promoBanner {
         display: none !important;
       }
+    }
+
+    /* ===== Add to Home Screen Modal ===== */
+    .a2hsModal.hidden {
+      display:none;
+    }
+
+    .a2hsModal {
+      position:fixed;
+      inset:0;
+      z-index:10040;
+    }
+
+    .a2hsBackdrop {
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.72);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+    }
+
+    .a2hsCard {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      width:min(92vw, 460px);
+      background:linear-gradient(180deg, rgba(20,22,30,.98), rgba(12,14,20,.98));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      box-shadow:0 20px 60px rgba(0,0,0,.45);
+      padding:22px 20px 18px;
+      color:var(--text);
+    }
+
+    .a2hsTop {
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .a2hsTitle {
+      margin:0;
+      font-size:1.2rem;
+      line-height:1.2;
+      font-weight:900;
+    }
+
+    .a2hsSub {
+      margin-top:6px;
+      color:var(--muted);
+      font-size:.95rem;
+      line-height:1.5;
+    }
+
+    .a2hsCloseBtn {
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      font-size:20px;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+
+    .a2hsSection {
+      margin-top:14px;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+    }
+
+    .a2hsSectionTitle {
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      font-weight:900;
+      margin-bottom:8px;
+    }
+
+    .a2hsList {
+      margin:0;
+      padding-left:18px;
+      color:var(--text);
+      line-height:1.55;
+      font-size:.95rem;
+    }
+
+    .a2hsNote {
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    .a2hsActions {
+      margin-top:16px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .a2hsActions button {
+      flex:1;
+      min-width:160px;
     }
 
     /* ===== Guided Focus Layout ===== */
@@ -1792,6 +1956,11 @@
         word-break: break-word;
       }
 
+      .contextSelect {
+        font-size:16px;
+        padding:11px 12px;
+      }
+
       .top {
         width: 100%;
         display: block;
@@ -1922,6 +2091,20 @@
       #guidedTopFocusSlot {
         margin-bottom:12px;
       }
+
+      .a2hsCard {
+        width:min(94vw, 460px);
+        padding:20px 16px 16px;
+      }
+
+      .a2hsActions {
+        flex-direction:column;
+      }
+
+      .a2hsActions button {
+        width:100%;
+        min-width:0;
+      }
     }
   </style>
 </head>
@@ -1933,7 +2116,53 @@
         <div>ScanLiftLog</div>
       </div>
       <div class="navLinks">
-        <a class="navLink" href="https://scanliftlog.com" target="_blank" rel="noopener">Home</a>
+        <button class="headerActionBtn" id="addToHomeScreenBtn" type="button">Add to Home Screen</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="a2hsModal" class="a2hsModal hidden" aria-hidden="true">
+    <div class="a2hsBackdrop"></div>
+    <div class="a2hsCard" role="dialog" aria-modal="true" aria-labelledby="a2hsTitle">
+      <div class="a2hsTop">
+        <div>
+          <h2 id="a2hsTitle" class="a2hsTitle">Add to Home Screen</h2>
+          <div class="a2hsSub">
+            Save ScanLiftLog to your phone’s home screen for quick access without scanning every time.
+          </div>
+        </div>
+        <button id="closeA2hsBtn" class="a2hsCloseBtn" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div class="a2hsSection">
+        <div class="a2hsSectionTitle">Important</div>
+        <div class="a2hsNote" id="a2hsCurrentUrlNote">
+          Save the gym home screen version, not a single machine page, so you can choose any machine later.
+        </div>
+      </div>
+
+      <div class="a2hsSection" id="a2hsIosSection">
+        <div class="a2hsSectionTitle">iPhone / iPad</div>
+        <ol class="a2hsList">
+          <li>Open this page in Safari</li>
+          <li>Tap the Share button</li>
+          <li>Tap <strong>Add to Home Screen</strong></li>
+          <li>Tap <strong>Add</strong></li>
+        </ol>
+      </div>
+
+      <div class="a2hsSection" id="a2hsAndroidSection">
+        <div class="a2hsSectionTitle">Android</div>
+        <ol class="a2hsList" id="a2hsAndroidList">
+          <li>Tap the browser menu</li>
+          <li>Tap <strong>Add to Home Screen</strong></li>
+          <li>Confirm to save it</li>
+        </ol>
+      </div>
+
+      <div class="a2hsActions">
+        <button id="openGymHomeBtn" type="button">Open Gym Home Screen Version</button>
+        <button id="confirmA2hsBtn" class="primary" type="button">Add to Home Screen</button>
       </div>
     </div>
   </div>
@@ -2007,14 +2236,21 @@
           <div class="contextLabel">Gym Name</div>
           <div class="contextValue" id="gymNameText">…</div>
         </div>
+
         <div class="contextItem">
-          <div class="contextLabel">Machine Name</div>
-          <div class="contextValue" id="machineNameText">…</div>
+          <div class="contextLabel">Machine</div>
+          <div class="contextSelectWrap">
+            <select id="machineSelect" class="contextSelect">
+              <option value="">Select a machine</option>
+            </select>
+          </div>
+          <div class="contextHint" id="machineSelectHint">
+            Choose a machine from this gym or scan a machine QR code.
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="card" id="inactiveGate" style="display:none;">
+        <div class="card" id="inactiveGate" style="display:none;">
       <div style="font-weight:900; font-size:18px;">Service Inactive</div>
       <div class="muted" style="margin-top:8px; line-height:1.5;">
         This gym is not currently active on ScanLiftLog.
@@ -2024,6 +2260,13 @@
       <div class="hr"></div>
       <div class="muted" style="font-size:12px;">
         Gym ID: <span id="inactiveGymId">—</span>
+      </div>
+    </div>
+
+    <div id="machineSelectionGate" class="card" style="display:none;">
+      <div style="font-weight:900; font-size:18px;">Select a Machine</div>
+      <div class="muted" style="margin-top:8px; line-height:1.5;">
+        Choose a machine from the dropdown above or scan a machine QR code to begin logging your workout.
       </div>
     </div>
 
@@ -2135,7 +2378,7 @@
         <div id="cardioFieldsGrid" class="cardioFieldGrid"></div>
       </div>
 
-           <div id="loggerActionPanel" class="loggerActionPanel" style="margin-top:14px;">
+      <div id="loggerActionPanel" class="loggerActionPanel" style="margin-top:14px;">
         <div class="btnrow" style="margin-bottom:10px;">
           <button
             class="primary"
@@ -2152,6 +2395,7 @@
           <button class="danger" id="clearHistoryBtn" type="button" style="flex:1; min-width:0;">Clear All History</button>
         </div>
       </div>
+    </div>
 
     <div class="card" id="historyCard">
       <div class="row" style="align-items:center; justify-content:space-between;">
@@ -2277,7 +2521,8 @@
       </div>
     </div>
   </div>
-    <!-- ===== Guided Workout Modal ===== -->
+
+  <!-- ===== Guided Workout Modal ===== -->
   <div id="guidedWorkoutModal" class="plannerModal hidden" aria-hidden="true">
     <div class="plannerModalCard">
       <div class="plannerModalHeader">
@@ -2375,8 +2620,7 @@
       </div>
     </div>
   </div>
-
-  <script src="/machine-map.js"></script>
+    <script src="/machine-map.js"></script>
 
   <script>
     /* ================================
@@ -2600,6 +2844,18 @@
       }[m]));
     }
 
+    function isIosLike() {
+      const ua = navigator.userAgent || "";
+      const platform = navigator.platform || "";
+      const touchPoints = navigator.maxTouchPoints || 0;
+      return /iPhone|iPad|iPod/i.test(ua) ||
+        (platform === "MacIntel" && touchPoints > 1);
+    }
+
+    function isInStandaloneMode() {
+      return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    }
+
     /* ---------- URL Parsing (robust) ---------- */
     function parseContextFromUrl() {
       const url = new URL(window.location.href);
@@ -2641,6 +2897,15 @@
       return { gymId, machineId, orgId };
     }
 
+    function buildGymHomeUrl(gid) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("gym", gid);
+      url.searchParams.delete("machine");
+      url.searchParams.delete("m");
+      url.hash = "";
+      return url.toString();
+    }
+
     /* ---------- User ID (device-local) ---------- */
     const USER_KEY = "scanliftlog_user_v1";
 
@@ -2672,6 +2937,9 @@
 
       const planBtn = document.getElementById("planWorkoutBtn");
       if (planBtn) planBtn.style.display = "none";
+
+      const machineSelectionGate = document.getElementById("machineSelectionGate");
+      if (machineSelectionGate) machineSelectionGate.style.display = "none";
 
       const inactiveGate = document.getElementById("inactiveGate");
       const inactiveGymId = document.getElementById("inactiveGymId");
@@ -2734,11 +3002,82 @@
     const BANNER_FOLDER = "banners";
     const gymName = GYM_MAP[gymId] || gymId.toUpperCase();
 
+    /* ---------- Gym machine catalog for dropdown ---------- */
+    const GYM_MACHINE_CATALOG = {
+      "pushfitness-melville": [
+        { machineCode:"CHPR",         machineNumber:1,  label:"Chest Press",                    goalTags:["chest","fullbody"],        type:"strength", markerLeft:18, markerTop:18 },
+        { machineCode:"INCHPR",       machineNumber:2,  label:"Incline Press",                  goalTags:["chest","shoulders"],       type:"strength", markerLeft:24, markerTop:18 },
+        { machineCode:"DECHPR",       machineNumber:3,  label:"Decline Press",                  goalTags:["chest"],                   type:"strength", markerLeft:30, markerTop:18 },
+        { machineCode:"CONVCHPR",     machineNumber:4,  label:"Converging Chest Press",         goalTags:["chest"],                   type:"strength", markerLeft:36, markerTop:18 },
+        { machineCode:"RDPEC",        machineNumber:5,  label:"Rear Delt / Pec Fly",            goalTags:["chest","shoulders"],       type:"strength", markerLeft:42, markerTop:18 },
+        { machineCode:"SEATDIPPLATE", machineNumber:6,  label:"Seated Dip - Plate Loaded",      goalTags:["chest","arms"],            type:"strength", markerLeft:48, markerTop:18 },
+        { machineCode:"SEATDIPPIN",   machineNumber:7,  label:"Seated Dip - Pin Loaded",        goalTags:["chest","arms"],            type:"strength", markerLeft:54, markerTop:18 },
+        { machineCode:"TRICEPPRESS",  machineNumber:8,  label:"Tricep Press",                   goalTags:["arms","chest"],            type:"strength", markerLeft:60, markerTop:18 },
+
+        { machineCode:"LATPD",        machineNumber:9,  label:"Lat Pulldown",                   goalTags:["back","fullbody"],         type:"strength", markerLeft:18, markerTop:30 },
+        { machineCode:"PULLDN",       machineNumber:10, label:"Pulldown",                       goalTags:["back"],                    type:"strength", markerLeft:24, markerTop:30 },
+        { machineCode:"DIVLATPD",     machineNumber:11, label:"Diverging Lat Pulldown",         goalTags:["back"],                    type:"strength", markerLeft:30, markerTop:30 },
+        { machineCode:"CABLEROW",     machineNumber:12, label:"Cable Row",                      goalTags:["back"],                    type:"strength", markerLeft:36, markerTop:30 },
+        { machineCode:"SETRW",        machineNumber:13, label:"Seated Row",                     goalTags:["back","fullbody"],         type:"strength", markerLeft:42, markerTop:30 },
+        { machineCode:"LTRW",         machineNumber:14, label:"Low Row Machine",                goalTags:["back"],                    type:"strength", markerLeft:48, markerTop:30 },
+        { machineCode:"DIVLROW",      machineNumber:15, label:"Diverging Low Row",              goalTags:["back"],                    type:"strength", markerLeft:54, markerTop:30 },
+        { machineCode:"TBRW",         machineNumber:16, label:"T-Bar Row Station",              goalTags:["back"],                    type:"strength", markerLeft:60, markerTop:30 },
+        { machineCode:"ASSTPD",       machineNumber:17, label:"Assisted Pull-Up / Dip",         goalTags:["back","arms"],             type:"strength", markerLeft:66, markerTop:30 },
+        { machineCode:"DUALPULL",     machineNumber:18, label:"Dual Adjustable Pulley",         goalTags:["back","chest","arms","shoulders"], type:"strength", markerLeft:72, markerTop:30 },
+
+        { machineCode:"SHPR",         machineNumber:19, label:"Shoulder Press",                 goalTags:["shoulders","fullbody"],    type:"strength", markerLeft:18, markerTop:42 },
+        { machineCode:"CONVSHPR",     machineNumber:20, label:"Converging Shoulder Press",      goalTags:["shoulders"],               type:"strength", markerLeft:24, markerTop:42 },
+        { machineCode:"LATRL",        machineNumber:21, label:"Lateral Raise",                  goalTags:["shoulders"],               type:"strength", markerLeft:30, markerTop:42 },
+        { machineCode:"BCPN",         machineNumber:22, label:"Biceps Curl - Pin Loaded",       goalTags:["arms"],                    type:"strength", markerLeft:36, markerTop:42 },
+        { machineCode:"BCPL",         machineNumber:23, label:"Biceps Curl - Plate Loaded",     goalTags:["arms"],                    type:"strength", markerLeft:42, markerTop:42 },
+        { machineCode:"TRIEX",        machineNumber:24, label:"Triceps Extension Machine",      goalTags:["arms"],                    type:"strength", markerLeft:48, markerTop:42 },
+        { machineCode:"OHBP",         machineNumber:25, label:"Overhead Barbell Press",         goalTags:["shoulders"],               type:"strength", markerLeft:54, markerTop:42 },
+
+        { machineCode:"LEGPR",        machineNumber:26, label:"Leg Press",                      goalTags:["legs","fullbody"],         type:"strength", markerLeft:18, markerTop:58 },
+        { machineCode:"ANGLP",        machineNumber:27, label:"Angled Leg Press",               goalTags:["legs"],                    type:"strength", markerLeft:24, markerTop:58 },
+        { machineCode:"HKSQ",         machineNumber:28, label:"Hack Squat",                     goalTags:["legs"],                    type:"strength", markerLeft:30, markerTop:58 },
+        { machineCode:"SQMT",         machineNumber:29, label:"Squat Machine",                  goalTags:["legs"],                    type:"strength", markerLeft:36, markerTop:58 },
+        { machineCode:"LEGEX",        machineNumber:30, label:"Leg Extension",                  goalTags:["legs"],                    type:"strength", markerLeft:42, markerTop:58 },
+        { machineCode:"LEGCUR",       machineNumber:31, label:"Leg Curl",                       goalTags:["legs"],                    type:"strength", markerLeft:48, markerTop:58 },
+        { machineCode:"SLCUR",        machineNumber:32, label:"Seated Leg Curl",                goalTags:["legs"],                    type:"strength", markerLeft:54, markerTop:58 },
+        { machineCode:"SLGCUR",       machineNumber:33, label:"Single Leg Curl",                goalTags:["legs"],                    type:"strength", markerLeft:60, markerTop:58 },
+        { machineCode:"PRONECUR",     machineNumber:34, label:"Prone Leg Curl",                 goalTags:["legs"],                    type:"strength", markerLeft:66, markerTop:58 },
+        { machineCode:"HIPAB",        machineNumber:35, label:"Hip Abductor",                   goalTags:["legs"],                    type:"strength", markerLeft:72, markerTop:58 },
+        { machineCode:"GLUTEXT",      machineNumber:36, label:"Glute Extension",                goalTags:["legs"],                    type:"strength", markerLeft:18, markerTop:70 },
+        { machineCode:"HIPTH",        machineNumber:37, label:"Hip Thrust Machine",             goalTags:["legs"],                    type:"strength", markerLeft:24, markerTop:70 },
+        { machineCode:"CALFRAISE",    machineNumber:38, label:"Calf Raise",                     goalTags:["legs"],                    type:"strength", markerLeft:30, markerTop:70 },
+        { machineCode:"DEADLUNGE",    machineNumber:39, label:"Deadlift Lunge",                 goalTags:["legs"],                    type:"strength", markerLeft:36, markerTop:70 },
+
+        { machineCode:"ABDOM",        machineNumber:40, label:"Abdominal",                      goalTags:["core","fullbody"],         type:"strength", markerLeft:48, markerTop:70 },
+        { machineCode:"RTTOR",        machineNumber:41, label:"Rotary Torso",                   goalTags:["core"],                    type:"strength", markerLeft:54, markerTop:70 },
+
+        { machineCode:"FBEN",         machineNumber:42, label:"Flat Bench",                     goalTags:["chest","shoulders","arms"], type:"strength", markerLeft:64, markerTop:18 },
+        { machineCode:"IBEN",         machineNumber:43, label:"Incline Bench",                  goalTags:["chest","shoulders"],       type:"strength", markerLeft:70, markerTop:18 },
+        { machineCode:"DBEN",         machineNumber:44, label:"Decline Bench",                  goalTags:["chest"],                   type:"strength", markerLeft:76, markerTop:18 },
+        { machineCode:"SMTH",         machineNumber:45, label:"Smith Machine",                  goalTags:["chest","legs","shoulders"], type:"strength", markerLeft:64, markerTop:58 },
+        { machineCode:"SQRK",         machineNumber:46, label:"Squat Rack",                     goalTags:["legs","shoulders"],        type:"strength", markerLeft:70, markerTop:58 },
+        { machineCode:"DBRCK",        machineNumber:47, label:"Dumbbell Rack",                  goalTags:["chest","arms","shoulders","legs"], type:"strength", markerLeft:76, markerTop:58 },
+        { machineCode:"MULTIPP",      machineNumber:48, label:"Multi Pull Press",               goalTags:["chest","back","shoulders"], type:"strength", markerLeft:66, markerTop:42 }
+      ],
+
+      "main": [
+        { machineCode:"PECDK", machineNumber:1, label:"Pec Deck", goalTags:["chest","fullbody"], type:"strength", markerLeft:20, markerTop:20 },
+        { machineCode:"LEGPR", machineNumber:2, label:"Leg Press", goalTags:["legs","fullbody"], type:"strength", markerLeft:32, markerTop:35 },
+        { machineCode:"LATPD", machineNumber:3, label:"Lat Pulldown", goalTags:["back","fullbody"], type:"strength", markerLeft:45, markerTop:20 },
+        { machineCode:"BIKE",  machineNumber:4, label:"Bike", goalTags:["cardio"], type:"cardio", markerLeft:58, markerTop:28 },
+        { machineCode:"TRED",  machineNumber:5, label:"Treadmill", goalTags:["cardio"], type:"cardio", markerLeft:70, markerTop:28 }
+      ]
+    };
+
+    function getGymCatalogMachines(gid) {
+      return (GYM_MACHINE_CATALOG[gid] || []).slice();
+    }
+
     /* ---------- Machine Name ---------- */
     const key = machineId ? String(machineId).trim().toUpperCase() : "";
     const machineName = key
       ? ((window.MACHINE_MAP && window.MACHINE_MAP[key]) ? window.MACHINE_MAP[key] : `Machine (${key})`)
-      : "Scan a machine QR code to begin";
+      : "Select a machine";
 
     function isAbductorComboMachine() {
       const name = String(machineName || "").toUpperCase();
@@ -2752,6 +3091,137 @@
     ];
 
     const machineType = (machineId && CARDIO_MACHINE_IDS.includes(machineId)) ? "cardio" : "strength";
+
+    function showMachineSelectionGate() {
+      const machineSelectionGate = document.getElementById("machineSelectionGate");
+      const logger = document.getElementById("logger");
+      const historyCard = document.getElementById("historyCard");
+      const badgeProgressCard = document.getElementById("badgeProgressCard");
+      const badgesCard = document.getElementById("badgesCard");
+      const planBtn = document.getElementById("planWorkoutBtn");
+
+      if (machineSelectionGate) machineSelectionGate.style.display = "";
+      if (logger) logger.style.display = "none";
+      if (historyCard) historyCard.style.display = "none";
+      if (badgeProgressCard) badgeProgressCard.style.display = "none";
+      if (badgesCard) badgesCard.style.display = "none";
+      if (planBtn) planBtn.style.display = "none";
+    }
+
+    function hideMachineSelectionGate() {
+      const machineSelectionGate = document.getElementById("machineSelectionGate");
+      const logger = document.getElementById("logger");
+      const historyCard = document.getElementById("historyCard");
+      const planBtn = document.getElementById("planWorkoutBtn");
+
+      if (machineSelectionGate) machineSelectionGate.style.display = "none";
+      if (logger) logger.style.display = "";
+      if (historyCard) historyCard.style.display = "";
+      if (planBtn) planBtn.style.display = "";
+    }
+
+    function populateMachineDropdown() {
+      const select = document.getElementById("machineSelect");
+      if (!select) return;
+
+      const currentValue = machineId || "";
+      const machines = getGymCatalogMachines(gymId)
+        .sort((a, b) => String(a.label || "").localeCompare(String(b.label || "")));
+
+      select.innerHTML = "";
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Select a machine";
+      select.appendChild(placeholder);
+
+      machines.forEach(m => {
+        const opt = document.createElement("option");
+        opt.value = String(m.machineCode || "").toUpperCase();
+        opt.textContent = m.label || opt.value;
+        if (opt.value === currentValue) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function handleMachineDropdownChange(nextMachineId) {
+      const clean = normalizeMachineId(nextMachineId || "");
+      gwSetParamAndNavigate({
+        gym: gymId,
+        machine: clean || null
+      });
+    }
+
+    /* ---------- Add to Home Screen ---------- */
+    let deferredA2hsPrompt = null;
+
+    function openA2hsModal() {
+      const modal = document.getElementById("a2hsModal");
+      const note = document.getElementById("a2hsCurrentUrlNote");
+      const confirmBtn = document.getElementById("confirmA2hsBtn");
+      const androidList = document.getElementById("a2hsAndroidList");
+
+      if (!modal) return;
+
+      if (note) {
+        note.textContent = machineId
+          ? "You are currently on a machine page. For the best experience, save the gym home screen version so you can choose any machine later."
+          : "You are already on the gym home screen version. Save this page so you can choose any machine later.";
+      }
+
+      if (confirmBtn) {
+        confirmBtn.textContent = deferredA2hsPrompt ? "Add to Home Screen" : "Got It";
+      }
+
+      if (androidList) {
+        androidList.innerHTML = deferredA2hsPrompt
+          ? `
+            <li>Tap the button below</li>
+            <li>Confirm <strong>Add to Home Screen</strong></li>
+            <li>Your shortcut will be saved</li>
+          `
+          : `
+            <li>Tap the browser menu</li>
+            <li>Tap <strong>Add to Home Screen</strong></li>
+            <li>Confirm to save it</li>
+          `;
+      }
+
+      modal.classList.remove("hidden");
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeA2hsModal() {
+      const modal = document.getElementById("a2hsModal");
+      if (!modal) return;
+      modal.classList.add("hidden");
+      modal.setAttribute("aria-hidden", "true");
+    }
+
+    function goToGymHomeVersion() {
+      window.location.href = buildGymHomeUrl(gymId);
+    }
+
+    async function confirmAddToHomeScreen() {
+      if (deferredA2hsPrompt) {
+        try {
+          deferredA2hsPrompt.prompt();
+          await deferredA2hsPrompt.userChoice;
+        } catch (e) {}
+        deferredA2hsPrompt = null;
+      }
+      closeA2hsModal();
+    }
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredA2hsPrompt = e;
+    });
+
+    window.addEventListener("appinstalled", () => {
+      deferredA2hsPrompt = null;
+      const btn = document.getElementById("addToHomeScreenBtn");
+      if (btn) btn.classList.add("hidden");
+    });
 
     /* ---------- Cardio Field Definitions ---------- */
     function getCardioFieldDefs(mid) {
@@ -3104,11 +3574,13 @@
     }
 
     function renderBadgeUI() {
+      if (!machineId) return;
       renderBadgeProgressCard();
       renderBadgesCard();
       renderGuidedStepBanner();
     }
-        /* ---------- Monthly Consistency ---------- */
+
+    /* ---------- Monthly Consistency ---------- */
     function getDaysInCurrentMonth() {
       const now = new Date();
       const year = now.getFullYear();
@@ -3195,8 +3667,7 @@
       fillEl.style.width = `${stats.pct}%`;
       subtextEl.textContent = `You have logged a workout ${stats.loggedDays} out of ${stats.daysInMonth} days this month`;
     }
-
-    /* ---------- Back Up Data ---------- */
+        /* ---------- Back Up Data ---------- */
     function downloadData() {
       const all = [];
       for (let i = 0; i < localStorage.length; i++) {
@@ -3306,6 +3777,11 @@
       const clean = String(mid || "").trim().toUpperCase();
       if (!clean) return "Unknown Machine";
       if (window.MACHINE_MAP && window.MACHINE_MAP[clean]) return window.MACHINE_MAP[clean];
+
+      const gymMachines = getGymCatalogMachines(gymId);
+      const catalogMatch = gymMachines.find(m => String(m.machineCode || "").toUpperCase() === clean);
+      if (catalogMatch && catalogMatch.label) return catalogMatch.label;
+
       return clean;
     }
 
@@ -3539,6 +4015,7 @@
     const exerciseInputWrap = document.getElementById("exerciseInputWrap");
     const abductorSelectWrap = document.getElementById("abductorSelectWrap");
     const abductorExerciseSelect = document.getElementById("abductorExerciseSelect");
+    const machineSelect = document.getElementById("machineSelect");
 
     const strengthSection = document.getElementById("strengthSection");
     const cardioSection = document.getElementById("cardioSection");
@@ -3577,11 +4054,11 @@
     const aiDisclaimerAgree = document.getElementById("aiDisclaimerAgree");
     const guidedTopFocusSlot = document.getElementById("guidedTopFocusSlot");
     const guidedSetsPanel = document.getElementById("guidedSetsPanel");
-   const loggerActionPanel = document.getElementById("loggerActionPanel");
+    const loggerActionPanel = document.getElementById("loggerActionPanel");
 
     let cardioInputs = {};
 
-      /* ---------- Guided Focus Helpers ---------- */
+    /* ---------- Guided Focus Helpers ---------- */
     const gwUiHomes = {};
 
     function gwRememberHome(key, node) {
@@ -3604,11 +4081,7 @@
 
     function gwMoveNodeTo(key, node, newParent) {
       if (!node || !newParent) return;
-
-      // Important: do nothing if the node is already in the right place.
-      // Re-appending an already-focused input container on mobile can kill focus.
       if (node.parentNode === newParent) return;
-
       gwRememberHome(key, node);
       newParent.appendChild(node);
     }
@@ -3616,8 +4089,6 @@
     function gwRestoreNode(key, node) {
       const home = gwUiHomes[key];
       if (!node || !home || !home.parent) return;
-
-      // If already back in its original parent, leave it alone.
       if (node.parentNode === home.parent) return;
 
       if (home.next && home.next.parentNode === home.parent) {
@@ -3627,7 +4098,7 @@
       }
     }
 
-       function gwSyncFocusedGuidedUI() {
+    function gwSyncFocusedGuidedUI() {
       const activePlan = gwLoadActivePlan(gymId, userId);
       const focusModeActive = !!(activePlan && activePlan.status === "active" && machineType === "strength");
 
@@ -3665,6 +4136,7 @@
         }
       }
     }
+
     /* ---------- Strength: Sets UI ---------- */
     function createSetRow(setIndex, weight = "", reps = "") {
       const row = document.createElement("div");
@@ -4151,70 +4623,6 @@
     }
 
     /* ---------- Guided Workout Catalog ---------- */
-    const GYM_MACHINE_CATALOG = {
-      "pushfitness-melville": [
-        { machineCode:"CHPR",         machineNumber:1,  label:"Chest Press",                    goalTags:["chest","fullbody"],        type:"strength", markerLeft:18, markerTop:18 },
-        { machineCode:"INCHPR",       machineNumber:2,  label:"Incline Press",                  goalTags:["chest","shoulders"],       type:"strength", markerLeft:24, markerTop:18 },
-        { machineCode:"DECHPR",       machineNumber:3,  label:"Decline Press",                  goalTags:["chest"],                   type:"strength", markerLeft:30, markerTop:18 },
-        { machineCode:"CONVCHPR",     machineNumber:4,  label:"Converging Chest Press",         goalTags:["chest"],                   type:"strength", markerLeft:36, markerTop:18 },
-        { machineCode:"RDPEC",        machineNumber:5,  label:"Rear Delt / Pec Fly",            goalTags:["chest","shoulders"],       type:"strength", markerLeft:42, markerTop:18 },
-        { machineCode:"SEATDIPPLATE", machineNumber:6,  label:"Seated Dip - Plate Loaded",      goalTags:["chest","arms"],            type:"strength", markerLeft:48, markerTop:18 },
-        { machineCode:"SEATDIPPIN",   machineNumber:7,  label:"Seated Dip - Pin Loaded",        goalTags:["chest","arms"],            type:"strength", markerLeft:54, markerTop:18 },
-        { machineCode:"TRICEPPRESS",  machineNumber:8,  label:"Tricep Press",                   goalTags:["arms","chest"],            type:"strength", markerLeft:60, markerTop:18 },
-
-        { machineCode:"LATPD",        machineNumber:9,  label:"Lat Pulldown",                   goalTags:["back","fullbody"],         type:"strength", markerLeft:18, markerTop:30 },
-        { machineCode:"PULLDN",       machineNumber:10, label:"Pulldown",                       goalTags:["back"],                    type:"strength", markerLeft:24, markerTop:30 },
-        { machineCode:"DIVLATPD",     machineNumber:11, label:"Diverging Lat Pulldown",         goalTags:["back"],                    type:"strength", markerLeft:30, markerTop:30 },
-        { machineCode:"CABLEROW",     machineNumber:12, label:"Cable Row",                      goalTags:["back"],                    type:"strength", markerLeft:36, markerTop:30 },
-        { machineCode:"SETRW",        machineNumber:13, label:"Seated Row",                     goalTags:["back","fullbody"],         type:"strength", markerLeft:42, markerTop:30 },
-        { machineCode:"LTRW",         machineNumber:14, label:"Low Row Machine",                goalTags:["back"],                    type:"strength", markerLeft:48, markerTop:30 },
-        { machineCode:"DIVLROW",      machineNumber:15, label:"Diverging Low Row",              goalTags:["back"],                    type:"strength", markerLeft:54, markerTop:30 },
-        { machineCode:"TBRW",         machineNumber:16, label:"T-Bar Row Station",              goalTags:["back"],                    type:"strength", markerLeft:60, markerTop:30 },
-        { machineCode:"ASSTPD",       machineNumber:17, label:"Assisted Pull-Up / Dip",         goalTags:["back","arms"],             type:"strength", markerLeft:66, markerTop:30 },
-        { machineCode:"DUALPULL",     machineNumber:18, label:"Dual Adjustable Pulley",         goalTags:["back","chest","arms","shoulders"], type:"strength", markerLeft:72, markerTop:30 },
-
-        { machineCode:"SHPR",         machineNumber:19, label:"Shoulder Press",                 goalTags:["shoulders","fullbody"],    type:"strength", markerLeft:18, markerTop:42 },
-        { machineCode:"CONVSHPR",     machineNumber:20, label:"Converging Shoulder Press",      goalTags:["shoulders"],               type:"strength", markerLeft:24, markerTop:42 },
-        { machineCode:"LATRL",        machineNumber:21, label:"Lateral Raise",                  goalTags:["shoulders"],               type:"strength", markerLeft:30, markerTop:42 },
-        { machineCode:"BCPN",         machineNumber:22, label:"Biceps Curl - Pin Loaded",       goalTags:["arms"],                    type:"strength", markerLeft:36, markerTop:42 },
-        { machineCode:"BCPL",         machineNumber:23, label:"Biceps Curl - Plate Loaded",     goalTags:["arms"],                    type:"strength", markerLeft:42, markerTop:42 },
-        { machineCode:"TRIEX",        machineNumber:24, label:"Triceps Extension Machine",      goalTags:["arms"],                    type:"strength", markerLeft:48, markerTop:42 },
-        { machineCode:"OHBP",         machineNumber:25, label:"Overhead Barbell Press",         goalTags:["shoulders"],               type:"strength", markerLeft:54, markerTop:42 },
-
-        { machineCode:"LEGPR",        machineNumber:26, label:"Leg Press",                      goalTags:["legs","fullbody"],         type:"strength", markerLeft:18, markerTop:58 },
-        { machineCode:"ANGLP",        machineNumber:27, label:"Angled Leg Press",               goalTags:["legs"],                    type:"strength", markerLeft:24, markerTop:58 },
-        { machineCode:"HKSQ",         machineNumber:28, label:"Hack Squat",                     goalTags:["legs"],                    type:"strength", markerLeft:30, markerTop:58 },
-        { machineCode:"SQMT",         machineNumber:29, label:"Squat Machine",                  goalTags:["legs"],                    type:"strength", markerLeft:36, markerTop:58 },
-        { machineCode:"LEGEX",        machineNumber:30, label:"Leg Extension",                  goalTags:["legs"],                    type:"strength", markerLeft:42, markerTop:58 },
-        { machineCode:"LEGCUR",       machineNumber:31, label:"Leg Curl",                       goalTags:["legs"],                    type:"strength", markerLeft:48, markerTop:58 },
-        { machineCode:"SLCUR",        machineNumber:32, label:"Seated Leg Curl",                goalTags:["legs"],                    type:"strength", markerLeft:54, markerTop:58 },
-        { machineCode:"SLGCUR",       machineNumber:33, label:"Single Leg Curl",                goalTags:["legs"],                    type:"strength", markerLeft:60, markerTop:58 },
-        { machineCode:"PRONECUR",     machineNumber:34, label:"Prone Leg Curl",                 goalTags:["legs"],                    type:"strength", markerLeft:66, markerTop:58 },
-        { machineCode:"HIPAB",        machineNumber:35, label:"Hip Abductor",                   goalTags:["legs"],                    type:"strength", markerLeft:72, markerTop:58 },
-        { machineCode:"GLUTEXT",      machineNumber:36, label:"Glute Extension",                goalTags:["legs"],                    type:"strength", markerLeft:18, markerTop:70 },
-        { machineCode:"HIPTH",        machineNumber:37, label:"Hip Thrust Machine",             goalTags:["legs"],                    type:"strength", markerLeft:24, markerTop:70 },
-        { machineCode:"CALFRAISE",    machineNumber:38, label:"Calf Raise",                     goalTags:["legs"],                    type:"strength", markerLeft:30, markerTop:70 },
-        { machineCode:"DEADLUNGE",    machineNumber:39, label:"Deadlift Lunge",                 goalTags:["legs"],                    type:"strength", markerLeft:36, markerTop:70 },
-
-        { machineCode:"ABDOM",        machineNumber:40, label:"Abdominal",                      goalTags:["core","fullbody"],         type:"strength", markerLeft:48, markerTop:70 },
-        { machineCode:"RTTOR",        machineNumber:41, label:"Rotary Torso",                   goalTags:["core"],                    type:"strength", markerLeft:54, markerTop:70 },
-
-        { machineCode:"FBEN",         machineNumber:42, label:"Flat Bench",                     goalTags:["chest","shoulders","arms"], type:"strength", markerLeft:64, markerTop:18 },
-        { machineCode:"IBEN",         machineNumber:43, label:"Incline Bench",                  goalTags:["chest","shoulders"],       type:"strength", markerLeft:70, markerTop:18 },
-        { machineCode:"DBEN",         machineNumber:44, label:"Decline Bench",                  goalTags:["chest"],                   type:"strength", markerLeft:76, markerTop:18 },
-        { machineCode:"SMTH",         machineNumber:45, label:"Smith Machine",                  goalTags:["chest","legs","shoulders"], type:"strength", markerLeft:64, markerTop:58 },
-        { machineCode:"SQRK",         machineNumber:46, label:"Squat Rack",                     goalTags:["legs","shoulders"],        type:"strength", markerLeft:70, markerTop:58 },
-        { machineCode:"DBRCK",        machineNumber:47, label:"Dumbbell Rack",                  goalTags:["chest","arms","shoulders","legs"], type:"strength", markerLeft:76, markerTop:58 },
-        { machineCode:"MULTIPP",      machineNumber:48, label:"Multi Pull Press",               goalTags:["chest","back","shoulders"], type:"strength", markerLeft:66, markerTop:42 }
-      ],
-
-      "main": [
-        { machineCode:"PECDK", machineNumber:1, label:"Pec Deck", goalTags:["chest","fullbody"], type:"strength", markerLeft:20, markerTop:20 },
-        { machineCode:"LEGPR", machineNumber:2, label:"Leg Press", goalTags:["legs","fullbody"], type:"strength", markerLeft:32, markerTop:35 },
-        { machineCode:"LATPD", machineNumber:3, label:"Lat Pulldown", goalTags:["back","fullbody"], type:"strength", markerLeft:45, markerTop:20 }
-      ]
-    };
-
     const WORKOUT_TEMPLATES = {
       chest: [
         { exercise:"Chest Press",   machineLabelMatch:["Chest Press","Converging Chest Press"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
@@ -4421,6 +4829,11 @@
     }
 
     function aiHandlePlanWorkoutEntry() {
+      if (!machineId) {
+        alert("Select a machine first before starting an AI guided workout.");
+        return;
+      }
+
       if (aiHasAcceptedDisclaimerThisSession()) {
         gwOpenSetupModal();
         return;
@@ -4451,7 +4864,8 @@
       guidedWorkoutModal.classList.add("hidden");
       guidedWorkoutModal.setAttribute("aria-hidden", "true");
     }
-        function gwRenderMarkers(plan) {
+
+    function gwRenderMarkers(plan) {
       if (!plannerMapMarkers) return;
       plannerMapMarkers.innerHTML = "";
 
@@ -4551,7 +4965,7 @@
       gwSyncFocusedGuidedUI();
     }
 
-     function renderGuidedStepBanner() {
+    function renderGuidedStepBanner() {
       if (!guidedStepBanner) return;
 
       const activePlan = gwLoadActivePlan(gymId, userId);
@@ -4559,12 +4973,12 @@
 
       if (!activePlan || activePlan.status !== "active") {
         guidedStepBanner.style.display = "none";
-        if (aiEntryWrap) aiEntryWrap.style.display = "";
+        if (aiEntryWrap) aiEntryWrap.style.display = machineId ? "" : "none";
         if (!gwIsEditingGuidedStrengthFields()) gwSyncFocusedGuidedUI();
         return;
       }
 
-      if (aiEntryWrap) aiEntryWrap.style.display = "none";
+      if (aiEntryWrap) aiEntryWrap.style.display = machineId ? "none" : "none";
 
       const current = gwGetCurrentStep(activePlan);
 
@@ -4756,8 +5170,7 @@
 
       window.location.replace(url.toString());
     }
-
-    function gwInitPlanner() {
+        function gwInitPlanner() {
       if (planWorkoutBtn) {
         planWorkoutBtn.addEventListener("click", aiHandlePlanWorkoutEntry);
       }
@@ -4819,6 +5232,88 @@
       // Guided workout should not add browser history entries.
     }
 
+    function initA2hsUi() {
+      const addBtn = document.getElementById("addToHomeScreenBtn");
+      const closeBtn = document.getElementById("closeA2hsBtn");
+      const modal = document.getElementById("a2hsModal");
+      const openGymHomeBtn = document.getElementById("openGymHomeBtn");
+      const confirmBtn = document.getElementById("confirmA2hsBtn");
+
+      if (isInStandaloneMode() && addBtn) {
+        addBtn.classList.add("hidden");
+      }
+
+      if (addBtn) {
+        addBtn.addEventListener("click", openA2hsModal);
+      }
+
+      if (closeBtn) {
+        closeBtn.addEventListener("click", closeA2hsModal);
+      }
+
+      if (modal) {
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal || e.target.classList.contains("a2hsBackdrop")) {
+            closeA2hsModal();
+          }
+        });
+      }
+
+      if (openGymHomeBtn) {
+        openGymHomeBtn.addEventListener("click", goToGymHomeVersion);
+      }
+
+      if (confirmBtn) {
+        confirmBtn.addEventListener("click", async () => {
+          await confirmAddToHomeScreen();
+        });
+      }
+    }
+
+    function initMachineDropdown() {
+      populateMachineDropdown();
+
+      if (machineSelect) {
+        machineSelect.addEventListener("change", () => {
+          handleMachineDropdownChange(machineSelect.value);
+        });
+      }
+    }
+
+    function updateHeaderContext() {
+      const gymNameText = document.getElementById("gymNameText");
+      const historyScopeBadge = document.getElementById("historyScopeBadge");
+      const machineSelectHint = document.getElementById("machineSelectHint");
+
+      if (gymNameText) gymNameText.textContent = gymName;
+
+      if (historyScopeBadge) {
+        historyScopeBadge.textContent = `Scope: ${machineId ? machineId : "No machine selected"}`;
+      }
+
+      if (machineSelectHint) {
+        machineSelectHint.textContent = machineId
+          ? "You can switch machines here or scan a different machine QR code."
+          : "Choose a machine from this gym or scan a machine QR code.";
+      }
+
+      const historySummaryHeader = document.getElementById("historySummaryHeader");
+      if (historySummaryHeader) {
+        historySummaryHeader.textContent = machineType === "cardio" ? "Summary" : "Top Set";
+      }
+    }
+
+    function applyMachineSelectedState() {
+      updateHeaderContext();
+
+      if (!machineId) {
+        showMachineSelectionGate();
+        return;
+      }
+
+      hideMachineSelectionGate();
+    }
+
     /* ================================
        INIT
        ================================ */
@@ -4829,16 +5324,11 @@
       }
 
       document.getElementById("year").textContent = String(new Date().getFullYear());
-      document.getElementById("gymNameText").textContent = gymName;
-      document.getElementById("machineNameText").textContent = machineName;
-      document.getElementById("historyScopeBadge").textContent = `Scope: ${machineId ? machineId : "No machine scanned"}`;
-
-      const historySummaryHeader = document.getElementById("historySummaryHeader");
-      if (historySummaryHeader) {
-        historySummaryHeader.textContent = machineType === "cardio" ? "Summary" : "Top Set";
-      }
-
       dateInput.value = todayISO();
+
+      initA2hsUi();
+      initMachineDropdown();
+      updateHeaderContext();
 
       const promoBannerEl = document.getElementById("promoBanner");
       const promoBannerImg = document.getElementById("promoBannerImg");
@@ -4900,7 +5390,9 @@
       const ok = await checkGymStatusOrGate(gymId);
       if (!ok) return;
 
-      logEvent(gymId, machineId, machineName, userId, "scan");
+      if (machineId) {
+        logEvent(gymId, machineId, machineName, userId, "scan");
+      }
 
       document.getElementById("downloadBtn").addEventListener("click", downloadData);
       document.getElementById("reportBtn").addEventListener("click", openWorkoutReport);
@@ -4992,7 +5484,7 @@
 
       document.getElementById("saveWorkoutBtn").addEventListener("click", () => {
         if (!machineId) {
-          alert("Scan a machine QR code before saving a workout.");
+          alert("Select a machine or scan a machine QR code before saving a workout.");
           return;
         }
 
@@ -5109,6 +5601,11 @@
       });
 
       document.getElementById("clearHistoryBtn").addEventListener("click", () => {
+        if (!machineId) {
+          alert("Select a machine first.");
+          return;
+        }
+
         if (!confirm("Clear ALL history for this machine on this device?")) return;
         saveWorkouts([]);
         renderHistory();
@@ -5119,13 +5616,18 @@
       });
 
       setModeUI();
-      renderGuidedStepBanner();
 
-      if (machineType !== "cardio") clearCurrentSets();
-      else clearCardioInputs();
+      if (machineId) {
+        if (machineType !== "cardio") clearCurrentSets();
+        else clearCardioInputs();
 
-      renderHistory();
-      renderBadgeUI();
+        hideMachineSelectionGate();
+        renderHistory();
+        renderBadgeUI();
+      } else {
+        showMachineSelectionGate();
+      }
+
       renderMonthlyConsistency();
       renderGuidedStepBanner();
       gwInitPlanner();
@@ -5134,22 +5636,24 @@
       const suppressReopen = sessionStorage.getItem("scanliftlog_guided_suppress_reopen") === "1";
       if (suppressReopen) {
         sessionStorage.removeItem("scanliftlog_guided_suppress_reopen");
-      } else {
+      } else if (machineId) {
         const existingPlan = gwLoadActivePlan(gymId, userId);
         if (existingPlan && existingPlan.status === "active") {
           gwRenderPlanUI(existingPlan);
         }
       }
 
-           window.addEventListener("resize", () => {
-        renderHistory();
+      window.addEventListener("resize", () => {
+        if (machineId) renderHistory();
       });
 
       window.addEventListener("resize", () => {
-        renderHistory();
+        if (machineId) renderHistory();
         renderGuidedStepBanner();
         gwSyncFocusedGuidedUI();
       });
+
+      applyMachineSelectedState();
     })();
   </script>
 </body>
