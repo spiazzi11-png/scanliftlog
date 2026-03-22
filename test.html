@@ -1735,11 +1735,23 @@
       line-height:1.4;
     }
 
-    .plannerBottomActions {
+     .plannerBottomActions {
       margin-top:14px;
       display:flex;
+      flex-direction:column;
       gap:10px;
       flex-wrap:wrap;
+    }
+
+    .plannerCompletionNote {
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(34,197,94,.26);
+      background: rgba(34,197,94,.10);
+      color:#dcfce7;
+      font-size:.95rem;
+      line-height:1.45;
+      font-weight:800;
     }
 
     .plannerStepTapHint {
@@ -2460,7 +2472,10 @@
           <div id="plannerStepsList" class="plannerStepsList"></div>
         </div>
 
-        <div class="plannerBottomActions">
+                <div class="plannerBottomActions">
+          <div id="guidedWorkoutCompletionNote" class="plannerCompletionNote" style="display:none;">
+            Nice work — you completed your guided workout.
+          </div>
           <button id="exitGuidedWorkoutBtn" type="button">Exit Guided Workout</button>
         </div>
       </div>
@@ -4053,6 +4068,7 @@ window.addEventListener("appinstalled", () => {
     const guidedStepBannerMeta = document.getElementById("guidedStepBannerMeta");
     const guidedStepBannerHint = document.getElementById("guidedStepBannerHint");
     const exitGuidedWorkoutBtn = document.getElementById("exitGuidedWorkoutBtn");
+    const guidedWorkoutCompletionNote = document.getElementById("guidedWorkoutCompletionNote");
     const aiDisclaimerModal = document.getElementById("aiDisclaimerModal");
     const closeAiDisclaimerBtn = document.getElementById("closeAiDisclaimerBtn");
     const cancelAiDisclaimerBtn = document.getElementById("cancelAiDisclaimerBtn");
@@ -4969,17 +4985,35 @@ window.addEventListener("appinstalled", () => {
     return;
   }
 
+  const isCompleted = plan.status === "completed";
+
   if (guidedWorkoutTitle) {
     guidedWorkoutTitle.textContent = `Guided Workout — ${String(plan.goal || "").toUpperCase()}`;
   }
 
   if (guidedWorkoutSub) {
-    guidedWorkoutSub.textContent = `${plan.duration} min • ${plan.level} • ${plan.style}`;
+    guidedWorkoutSub.textContent = isCompleted
+      ? `Workout complete • ${plan.duration} min • ${plan.level} • ${plan.style}`
+      : `${plan.duration} min • ${plan.level} • ${plan.style}`;
   }
 
   if (plannerAIText) {
     plannerAIText.textContent =
       plan.aiExplanation || "Your guided workout explanation will appear here.";
+  }
+
+  if (guidedWorkoutCompletionNote) {
+    if (isCompleted) {
+      guidedWorkoutCompletionNote.style.display = "";
+      guidedWorkoutCompletionNote.textContent = "Nice work — you completed your guided workout.";
+    } else {
+      guidedWorkoutCompletionNote.style.display = "none";
+      guidedWorkoutCompletionNote.textContent = "";
+    }
+  }
+
+  if (exitGuidedWorkoutBtn) {
+    exitGuidedWorkoutBtn.textContent = isCompleted ? "Finished" : "Exit Guided Workout";
   }
 
   if (
