@@ -54,7 +54,7 @@
     .wrap {
       max-width: 760px;
       margin: 0 auto;
-      padding: 14px 14px 28px;
+      padding: 10px 12px 24px;
     }
 
     .top {
@@ -125,7 +125,7 @@
     }
 
     .card.loggerCard {
-      margin-top:12px;
+      margin-top:8px;
       padding:14px 14px 16px;
       border:2px solid rgba(220,38,38,.55);
       background:
@@ -400,11 +400,54 @@
       line-height:1.45;
     }
 
+    .machineStripCard {
+      margin-top:0;
+      margin-bottom:0;
+      padding:8px 10px 10px;
+      border-radius:16px;
+      border:1px solid rgba(220,38,38,.28);
+      background: linear-gradient(180deg, rgba(14,15,18,.98), rgba(8,9,11,.99));
+    }
+
+    .contextBarMachineOnly {
+      margin:0;
+    }
+
+    .contextItemMachine {
+      padding:6px 8px !important;
+      border-radius:12px !important;
+    }
+
+    .contextBarMachineOnly .contextSelect {
+      font-size:13px;
+      padding:8px 10px;
+    }
+
+    .contextBarMachineOnly .contextHint {
+      margin-top:4px;
+      font-size:9px;
+      line-height:1.3;
+    }
+
+    .machineBackupNoteRow {
+      margin-top:6px;
+    }
+
+    .machineStripCard .backupNote {
+      font-size:9px;
+      line-height:1.25;
+    }
+
     .actionTileGrid {
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:8px;
       margin:10px 0 12px;
+    }
+
+    .actionTileGridTight {
+      gap:5px;
+      margin:6px 0 8px;
     }
 
     .actionTile {
@@ -419,6 +462,28 @@
       justify-content:center;
       text-align:center;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    .actionTileGridTight .actionTile {
+      min-height:38px;
+      padding:5px 6px;
+      border-radius:11px;
+    }
+
+    .actionTileGridTight .actionTileBtn {
+      font-size:9px;
+      padding:6px 4px;
+      line-height:1.15;
+    }
+
+    .actionTileGridTight .actionTileBtnGhost {
+      font-size:8px;
+      padding:5px 4px;
+    }
+
+    .actionTileGridTight .actionTileStack {
+      padding:5px 6px 6px;
+      gap:4px;
     }
 
     .actionTileStack {
@@ -500,9 +565,9 @@
     }
 
     .loggerMainTitle {
-      margin:0 0 12px;
+      margin:0 0 8px;
       text-align:center;
-      font-size:17px;
+      font-size:16px;
       font-weight:900;
       letter-spacing:.02em;
       color:#ef4444;
@@ -596,6 +661,10 @@
       margin-top:14px;
     }
 
+    .loggerSaveRow {
+      margin-bottom:0;
+    }
+
     .saveBtnMain {
       width:100%;
       padding:16px 18px !important;
@@ -634,6 +703,36 @@
       font-size:12px !important;
       border:2px solid rgba(220,38,38,.55) !important;
       box-shadow: inset 0 0 0 1px rgba(0,0,0,.4);
+    }
+
+    .loggerClearPair {
+      display:flex;
+      gap:8px;
+      align-items:stretch;
+      margin:10px 0 0;
+    }
+
+    .loggerClearPair .secondaryBtnMain,
+    .loggerClearPair .clearHistoryBtn {
+      flex:1;
+      min-width:0;
+      margin-top:0 !important;
+      width:auto !important;
+    }
+
+    .secondaryBtnCompact {
+      padding:10px 8px !important;
+      font-size:10px !important;
+      letter-spacing:.03em !important;
+      border-radius:12px !important;
+    }
+
+    .clearHistoryBtnCompact {
+      padding:10px 8px !important;
+      font-size:10px !important;
+      letter-spacing:.03em !important;
+      border-radius:12px !important;
+      border-width:1px !important;
     }
 
     .moreOptionsWrap {
@@ -1074,6 +1173,37 @@
       -webkit-backdrop-filter:blur(10px);
     }
 
+    .consistencyCardCompact {
+      margin:6px 0 6px;
+      padding:8px 10px;
+      border-radius:14px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.22);
+    }
+
+    .consistencyCardCompact .consistencyTop {
+      margin-bottom:5px;
+      gap:8px;
+    }
+
+    .consistencyCardCompact .consistencyLabel {
+      font-size:.68rem;
+      letter-spacing:.06em;
+    }
+
+    .consistencyCardCompact .consistencyValue {
+      font-size:.78rem;
+    }
+
+    .consistencyCardCompact .consistencyBar {
+      height:5px;
+    }
+
+    .consistencyCardCompact .consistencySubtext {
+      margin-top:5px;
+      font-size:.72rem;
+      line-height:1.25;
+    }
+
     .consistencyTop {
       display:flex;
       align-items:center;
@@ -1255,6 +1385,14 @@
       padding: 14px;
       margin: 12px 0 0;
       box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    }
+
+    .badgeProgressCard.badgeProgressAfterHistory {
+      margin-top:10px;
+      margin-bottom:2px;
+      padding:12px;
+      border-radius:16px;
+      border-color: rgba(220,38,38,.2);
     }
 
     .badgeProgressTop {
@@ -2402,7 +2540,31 @@
   <div class="wrap">
     <div id="guidedTopFocusSlot" hidden></div>
 
-    <div class="consistencyCard" id="consistencyCard" data-ui="monthly-consistency">
+    <div class="card machineStripCard">
+      <div data-ui="gym-machine-pill">
+        <div class="contextBar contextBarCompact contextBarMachineOnly">
+          <div class="contextItem contextItemMachine">
+            <div class="contextLabel">Machine</div>
+            <div class="contextSelectWrap">
+              <select id="machineSelect" class="contextSelect">
+                <option value="">Select a machine</option>
+              </select>
+            </div>
+            <div class="contextHint" id="machineSelectHint">
+              Choose a machine from this gym or scan a machine QR code.
+            </div>
+          </div>
+        </div>
+      </div>
+      <span id="gymNameText" hidden></span>
+      <div class="backupNoteRow machineBackupNoteRow">
+        <div class="backupNote">
+          Download your data before clearing browser cache. Private/incognito browsing will not save workout history.
+        </div>
+      </div>
+    </div>
+
+    <div class="consistencyCard consistencyCardCompact" id="consistencyCard" data-ui="monthly-consistency">
       <div class="consistencyTop">
         <div class="consistencyLabel">Monthly Consistency</div>
         <div class="consistencyValue" id="consistencyValue">0 / 30 days</div>
@@ -2417,7 +2579,7 @@
       </div>
     </div>
 
-    <div class="actionTileGrid" data-ui="action-tiles" aria-label="Quick actions">
+    <div class="actionTileGrid actionTileGridTight" data-ui="action-tiles" aria-label="Quick actions">
       <div class="actionTile">
         <button class="actionTileBtn" id="planWorkoutBtn" type="button">AI Workout Assistant</button>
       </div>
@@ -2444,33 +2606,6 @@
       </div>
     </div>
 
-    <div class="card headerCard headerCardCompact">
-      <div class="contextBar contextBarCompact" data-ui="gym-machine-pill">
-        <div class="contextItem">
-          <div class="contextLabel">Gym Name</div>
-          <div class="contextValue" id="gymNameText">…</div>
-        </div>
-
-        <div class="contextItem">
-          <div class="contextLabel">Machine</div>
-          <div class="contextSelectWrap">
-            <select id="machineSelect" class="contextSelect">
-              <option value="">Select a machine</option>
-            </select>
-          </div>
-          <div class="contextHint" id="machineSelectHint">
-            Choose a machine from this gym or scan a machine QR code.
-          </div>
-        </div>
-      </div>
-
-      <div class="backupNoteRow">
-        <div class="backupNote">
-          Download your data before clearing browser cache. Private/incognito browsing will not save workout history.
-        </div>
-      </div>
-    </div>
-
     <div class="card" id="inactiveGate" style="display:none;">
       <div style="font-weight:900; font-size:18px;">Service Inactive</div>
       <div class="muted" style="margin-top:8px; line-height:1.5;">
@@ -2490,8 +2625,6 @@
         Choose a machine from the dropdown above or scan a machine QR code to begin logging your workout.
       </div>
     </div>
-
-    <div id="badgeProgressCard" class="badgeProgressCard" style="display:none;" data-ui="current-badge"></div>
 
     <div class="card loggerCard" id="logger">
       <h2 class="loggerMainTitle">Indepth Workout Tracking</h2>
@@ -2546,7 +2679,7 @@
       </div>
 
       <div id="loggerActionPanel" class="loggerActionPanel">
-        <div class="btnrow" style="margin-bottom:10px;">
+        <div class="btnrow loggerSaveRow">
           <button
             class="primary saveBtnMain"
             id="saveWorkoutBtn"
@@ -2556,8 +2689,9 @@
           </button>
         </div>
 
-        <div class="btnrow">
-          <button id="clearCurrentBtn" class="secondaryBtnMain" type="button">Clear Current</button>
+        <div class="loggerClearPair">
+          <button id="clearCurrentBtn" class="secondaryBtnMain secondaryBtnCompact" type="button">Clear Current</button>
+          <button class="clearHistoryBtn clearHistoryBtnCompact" id="clearHistoryBtn" type="button">Clear All History</button>
         </div>
 
         <div class="moreOptionsWrap" id="moreOptionsWrap">
@@ -2621,8 +2755,6 @@
             </div>
           </div>
         </div>
-
-        <button class="clearHistoryBtn" id="clearHistoryBtn" type="button">Clear All History</button>
       </div>
     </div>
 
@@ -2652,6 +2784,8 @@
         <div class="muted" style="margin-top:10px;">No workouts saved yet.</div>
       </div>
     </div>
+
+    <div id="badgeProgressCard" class="badgeProgressCard" style="display:none;" data-ui="current-badge"></div>
 
     <div id="badgesCard" class="badgesCard" style="display:none;"></div>
 
@@ -3773,7 +3907,7 @@
       const pct = getBadgeProgressPct(totalSaved);
 
       el.style.display = "";
-      el.className = `badgeProgressCard badge-accent-${current ? current.accent : "steel"}`;
+      el.className = `badgeProgressCard badge-accent-${current ? current.accent : "steel"} badgeProgressAfterHistory`;
 
       const progressText = next
         ? `${Math.max(0, next.milestone - totalSaved)} more ${next.milestone - totalSaved === 1 ? "save" : "saves"} until ${next.name}`
