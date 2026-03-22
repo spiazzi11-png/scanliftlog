@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ScanLiftLog</title>
 
-  <meta name="theme-color" content="#08090c" />
+  <meta name="theme-color" content="#0b0c10" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="ScanLiftLog" />
@@ -15,161 +15,128 @@
 
   <style>
     :root {
-      --bg:#08090c;
-      --bg2:#0b0c10;
-      --panel:#111318;
-      --panel2:#171a21;
-      --panel3:#0f1116;
-      --text:#f3f4f6;
-      --muted:#a1a1aa;
-      --line:rgba(255,255,255,.08);
-      --lineStrong:rgba(239,68,68,.34);
-      --accent:#dc2626;
-      --accent2:#ef4444;
-      --accentSoft:rgba(239,68,68,.12);
-      --accentGlow:0 0 0 1px rgba(239,68,68,.20), 0 18px 40px rgba(0,0,0,.34);
-      --shadow:0 12px 34px rgba(0,0,0,.34);
+      --bg:#0b0c10;
+      --panel:#121318;
+      --panel2:#0f1015;
+      --text:#e9e9ee;
+      --muted:#a9a9b6;
+      --line:rgba(255,255,255,.10);
+      --accent:#8b5cf6;
+      --accent2:#22c55e;
+      --shadow:0 10px 40px rgba(0,0,0,.35);
       --radius:18px;
-      --radius2:24px;
+      --radius2:26px;
       --plannerActive:#dc2626;
       --plannerComplete:#16a34a;
       --plannerSkipped:#6b7280;
-    }
-
-    * {
-      box-sizing:border-box;
     }
 
     body {
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       background:
-        radial-gradient(900px 500px at 50% -10%, rgba(220,38,38,.18), transparent 60%),
-        radial-gradient(800px 500px at 100% 0%, rgba(127,29,29,.16), transparent 60%),
-        linear-gradient(180deg, #050608 0%, #090a0e 40%, #07080b 100%);
+        radial-gradient(1000px 600px at 20% 0%, rgba(139,92,246,.22), transparent 60%),
+        radial-gradient(900px 600px at 90% 10%, rgba(34,197,94,.14), transparent 55%),
+        linear-gradient(180deg, #07080c 0%, #0b0c10 70%, #07080c 100%);
       color:var(--text);
     }
 
     .wrap {
-      max-width: 760px;
+      max-width: 980px;
       margin: 0 auto;
-      padding: 14px 14px 28px;
+      padding: 22px;
     }
 
     .top {
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:12px;
+      gap:14px;
       flex-wrap:wrap;
     }
 
     h1 {
       margin:0;
-      font-size:22px;
-      letter-spacing:.2px;
+      font-size: 22px;
+      letter-spacing: .2px;
     }
 
     .sub {
       margin:6px 0 0;
       color:var(--muted);
-      font-size:13px;
+      font-size: 13px;
     }
 
     .pills {
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap:10px;
-      width:100%;
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      align-items:center;
     }
 
     .pill {
-      min-height:48px;
       font-size:12px;
-      padding:10px 12px;
-      border:1px solid rgba(255,255,255,.08);
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border-radius:16px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+      padding:8px 12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius:999px;
     }
 
     .pill.context {
-      border-color: rgba(239,68,68,.32);
-      background: linear-gradient(180deg, rgba(239,68,68,.14), rgba(255,255,255,.03));
+      border-color: rgba(139,92,246,.55);
+      background: rgba(139,92,246,.18);
       font-weight:800;
       color:var(--text);
     }
 
     .card {
-      margin-top:14px;
-      background: linear-gradient(180deg, rgba(17,19,24,.96), rgba(12,14,19,.96));
+      margin-top:16px;
+      background: rgba(18,19,24,.66);
       border:1px solid var(--line);
       border-radius:var(--radius);
-      padding:14px;
+      padding:16px;
       box-shadow: var(--shadow);
     }
 
     .card.headerCard {
-      margin-top:12px;
-      padding:12px;
-      background:
-        linear-gradient(180deg, rgba(20,22,28,.96), rgba(12,14,18,.96));
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.06);
-      box-shadow: var(--shadow);
-    }
-
-    .card.loggerCard {
-      margin-top:12px;
-      padding:14px;
-      border:1px solid var(--lineStrong);
-      background:
-        radial-gradient(120% 120% at 50% 0%, rgba(220,38,38,.10), transparent 42%),
-        linear-gradient(180deg, rgba(18,20,26,.98), rgba(10,12,17,.98));
-      box-shadow: var(--accentGlow);
-    }
-
-    .card.historyCardShell {
-      border-color: rgba(255,255,255,.08);
-      background: linear-gradient(180deg, rgba(18,20,26,.95), rgba(11,13,18,.95));
+      margin-top:14px;
+      padding:18px;
+      background: rgba(18,19,24,.78);
+      border-radius: var(--radius2);
     }
 
     label {
       display:block;
-      font-size:12px;
+      font-size: 12px;
       color:var(--muted);
-      margin:0 0 6px;
+      margin: 0 0 6px;
     }
 
     input, select {
-      width:100%;
+      width: 100%;
       box-sizing:border-box;
-      padding:12px 12px;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:14px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
       font-size:14px;
-      background: rgba(255,255,255,.04);
+      background: rgba(255,255,255,.03);
       color:var(--text);
     }
 
     input::placeholder {
-      color: rgba(243,244,246,.42);
+      color: rgba(233,233,238,.55);
     }
 
     input:focus, select:focus {
       outline:none;
-      border-color: rgba(239,68,68,.52);
-      box-shadow: 0 0 0 2px rgba(239,68,68,.16);
+      border-color: rgba(139,92,246,.55);
+      box-shadow: 0 0 0 2px rgba(139,92,246,.22);
     }
 
     button {
-      padding:11px 13px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       color:var(--text);
       cursor:pointer;
@@ -177,15 +144,14 @@
     }
 
     button.primary {
-      border-color: rgba(239,68,68,.46);
-      background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+      border-color: rgba(139,92,246,.55);
+      background: linear-gradient(135deg, rgba(139,92,246,.95), rgba(139,92,246,.55));
       color:#fff;
-      box-shadow: 0 8px 20px rgba(127,29,29,.30);
     }
 
     button.danger {
-      border-color: rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(56,60,68,.95), rgba(36,40,47,.95));
+      border-color: rgba(239,68,68,.45);
+      background: linear-gradient(135deg, rgba(239,68,68,.90), rgba(239,68,68,.55));
       color:#fff;
     }
 
@@ -214,7 +180,7 @@
 
     .hr {
       height:1px;
-      background:rgba(255,255,255,.06);
+      background:var(--line);
       margin:14px 0;
     }
 
@@ -224,7 +190,7 @@
       text-decoration:underline;
       cursor:pointer;
       font-size:12px;
-      opacity:.8;
+      opacity:0.75;
       padding:0;
       font-weight:700;
     }
@@ -232,8 +198,8 @@
     .badge {
       display:inline-block;
       font-size:11px;
-      padding:5px 9px;
-      border:1px solid rgba(255,255,255,.08);
+      padding:4px 8px;
+      border:1px solid var(--line);
       border-radius:999px;
       background: rgba(255,255,255,.04);
       color:var(--muted);
@@ -244,15 +210,15 @@
       position:sticky;
       top:0;
       z-index:30;
-      backdrop-filter: blur(12px);
-      background: rgba(8,9,12,.84);
-      border-bottom:1px solid rgba(255,255,255,.06);
+      backdrop-filter: blur(10px);
+      background: rgba(11,12,16,.72);
+      border-bottom:1px solid var(--line);
     }
 
     .appNavInner {
-      max-width:760px;
-      margin:0 auto;
-      padding:12px 14px;
+      max-width: 980px;
+      margin: 0 auto;
+      padding:12px 22px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -263,7 +229,7 @@
       display:flex;
       align-items:center;
       gap:10px;
-      font-weight:900;
+      font-weight:800;
       letter-spacing:.2px;
     }
 
@@ -272,9 +238,9 @@
       height:28px;
       border-radius:10px;
       background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 55%),
-        linear-gradient(135deg, #ef4444, #991b1b);
-      box-shadow: 0 8px 20px rgba(127,29,29,.32);
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), transparent 55%),
+        linear-gradient(135deg, rgba(139,92,246,.95), rgba(34,197,94,.85));
+      box-shadow: var(--shadow);
     }
 
     .navLinks {
@@ -284,9 +250,25 @@
       flex-wrap:wrap;
     }
 
+    .navLink {
+      text-decoration:none;
+      color:var(--muted);
+      padding:6px 8px;
+      border-radius:10px;
+      border:1px solid transparent;
+      font-weight:700;
+      font-size:12px;
+    }
+
+    .navLink:hover {
+      color:var(--text);
+      border-color:var(--line);
+      background: rgba(255,255,255,.04);
+    }
+
     .headerActionBtn {
-      border:1px solid rgba(239,68,68,.32);
-      background: linear-gradient(180deg, rgba(239,68,68,.16), rgba(255,255,255,.04));
+      border:1px solid rgba(139,92,246,.45);
+      background: linear-gradient(135deg, rgba(139,92,246,.22), rgba(34,197,94,.12));
       color:#fff;
       font-weight:900;
       padding:10px 14px;
@@ -297,8 +279,8 @@
     }
 
     .headerActionBtn:hover {
-      border-color: rgba(239,68,68,.48);
-      background: linear-gradient(180deg, rgba(239,68,68,.22), rgba(255,255,255,.06));
+      border-color: rgba(139,92,246,.65);
+      background: linear-gradient(135deg, rgba(139,92,246,.30), rgba(34,197,94,.16));
     }
 
     .headerActionBtn.hidden {
@@ -306,22 +288,23 @@
     }
 
     .contextBar {
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-      margin-top:0;
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:4px;
     }
 
     .contextItem {
-      min-width:0;
-      padding:12px 12px;
+      flex:1;
+      min-width:260px;
+      padding:18px 18px;
       border-radius:18px;
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.04);
+      border:1px solid var(--line);
     }
 
     .contextLabel {
-      font-size:10px;
+      font-size:11px;
       text-transform:uppercase;
       letter-spacing:1px;
       color:var(--muted);
@@ -329,12 +312,11 @@
     }
 
     .contextValue {
-      margin-top:6px;
-      font-size:22px;
+      margin-top:8px;
+      font-size:30px;
       line-height:1.1;
       font-weight:900;
       color:var(--text);
-      word-break:break-word;
     }
 
     .contextSelectWrap {
@@ -343,12 +325,12 @@
 
     .contextSelect {
       width:100%;
-      font-size:16px;
+      font-size:18px;
       font-weight:800;
       line-height:1.2;
-      padding:12px 12px;
+      padding:12px 14px;
       border-radius:14px;
-      border:1px solid rgba(255,255,255,.08);
+      border:1px solid var(--line);
       background: rgba(255,255,255,.04);
       color:var(--text);
     }
@@ -361,74 +343,13 @@
     .contextHint {
       margin-top:8px;
       color:var(--muted);
-      font-size:11px;
-      line-height:1.4;
-    }
-
-    .loggerHeader {
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:10px;
-    }
-
-    .loggerHeaderText {
-      min-width:0;
-    }
-
-    .loggerEyebrow {
-      font-size:11px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:#fca5a5;
-      font-weight:900;
-    }
-
-    .loggerTitle {
-      margin-top:4px;
-      font-size:18px;
-      font-weight:900;
-      line-height:1.2;
-    }
-
-    .loggerSub {
-      margin-top:4px;
       font-size:12px;
-      color:var(--muted);
-      line-height:1.45;
-    }
-
-    .featureGrid {
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:10px;
-      margin-top:12px;
-    }
-
-    .featureBtn {
-      min-height:54px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.08);
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      color:var(--text);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      font-size:13px;
-      font-weight:900;
-      padding:12px 10px;
-    }
-
-    .featureBtn.featureDanger {
-      border-color: rgba(239,68,68,.22);
-      background: linear-gradient(180deg, rgba(239,68,68,.12), rgba(255,255,255,.03));
+      line-height:1.4;
     }
 
     .setsHeader {
       display:grid;
-      grid-template-columns: 54px 1fr 1fr 52px;
+      grid-template-columns: 52px 1fr 1fr 60px;
       gap:10px;
       align-items:center;
       margin-top:10px;
@@ -436,7 +357,7 @@
 
     .setRow {
       display:grid;
-      grid-template-columns: 54px 1fr 1fr 52px;
+      grid-template-columns: 52px 1fr 1fr 60px;
       gap:10px;
       align-items:center;
       margin-top:10px;
@@ -446,20 +367,19 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      width:50px;
-      height:44px;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:14px;
+      width:48px;
+      height:40px;
+      border:1px solid var(--line);
+      border-radius:12px;
       background: rgba(255,255,255,.04);
       font-weight:900;
-      color:#fff;
     }
 
     .iconBtn {
       width:44px;
-      height:44px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
+      height:40px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -467,105 +387,18 @@
       font-weight:900;
       background: rgba(255,255,255,.06);
       color:var(--text);
-      padding:0;
     }
 
     .iconBtn.primary {
-      border-color: rgba(239,68,68,.44);
-      background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+      border-color: rgba(139,92,246,.55);
+      background: linear-gradient(135deg, rgba(139,92,246,.95), rgba(139,92,246,.55));
       color:#fff;
     }
 
     .iconBtn.danger {
-      border-color: rgba(239,68,68,.34);
-      background: linear-gradient(180deg, rgba(127,29,29,.94), rgba(69,10,10,.94));
+      border-color: rgba(239,68,68,.45);
+      background: linear-gradient(135deg, rgba(239,68,68,.90), rgba(239,68,68,.55));
       color:#fff;
-    }
-
-    .loggerActionPanel {
-      margin-top:14px;
-    }
-
-    .saveBtnMain {
-      width:100%;
-      padding:16px 18px !important;
-      font-size:19px !important;
-      font-weight:900 !important;
-      border-radius:16px !important;
-      justify-content:center;
-      letter-spacing:.01em;
-    }
-
-    .secondaryBtnMain {
-      width:100%;
-      padding:14px 16px !important;
-      border-radius:16px !important;
-      background: linear-gradient(180deg, rgba(63,63,70,.95), rgba(39,39,42,.95)) !important;
-      border:1px solid rgba(255,255,255,.08) !important;
-      color:#fff !important;
-    }
-
-    .clearHistoryBtn {
-      margin-top:10px;
-      width:100%;
-      border-radius:16px !important;
-      background: linear-gradient(180deg, rgba(28,30,36,.98), rgba(20,22,27,.98)) !important;
-      color:#d4d4d8 !important;
-      border:1px solid rgba(255,255,255,.08) !important;
-    }
-
-    .moreOptionsWrap {
-      margin-top:12px;
-    }
-
-    .moreOptionsToggle {
-      width:100%;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.08);
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:12px 14px;
-      font-size:13px;
-      font-weight:900;
-      color:#fff;
-    }
-
-    .moreOptionsToggleText {
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-
-    .moreOptionsToggleHint {
-      font-size:11px;
-      color:var(--muted);
-      font-weight:700;
-    }
-
-    .moreOptionsChevron {
-      transition:transform .22s ease;
-      font-size:14px;
-      color:#fca5a5;
-    }
-
-    .moreOptionsWrap.open .moreOptionsChevron {
-      transform:rotate(180deg);
-    }
-
-    .moreOptionsPanel {
-      display:none;
-      margin-top:10px;
-      padding:12px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.06);
-      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
-    }
-
-    .moreOptionsWrap.open .moreOptionsPanel {
-      display:block;
     }
 
     table {
@@ -576,7 +409,7 @@
     th, td {
       text-align:left;
       padding:10px 8px;
-      border-bottom:1px solid rgba(255,255,255,.06);
+      border-bottom:1px solid var(--line);
       font-size:13px;
       vertical-align:top;
     }
@@ -601,11 +434,11 @@
     .setsMini td, .setsMini th {
       font-size:12px;
       padding:6px 6px;
-      border-bottom:1px solid rgba(255,255,255,.06);
+      border-bottom:1px solid var(--line);
     }
 
     footer {
-      margin:18px 0 6px;
+      margin:16px 0 6px;
       text-align:center;
       color:var(--muted);
       font-size:12px;
@@ -620,11 +453,10 @@
       background:transparent;
       cursor:pointer;
       font-weight:900;
-      text-decoration:none;
+      text-decoration:underline;
       padding:0;
       font-size:12px;
-      opacity:.95;
-      color:#fff;
+      opacity:.85;
     }
 
     .cardioHeader {
@@ -632,15 +464,15 @@
     }
 
     #restStatus.go {
-      color:#22c55e;
+      color:var(--accent2);
       font-size:20px;
       font-weight:900;
       letter-spacing:.4px;
     }
 
     #inactiveGate {
-      border-color: rgba(239,68,68,.24);
-      background: linear-gradient(180deg, rgba(32,14,17,.96), rgba(18,19,24,.96));
+      border-color: rgba(239,68,68,.30);
+      background: rgba(18,19,24,.66);
     }
 
     .tipWrap {
@@ -648,8 +480,6 @@
       display:inline-flex;
       align-items:center;
       gap:6px;
-      width:100%;
-      justify-content:center;
     }
 
     .tipIcon {
@@ -661,12 +491,11 @@
       padding:2px 4px;
       border-radius:8px;
       border:1px solid transparent;
-      flex:0 0 auto;
     }
 
     .tipIcon:hover {
       color:var(--text);
-      border-color:rgba(255,255,255,.08);
+      border-color:var(--line);
       background: rgba(255,255,255,.04);
     }
 
@@ -680,7 +509,7 @@
       font-size:12px;
       line-height:1.4;
       background: var(--panel);
-      border:1px solid rgba(255,255,255,.08);
+      border:1px solid var(--line);
       border-radius:12px;
       color:var(--text);
       box-shadow: var(--shadow);
@@ -702,7 +531,7 @@
       border-left:7px solid transparent;
       border-right:7px solid transparent;
       border-top:7px solid var(--panel);
-      filter: drop-shadow(0 -1px 0 rgba(255,255,255,.08));
+      filter: drop-shadow(0 -1px 0 rgba(255,255,255,.10));
     }
 
     .tipWrap:hover .tipBox,
@@ -717,15 +546,14 @@
     }
 
     .backupNote {
-      margin-top:2px;
-      font-size:10px;
+      margin-top:6px;
+      font-size:11px;
       line-height:1.35;
-      color: rgba(243,244,246,.60);
-      text-align:center;
+      color: rgba(233,233,238,.72);
     }
 
     .backupNote strong {
-      color: rgba(243,244,246,.88);
+      color: rgba(233,233,238,.92);
     }
 
     .backupNote .warn {
@@ -735,27 +563,27 @@
 
     .backupNoteRow {
       width:100%;
-      margin-top:4px;
+      margin-top:6px;
     }
 
     .promoBanner {
-      width:100%;
-      overflow:hidden;
-      background: rgba(12,13,17,.92);
-      border-bottom:1px solid rgba(255,255,255,.06);
+      width: 100%;
+      overflow: hidden;
+      background: rgba(15,16,21,.6);
+      border-bottom: 1px solid var(--line);
     }
 
     .promoBanner img {
-      width:100%;
-      height:auto;
-      max-height:118px;
-      object-fit:cover;
-      display:block;
+      width: 100%;
+      height: auto;
+      max-height: 140px;
+      object-fit: cover;
+      display: block;
     }
 
     .promoBanner a {
-      display:block;
-      text-decoration:none;
+      display: block;
+      text-decoration: none;
     }
 
     @media (min-width: 769px) {
@@ -764,6 +592,7 @@
       }
     }
 
+    /* ===== Add to Home Screen Modal ===== */
     .a2hsModal.hidden {
       display:none;
     }
@@ -878,6 +707,7 @@
       min-width:160px;
     }
 
+    /* ===== Guided Focus Layout ===== */
     #guidedTopFocusSlot {
       display:none;
       margin:0 0 14px;
@@ -907,7 +737,7 @@
     }
 
     .guidedSetsPanel {
-      margin-top:14px;
+      margin-top:18px;
     }
 
     #logger .guidedSetsPanel {
@@ -921,7 +751,7 @@
     body.guided-focus-active #guidedTopFocusSlot .guidedSetsPanel {
       margin-top:0;
       background: rgba(18,19,24,.78);
-      border:1px solid rgba(255,255,255,.08);
+      border:1px solid var(--line);
       border-radius:18px;
       padding:16px;
       box-shadow: var(--shadow);
@@ -931,19 +761,19 @@
       margin:0;
     }
 
-    .consistencyCard {
-      margin:12px 0 12px;
+    /* ===== Monthly Consistency ===== */
+    .consistencyCard{
+      margin:12px 0 16px;
       padding:12px 14px;
-      border-radius:20px;
-      background:
-        linear-gradient(180deg, rgba(41,12,15,.94), rgba(17,19,24,.96));
-      border:1px solid rgba(239,68,68,.28);
-      box-shadow: 0 12px 28px rgba(0,0,0,.24);
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 10px 30px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.04);
       backdrop-filter:blur(10px);
       -webkit-backdrop-filter:blur(10px);
     }
 
-    .consistencyTop {
+    .consistencyTop{
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -951,22 +781,22 @@
       margin-bottom:8px;
     }
 
-    .consistencyLabel {
-      font-size:.80rem;
-      font-weight:900;
+    .consistencyLabel{
+      font-size:.9rem;
+      font-weight:800;
       letter-spacing:.08em;
       text-transform:uppercase;
-      color:#fca5a5;
+      color:var(--muted);
     }
 
-    .consistencyValue {
-      font-size:.92rem;
+    .consistencyValue{
+      font-size:.95rem;
       font-weight:800;
       color:var(--text);
       white-space:nowrap;
     }
 
-    .consistencyBar {
+    .consistencyBar{
       height:8px;
       width:100%;
       border-radius:999px;
@@ -975,22 +805,23 @@
       box-shadow:inset 0 1px 2px rgba(0,0,0,.35);
     }
 
-    .consistencyBarFill {
+    .consistencyBarFill{
       height:100%;
       width:0%;
       border-radius:999px;
-      background:linear-gradient(90deg, #991b1b, #dc2626, #ef4444);
-      box-shadow:0 0 10px rgba(255,0,0,.20);
+      background:linear-gradient(90deg, #8b0000, #c40000, #ff2a2a);
+      box-shadow:0 0 10px rgba(255,0,0,.25);
       transition:width .35s ease;
     }
 
-    .consistencySubtext {
+    .consistencySubtext{
       margin-top:8px;
-      font-size:.84rem;
-      color:#d4d4d8;
+      font-size:.92rem;
+      color:var(--muted);
       line-height:1.35;
     }
 
+    /* ===== History: desktop table + mobile cards ===== */
     .historyTableWrap {
       display:block;
     }
@@ -1000,8 +831,8 @@
     }
 
     .historyCardMobile {
-      border:1px solid rgba(255,255,255,.06);
-      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
       border-radius:16px;
       padding:12px;
       margin-top:10px;
@@ -1022,7 +853,7 @@
     }
 
     .historyCardSaved {
-      margin-top:4px;
+      margin-top:8px;
       font-size:12px;
       color:var(--muted);
     }
@@ -1044,8 +875,8 @@
       margin-top:10px;
       border:0;
       background:transparent;
-      color:#fca5a5;
-      text-decoration:none;
+      color:var(--text);
+      text-decoration:underline;
       font-weight:800;
       padding:0;
       cursor:pointer;
@@ -1059,12 +890,13 @@
       display:none;
     }
 
+    /* ===== Guided Step Banner ===== */
     .guidedStepBanner {
       margin-top:14px;
       padding:14px;
       border-radius:18px;
-      background: linear-gradient(180deg, rgba(127,29,29,.34), rgba(69,10,10,.18));
-      border:1px solid rgba(239,68,68,.24);
+      background: linear-gradient(180deg, rgba(59,130,246,.16), rgba(37,99,235,.10));
+      border:1px solid rgba(96,165,250,.30);
       box-shadow: 0 10px 28px rgba(0,0,0,.18);
     }
 
@@ -1082,7 +914,7 @@
       font-weight:900;
       letter-spacing:.08em;
       text-transform:uppercase;
-      color:#fecaca;
+      color:#bfdbfe;
     }
 
     .guidedStepBannerPill {
@@ -1090,13 +922,13 @@
       font-weight:900;
       color:#fff;
       background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.16);
       border-radius:999px;
       padding:6px 10px;
     }
 
     .guidedStepBannerTitle {
-      font-size:1.02rem;
+      font-size:1.05rem;
       font-weight:900;
       color:var(--text);
       line-height:1.3;
@@ -1104,25 +936,26 @@
 
     .guidedStepBannerMeta {
       margin-top:6px;
-      font-size:.94rem;
+      font-size:.98rem;
       font-weight:800;
-      color:#f5d0d0;
+      color:#dbeafe;
     }
 
     .guidedStepBannerHint {
       margin-top:8px;
-      font-size:.88rem;
+      font-size:.92rem;
       line-height:1.45;
-      color:rgba(243,244,246,.86);
+      color:rgba(233,233,238,.88);
     }
 
+    /* ===== Badges ===== */
     .badgeProgressCard,
     .badgesCard {
       background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
       border: 1px solid rgba(255,255,255,.08);
       border-radius: 18px;
       padding: 14px;
-      margin: 12px 0 0;
+      margin: 16px 0 0;
       box-shadow: 0 10px 30px rgba(0,0,0,.18);
     }
 
@@ -1273,6 +1106,7 @@
       border:1px solid rgba(255,255,255,.08);
       opacity:.9;
     }
+
     .badge-accent-steel.badgeTile.unlocked,
     .badge-accent-steel .badgeIconWrap {
       border-color: rgba(156,163,175,.24);
@@ -1455,79 +1289,81 @@
       background: linear-gradient(90deg, #9ca3af, #f3f4f6);
     }
 
+    /* ===== Private / Incognito Mode Modal ===== */
     .privateModeModal.hidden {
-      display:none;
+      display: none;
     }
 
     .privateModeModal {
-      position:fixed;
-      inset:0;
-      z-index:9999;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
     }
 
     .privateModeBackdrop {
-      position:absolute;
-      inset:0;
-      background: rgba(0,0,0,.72);
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
     }
 
     .privateModeCard {
-      position:absolute;
-      top:50%;
-      left:50%;
-      width:min(92vw, 420px);
-      transform:translate(-50%, -50%);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(92vw, 420px);
+      transform: translate(-50%, -50%);
       background: linear-gradient(180deg, rgba(20,22,30,.96), rgba(12,14,20,.96));
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
-      box-shadow:0 20px 60px rgba(0,0,0,.45);
-      padding:24px 22px 20px;
-      text-align:center;
-      color:var(--text);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 22px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      padding: 24px 22px 20px;
+      text-align: center;
+      color: var(--text, #e9e9ee);
     }
 
     .privateModeIcon {
-      width:56px;
-      height:56px;
-      margin:0 auto 14px;
-      border-radius:999px;
-      display:grid;
-      place-items:center;
-      font-size:28px;
-      font-weight:800;
-      background: rgba(239,68,68,.14);
-      border:1px solid rgba(239,68,68,.35);
-      color:#f87171;
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 14px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      font-weight: 800;
+      background: rgba(239, 68, 68, 0.14);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #f87171;
     }
 
     .privateModeCard h2 {
-      margin:0 0 10px;
-      font-size:1.25rem;
-      line-height:1.2;
+      margin: 0 0 10px;
+      font-size: 1.25rem;
+      line-height: 1.2;
     }
 
     .privateModeCard p {
-      margin:0 0 18px;
-      color:var(--muted);
-      font-size:.98rem;
-      line-height:1.5;
+      margin: 0 0 18px;
+      color: var(--muted, #a9a9b6);
+      font-size: 0.98rem;
+      line-height: 1.5;
     }
 
     #privateModeCloseBtn {
-      width:100%;
-      border:0;
-      border-radius:14px;
-      padding:12px 16px;
-      font-weight:700;
-      font-size:.98rem;
-      cursor:pointer;
-      color:#fff;
-      background: linear-gradient(135deg, #ef4444, #991b1b);
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 0.98rem;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, var(--accent, #8b5cf6), var(--accent2, #22c55e));
       box-shadow: 0 10px 24px rgba(0,0,0,.25);
     }
 
+    /* ===== Cardio Quick UI ===== */
     .cardioQuickActions {
       display:flex;
       gap:10px;
@@ -1537,29 +1373,29 @@
     }
 
     .cardioQuickBtn {
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.05);
       color:var(--text);
-      border-radius:14px;
+      border-radius:12px;
       padding:10px 12px;
       font-weight:800;
       cursor:pointer;
     }
 
     .cardioQuickBtn:hover {
-      border-color: rgba(239,68,68,.42);
-      background: rgba(239,68,68,.10);
+      border-color: rgba(139,92,246,.45);
+      background: rgba(139,92,246,.12);
     }
 
     .cardioFieldGrid {
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       gap:12px;
       margin-top:12px;
     }
 
     .cardioFieldCard {
-      border:1px solid rgba(255,255,255,.08);
+      border:1px solid var(--line);
       background: rgba(255,255,255,.03);
       border-radius:16px;
       padding:12px;
@@ -1582,7 +1418,7 @@
       width:46px;
       height:44px;
       border-radius:12px;
-      border:1px solid rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       color:var(--text);
       font-size:20px;
@@ -1594,8 +1430,8 @@
     }
 
     .cardioStepBtn:hover {
-      border-color: rgba(239,68,68,.42);
-      background: rgba(239,68,68,.12);
+      border-color: rgba(139,92,246,.45);
+      background: rgba(139,92,246,.14);
     }
 
     .cardioValueInput {
@@ -1626,8 +1462,8 @@
     }
 
     .cardioChip:hover {
-      border-color: rgba(239,68,68,.42);
-      background: rgba(239,68,68,.12);
+      border-color: rgba(139,92,246,.45);
+      background: rgba(139,92,246,.14);
     }
 
     .cardioFieldHint {
@@ -1637,22 +1473,22 @@
       line-height:1.3;
     }
 
-    .plannerEntryWrap {
-      margin:12px 0 0;
+    /* ===== Guided Workout Planner ===== */
+    .plannerEntryWrap{
+      margin: 12px 0 0;
       display:flex;
       justify-content:center;
     }
 
-    .plannerEntryWrap .primary {
-      width:100%;
-      min-width:0;
-      padding:12px 16px;
+    .plannerEntryWrap .primary{
+      width:auto;
+      min-width:220px;
+      padding:10px 16px;
       font-size:15px;
       font-weight:900;
-      border-color: rgba(239,68,68,.44);
-      background: linear-gradient(180deg, rgba(239,68,68,.96), rgba(153,27,27,.96));
+      border-color: rgba(59,130,246,.55);
+      background: linear-gradient(135deg, rgba(59,130,246,.95), rgba(37,99,235,.65));
       color:#fff;
-      border-radius:16px;
     }
 
     .plannerModal {
@@ -1758,7 +1594,7 @@
       margin-top:14px;
       padding:14px;
       border-radius:16px;
-      background: rgba(255,255,255,.04);
+      background:rgba(255,255,255,.04);
       border:1px solid rgba(255,255,255,.08);
     }
 
@@ -1792,7 +1628,7 @@
     .plannerCurrentCard,
     .plannerStepsCard,
     .plannerAICard {
-      background: rgba(255,255,255,.04);
+      background:rgba(255,255,255,.04);
       border:1px solid rgba(255,255,255,.08);
       border-radius:20px;
       padding:16px;
@@ -1867,17 +1703,17 @@
       border-radius:16px;
       padding:12px;
       border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
+      background:rgba(255,255,255,.03);
       cursor:pointer;
     }
 
     .plannerStepItem.active {
-      border-color: rgba(220,38,38,.6);
+      border-color:rgba(220,38,38,.6);
       box-shadow:0 0 0 1px rgba(220,38,38,.3) inset;
     }
 
     .plannerStepItem.completed {
-      border-color: rgba(34,197,94,.45);
+      border-color:rgba(34,197,94,.45);
     }
 
     .plannerStepItem.skipped {
@@ -1899,7 +1735,7 @@
       line-height:1.4;
     }
 
-    .plannerBottomActions {
+     .plannerBottomActions {
       margin-top:14px;
       display:flex;
       flex-direction:column;
@@ -1930,33 +1766,34 @@
       color:#fecaca;
     }
 
+    /* ===== AI Guided Workout Disclaimer Modal ===== */
     .aiDisclaimerModal {
-      position:fixed;
-      inset:0;
-      z-index:10020;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
+      position: fixed;
+      inset: 0;
+      z-index: 10020;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
       background: rgba(0,0,0,.76);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
     }
 
     .aiDisclaimerModal.hidden {
-      display:none;
+      display: none;
     }
 
     .aiDisclaimerCard {
-      width:min(760px, 100%);
-      max-height:90vh;
-      overflow:auto;
+      width: min(760px, 100%);
+      max-height: 90vh;
+      overflow: auto;
       background: linear-gradient(180deg, rgba(18,19,24,.98), rgba(15,16,21,.98));
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:24px;
-      box-shadow:0 20px 60px rgba(0,0,0,.45);
-      padding:20px;
-      color:var(--text);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      padding: 20px;
+      color: var(--text);
     }
 
     .aiDisclaimerHeader {
@@ -1986,7 +1823,7 @@
       border-radius:18px;
       border:1px solid rgba(239,68,68,.26);
       background: rgba(239,68,68,.10);
-      color:#f3f4f6;
+      color: #f3f4f6;
       line-height:1.55;
       font-size:.94rem;
     }
@@ -2025,102 +1862,117 @@
       flex-wrap:wrap;
     }
 
+    /* ===== Mobile ===== */
     @media (max-width: 768px) {
-      .wrap {
-        padding:12px 12px 24px;
-      }
-
       .card.headerCard {
-        display:flex;
-        flex-direction:column;
-        overflow:hidden;
-      }
-
-      .top {
-        width:100%;
-        display:block;
-      }
-
-      .top > div:first-child {
-        display:none;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
       }
 
       .contextBar {
-        order:-1;
-        margin-top:0;
-        margin-bottom:10px;
-        gap:10px;
-        flex-direction:column;
-        width:100%;
+        order: -1;
+        margin-top: 0;
+        margin-bottom: 12px;
+        gap: 10px;
+        flex-direction: column;
+        width: 100%;
       }
 
       .contextItem {
-        width:100%;
-        max-width:100%;
-        padding:12px 12px;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        padding: 12px 14px;
       }
 
       .contextValue {
-        font-size:18px;
-        line-height:1.08;
+        font-size: 20px;
+        line-height: 1.08;
+        word-break: break-word;
       }
 
       .contextSelect {
-        font-size:15px;
+        font-size:16px;
         padding:11px 12px;
       }
 
+      .top {
+        width: 100%;
+        display: block;
+      }
+
+      .top > div:first-child {
+        display: none;
+      }
+
       .pills {
-        grid-template-columns:1fr 1fr;
-        gap:10px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        align-items: stretch;
       }
 
       .pill {
-        width:100%;
-        min-width:0;
-        max-width:100%;
-        padding:10px 12px;
-        font-size:11px;
-        line-height:1.1;
-        overflow:hidden;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 9px 12px;
+        font-size: 11px;
+        line-height: 1.1;
+        overflow: hidden;
       }
 
       .pillBtn {
-        display:block;
-        width:100%;
-        font-size:11px;
-        line-height:1.1;
-        white-space:normal;
-        text-align:center;
+        display: block;
+        width: 100%;
+        font-size: 11px;
+        line-height: 1.1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        text-align: center;
       }
 
       .tipWrap {
-        width:100%;
-        max-width:100%;
-        justify-content:center;
-        align-items:center;
-        gap:6px;
-        min-width:0;
+        width: 100%;
+        max-width: 100%;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
       }
 
       .tipIcon {
-        font-size:11px;
-        padding:1px 3px;
+        flex: 0 0 auto;
+        font-size: 11px;
+        padding: 1px 3px;
       }
 
       .pill.reportPill {
-        grid-column:1 / -1;
+        grid-column: 1 / -1;
       }
 
       .backupNoteRow {
-        width:100%;
-        max-width:100%;
-        margin-top:8px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin-top: 8px;
       }
 
       .backupNote {
-        font-size:10px;
-        line-height:1.3;
+        font-size: 10px;
+        line-height: 1.3;
       }
 
       .consistencyTop {
@@ -2142,7 +1994,7 @@
       }
 
       .cardioFieldGrid {
-        grid-template-columns:1fr;
+        grid-template-columns: 1fr;
       }
 
       .plannerGrid {
@@ -2178,21 +2030,6 @@
       .a2hsActions button {
         width:100%;
         min-width:0;
-      }
-
-      .featureGrid {
-        grid-template-columns:1fr 1fr;
-      }
-
-      .setsHeader,
-      .setRow {
-        grid-template-columns: 48px 1fr 1fr 44px;
-        gap:8px;
-      }
-
-      .setBadge {
-        width:44px;
-        height:42px;
       }
     }
   </style>
@@ -2287,6 +2124,39 @@
     </div>
 
     <div class="card headerCard">
+      <div class="top">
+        <div></div>
+
+        <div class="pills">
+          <div class="pill">
+            <div class="tipWrap">
+              <button class="pillBtn" id="downloadBtn" type="button">Back Up Data</button>
+              <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
+              <div class="tipBox">
+                Clearing browser data can erase workout history.
+                Export occasionally to keep a backup.
+              </div>
+            </div>
+          </div>
+
+          <div class="pill">
+            <button class="pillBtn" id="uploadBtn" type="button">Restore Data</button>
+          </div>
+
+          <input id="uploadFileInput" type="file" accept="application/json,.json" style="display:none;" />
+
+          <div class="pill reportPill">
+            <button class="pillBtn" id="reportBtn" type="button">Workout Report</button>
+          </div>
+        </div>
+
+        <div class="backupNoteRow">
+          <div class="backupNote">
+            Download your data before clearing browser cache. Private/incognito browsing will not save workout history.
+          </div>
+        </div>
+      </div>
+
       <div class="contextBar" data-ui="gym-machine-pill">
         <div class="contextItem">
           <div class="contextLabel">Gym Name</div>
@@ -2305,42 +2175,8 @@
           </div>
         </div>
       </div>
-
-      <div class="featureGrid">
-        <div class="pill">
-          <div class="tipWrap">
-            <button class="pillBtn" id="downloadBtn" type="button">Back Up Data</button>
-            <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
-            <div class="tipBox">
-              Clearing browser data can erase workout history.
-              Export occasionally to keep a backup.
-            </div>
-          </div>
-        </div>
-
-        <div class="pill">
-          <button class="pillBtn" id="uploadBtn" type="button">Restore Data</button>
-        </div>
-
-        <input id="uploadFileInput" type="file" accept="application/json,.json" style="display:none;" />
-
-        <div class="pill reportPill">
-          <button class="pillBtn" id="reportBtn" type="button">Workout Report</button>
-        </div>
-
-        <div class="pill">
-          <button class="pillBtn" id="planWorkoutBtn" type="button">AI Guided Workout</button>
-        </div>
-      </div>
-
-      <div class="backupNoteRow">
-        <div class="backupNote">
-          Download your data before clearing browser cache. Private/incognito browsing will not save workout history.
-        </div>
-      </div>
     </div>
-
-    <div class="card" id="inactiveGate" style="display:none;">
+        <div class="card" id="inactiveGate" style="display:none;">
       <div style="font-weight:900; font-size:18px;">Service Inactive</div>
       <div class="muted" style="margin-top:8px; line-height:1.5;">
         This gym is not currently active on ScanLiftLog.
@@ -2362,33 +2198,79 @@
 
     <div id="badgeProgressCard" class="badgeProgressCard" style="display:none;" data-ui="current-badge"></div>
 
-    <div class="card loggerCard" id="logger">
-      <div class="loggerHeader">
-        <div class="loggerHeaderText">
-          <div class="loggerEyebrow">In-Depth Workout Tracking</div>
-          <div class="loggerTitle">Log your workout</div>
-          <div class="loggerSub">Save your sets fast, then use More Options for notes, date, exercise, and rest timer controls.</div>
+    <div class="plannerEntryWrap">
+      <button id="planWorkoutBtn" class="primary" type="button">AI Guided Workout</button>
+    </div>
+
+    <div class="card" id="logger">
+      <div class="row" style="align-items:flex-end;">
+        <div class="col">
+          <label>Date</label>
+          <input id="dateInput" type="date" />
+        </div>
+        <div class="col">
+          <label>Notes (optional)</label>
+          <input id="notesInput" placeholder="e.g., controlled reps, last set to failure" />
         </div>
       </div>
 
-      <div id="guidedStepBanner" class="guidedStepBanner" style="display:none;">
-        <div class="guidedStepBannerTop">
-          <div class="guidedStepBannerEyebrow">AI Guided Workout Active</div>
-          <div id="guidedStepBannerPill" class="guidedStepBannerPill">Step 1 of 4</div>
+      <div class="row" id="exerciseRow" style="align-items:flex-end; margin-top:12px;">
+        <div class="col" id="exerciseInputWrap">
+          <label>Exercise (optional)</label>
+          <input id="exerciseInput" placeholder="e.g., Dumbbell Flys, DB Press, Incline DB Row" />
         </div>
+
+        <div class="col" id="abductorSelectWrap" style="display:none;">
+          <label>Exercise</label>
+          <select id="abductorExerciseSelect">
+            <option value="">Select movement</option>
+            <option value="Hip Abductor - Inner">Hip Abductor - Inner</option>
+            <option value="Hip Adductor - Outer">Hip Adductor - Outer</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div id="strengthSection">
+        <div class="row" style="align-items:flex-end; margin-top:12px;">
+          <div class="col" style="max-width:220px;">
+            <label>Rest Timer (seconds)</label>
+            <input id="restSecondsInput" type="number" min="0" step="5" value="120" />
+          </div>
+
+          <div class="col" style="max-width:220px;">
+            <label>Countdown</label>
+            <input id="restCountdownDisplay" type="text" value="02:00" readonly />
+          </div>
+
+          <div class="col" style="max-width:320px;">
+            <label>&nbsp;</label>
+            <div class="btnrow">
+              <button class="iconBtn primary" id="restStartBtn" type="button">▶</button>
+              <button class="iconBtn" id="restStopBtn" type="button">■</button>
+              <div class="muted" id="restStatus" style="margin-left:6px;">Ready</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="guidedStepBanner" class="guidedStepBanner" style="display:none;">
+          <div class="guidedStepBannerTop">
+            <div class="guidedStepBannerEyebrow">AI Guided Workout Active</div>
+            <div id="guidedStepBannerPill" class="guidedStepBannerPill">Step 1 of 4</div>
+          </div>
 
         <div id="guidedStepBannerTitle" class="guidedStepBannerTitle">Chest Press</div>
 
-        <div id="guidedStepBannerMeta" class="guidedStepBannerMeta">
-          3 sets × 10 reps
+          <div id="guidedStepBannerMeta" class="guidedStepBannerMeta">
+            3 sets × 10 reps
+          </div>
+
+          <div id="guidedStepBannerHint" class="guidedStepBannerHint">
+            Complete this machine, then save your workout to continue your guided plan.
+          </div>
         </div>
 
-        <div id="guidedStepBannerHint" class="guidedStepBannerHint">
-          Complete this machine, then save your workout to continue your guided plan.
-        </div>
-      </div>
-
-      <div id="strengthSection">
         <div id="guidedSetsPanel" class="guidedSetsPanel" data-ui="guided-sets-panel">
           <div style="font-weight:900;">Sets</div>
           <div class="muted" style="margin-top:6px;">Use + to add sets. Each set stores weight and reps.</div>
@@ -2420,90 +2302,28 @@
         <div id="cardioFieldsGrid" class="cardioFieldGrid"></div>
       </div>
 
-      <div id="loggerActionPanel" class="loggerActionPanel">
+      <div id="loggerActionPanel" class="loggerActionPanel" style="margin-top:14px;">
         <div class="btnrow" style="margin-bottom:10px;">
           <button
-            class="primary saveBtnMain"
+            class="primary"
             id="saveWorkoutBtn"
             type="button"
+            style="width:100%; padding:16px 18px; font-size:20px; font-weight:900; justify-content:center;"
           >
             Save Workout
           </button>
         </div>
 
         <div class="btnrow">
-          <button id="clearCurrentBtn" class="secondaryBtnMain" type="button">Clear Current</button>
-        </div>
-
-        <button class="clearHistoryBtn" id="clearHistoryBtn" type="button">Clear All History</button>
-
-        <div class="moreOptionsWrap" id="moreOptionsWrap">
-          <button class="moreOptionsToggle" id="moreOptionsToggle" type="button" aria-expanded="false">
-            <span class="moreOptionsToggleText">
-              <span>More Options</span>
-              <span class="moreOptionsToggleHint">Date, notes, exercise, rest timer</span>
-            </span>
-            <span class="moreOptionsChevron" id="moreOptionsChevron">▼</span>
-          </button>
-
-          <div class="moreOptionsPanel" id="moreOptionsPanel">
-            <div class="row" style="align-items:flex-end;">
-              <div class="col">
-                <label>Date</label>
-                <input id="dateInput" type="date" />
-              </div>
-              <div class="col">
-                <label>Notes (optional)</label>
-                <input id="notesInput" placeholder="e.g., controlled reps, last set to failure" />
-              </div>
-            </div>
-
-            <div class="row" id="exerciseRow" style="align-items:flex-end; margin-top:12px;">
-              <div class="col" id="exerciseInputWrap">
-                <label>Exercise (optional)</label>
-                <input id="exerciseInput" placeholder="e.g., Dumbbell Flys, DB Press, Incline DB Row" />
-              </div>
-
-              <div class="col" id="abductorSelectWrap" style="display:none;">
-                <label>Exercise</label>
-                <select id="abductorExerciseSelect">
-                  <option value="">Select movement</option>
-                  <option value="Hip Abductor - Inner">Hip Abductor - Inner</option>
-                  <option value="Hip Adductor - Outer">Hip Adductor - Outer</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="hr"></div>
-
-            <div class="row" style="align-items:flex-end; margin-top:0;">
-              <div class="col" style="max-width:220px;">
-                <label>Rest Timer (seconds)</label>
-                <input id="restSecondsInput" type="number" min="0" step="5" value="120" />
-              </div>
-
-              <div class="col" style="max-width:220px;">
-                <label>Countdown</label>
-                <input id="restCountdownDisplay" type="text" value="02:00" readonly />
-              </div>
-
-              <div class="col" style="max-width:320px;">
-                <label>&nbsp;</label>
-                <div class="btnrow">
-                  <button class="iconBtn primary" id="restStartBtn" type="button">▶</button>
-                  <button class="iconBtn" id="restStopBtn" type="button">■</button>
-                  <div class="muted" id="restStatus" style="margin-left:6px;">Ready</div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <button id="clearCurrentBtn" type="button" style="flex:1; min-width:0;">Clear Current</button>
+          <button class="danger" id="clearHistoryBtn" type="button" style="flex:1; min-width:0;">Clear All History</button>
         </div>
       </div>
     </div>
 
-    <div class="card historyCardShell" id="historyCard">
+    <div class="card" id="historyCard">
       <div class="row" style="align-items:center; justify-content:space-between;">
-        <div style="font-weight:900;">Workout History</div>
+        <div style="font-weight:900;">History</div>
         <div class="badge" id="historyScopeBadge">Scope: …</div>
       </div>
 
@@ -2652,7 +2472,7 @@
           <div id="plannerStepsList" class="plannerStepsList"></div>
         </div>
 
-        <div class="plannerBottomActions">
+                <div class="plannerBottomActions">
           <div id="guidedWorkoutCompletionNote" class="plannerCompletionNote" style="display:none;">
             Workout complete — nice work
           </div>
@@ -2663,38 +2483,38 @@
   </div>
 
   <!-- ===== AI Guided Workout Disclaimer Modal ===== -->
-  <div id="aiDisclaimerModal" class="aiDisclaimerModal hidden" aria-hidden="true">
-    <div class="aiDisclaimerCard" role="dialog" aria-modal="true" aria-labelledby="aiDisclaimerTitle">
-      <div class="aiDisclaimerHeader">
-        <div>
-          <h2 id="aiDisclaimerTitle">Before starting an AI-guided workout</h2>
-          <div class="aiDisclaimerSub">
-            This feature is a general workout aid only. It is not medical advice or a substitute for a qualified trainer or healthcare professional.
-          </div>
+<div id="aiDisclaimerModal" class="aiDisclaimerModal hidden" aria-hidden="true">
+  <div class="aiDisclaimerCard" role="dialog" aria-modal="true" aria-labelledby="aiDisclaimerTitle">
+    <div class="aiDisclaimerHeader">
+      <div>
+        <h2 id="aiDisclaimerTitle">Before starting an AI-guided workout</h2>
+        <div class="aiDisclaimerSub">
+          This feature is a general workout aid only. It is not medical advice or a substitute for a qualified trainer or healthcare professional.
         </div>
-        <button id="closeAiDisclaimerBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
       </div>
+      <button id="closeAiDisclaimerBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
+    </div>
 
-      <div class="aiDisclaimerAlert">
-        Use this feature at your own risk. Choose safe weight, use proper form, and stop immediately if you feel pain, dizziness, or discomfort.
-      </div>
+    <div class="aiDisclaimerAlert">
+      Use this feature at your own risk. Choose safe weight, use proper form, and stop immediately if you feel pain, dizziness, or discomfort.
+    </div>
 
-      <div class="aiDisclaimerCheckRow">
-        <input type="checkbox" id="aiDisclaimerAgree" />
-        <label for="aiDisclaimerAgree" style="margin:0; color:var(--text); line-height:1.5;">
-          I understand this is only a general workout aid, not medical or professional training advice, and I accept responsibility for how I use it during this session.
-        </label>
-      </div>
+    <div class="aiDisclaimerCheckRow">
+      <input type="checkbox" id="aiDisclaimerAgree" />
+      <label for="aiDisclaimerAgree" style="margin:0; color:var(--text); line-height:1.5;">
+        I understand this is only a general workout aid, not medical or professional training advice, and I accept responsibility for how I use it during this session.
+      </label>
+    </div>
 
-      <div class="aiDisclaimerActions">
-        <button id="cancelAiDisclaimerBtn" type="button">Cancel</button>
-        <button id="acceptAiDisclaimerBtn" class="primary" type="button" disabled>I Understand & Continue</button>
-      </div>
+    <div class="aiDisclaimerActions">
+      <button id="cancelAiDisclaimerBtn" type="button">Cancel</button>
+      <button id="acceptAiDisclaimerBtn" class="primary" type="button" disabled>I Understand & Continue</button>
     </div>
   </div>
-
-  <script src="/machine-map.js"></script>
-  <script>
+</div>
+  
+<script src="/machine-map.js"></script>  
+<script>
     /* ================================
        IMPORTANT DEPLOYMENT NOTE
        ================================
@@ -2889,6 +2709,7 @@
         .replace(/[^A-Z0-9]/g, "");
     }
 
+    /* ---------- Utilities ---------- */
     function safeJSONParse(s, fallback) {
       try { return JSON.parse(s); } catch { return fallback; }
     }
@@ -2940,6 +2761,7 @@
       return url.toString();
     }
 
+    /* ---------- URL Parsing (robust) ---------- */
     function parseContextFromUrl() {
       const url = new URL(window.location.href);
       const params = url.searchParams;
@@ -2980,6 +2802,7 @@
       return { gymId, machineId, orgId };
     }
 
+    /* ---------- User ID (device-local) ---------- */
     const USER_KEY = "scanliftlog_user_v1";
 
     function getOrCreateUserId() {
@@ -2990,6 +2813,8 @@
       }
       return id;
     }
+
+    /* ---------- Inactive Gate ---------- */
     function showInactiveGate(gid) {
       const logger = document.getElementById("logger");
       if (logger) logger.style.display = "none";
@@ -3018,6 +2843,7 @@
       if (inactiveGate) inactiveGate.style.display = "";
     }
 
+    /* ---------- Analytics ---------- */
     const ANALYTICS_BASE = "";
 
     async function checkGymStatusOrGate(gid) {
@@ -3037,12 +2863,14 @@
       return Number.isFinite(n) ? n : null;
     }
 
+    /* ---------- Boot context ---------- */
     const userId = getOrCreateUserId();
     const ctx = parseContextFromUrl();
     const gymId = ctx.gymId;
     const orgId = ctx.orgId;
     const machineId = ctx.machineId;
 
+    /* ---------- Local kill switch ---------- */
     const GYM_STATUS = {
       "main": true,
       "pushfitness-melville": true
@@ -3053,6 +2881,7 @@
       return !!GYM_STATUS[gid];
     }
 
+    /* ---------- Gym Map ---------- */
     const GYM_MAP = {
       "main": "ScanLiftLog Test Gym",
       "pushfitness-melville": "Push Fitness Club",
@@ -3069,63 +2898,70 @@
     const BANNER_FOLDER = "banners";
     const gymName = GYM_MAP[gymId] || gymId.toUpperCase();
 
+    /* ---------- Gym machine catalog for dropdown ---------- */
     const GYM_MACHINE_CATALOG = {
       "pushfitness-melville": [
-        { machineCode:"CHPR", machineNumber:1, label:"Chest Press", goalTags:["chest","fullbody"], type:"strength", markerLeft:18, markerTop:18 },
-        { machineCode:"INCHPR", machineNumber:2, label:"Incline Press", goalTags:["chest","shoulders"], type:"strength", markerLeft:24, markerTop:18 },
-        { machineCode:"DECHPR", machineNumber:3, label:"Decline Press", goalTags:["chest"], type:"strength", markerLeft:30, markerTop:18 },
-        { machineCode:"CONVCHPR", machineNumber:4, label:"Converging Chest Press", goalTags:["chest"], type:"strength", markerLeft:36, markerTop:18 },
-        { machineCode:"RDPEC", machineNumber:5, label:"Rear Delt / Pec Fly", goalTags:["chest","shoulders"], type:"strength", markerLeft:42, markerTop:18 },
-        { machineCode:"SEATDIPPLATE", machineNumber:6, label:"Seated Dip - Plate Loaded", goalTags:["chest","arms"], type:"strength", markerLeft:48, markerTop:18 },
-        { machineCode:"SEATDIPPIN", machineNumber:7, label:"Seated Dip - Pin Loaded", goalTags:["chest","arms"], type:"strength", markerLeft:54, markerTop:18 },
-        { machineCode:"TRICEPPRESS", machineNumber:8, label:"Tricep Press", goalTags:["arms","chest"], type:"strength", markerLeft:60, markerTop:18 },
-        { machineCode:"LATPD", machineNumber:9, label:"Lat Pulldown", goalTags:["back","fullbody"], type:"strength", markerLeft:18, markerTop:30 },
-        { machineCode:"PULLDN", machineNumber:10, label:"Pulldown", goalTags:["back"], type:"strength", markerLeft:24, markerTop:30 },
-        { machineCode:"DIVLATPD", machineNumber:11, label:"Diverging Lat Pulldown", goalTags:["back"], type:"strength", markerLeft:30, markerTop:30 },
-        { machineCode:"CABLEROW", machineNumber:12, label:"Cable Row", goalTags:["back"], type:"strength", markerLeft:36, markerTop:30 },
-        { machineCode:"SETRW", machineNumber:13, label:"Seated Row", goalTags:["back","fullbody"], type:"strength", markerLeft:42, markerTop:30 },
-        { machineCode:"LTRW", machineNumber:14, label:"Low Row Machine", goalTags:["back"], type:"strength", markerLeft:48, markerTop:30 },
-        { machineCode:"DIVLROW", machineNumber:15, label:"Diverging Low Row", goalTags:["back"], type:"strength", markerLeft:54, markerTop:30 },
-        { machineCode:"TBRW", machineNumber:16, label:"T-Bar Row Station", goalTags:["back"], type:"strength", markerLeft:60, markerTop:30 },
-        { machineCode:"ASSTPD", machineNumber:17, label:"Assisted Pull-Up / Dip", goalTags:["back","arms"], type:"strength", markerLeft:66, markerTop:30 },
-        { machineCode:"DUALPULL", machineNumber:18, label:"Dual Adjustable Pulley", goalTags:["back","chest","arms","shoulders"], type:"strength", markerLeft:72, markerTop:30 },
-        { machineCode:"SHPR", machineNumber:19, label:"Shoulder Press", goalTags:["shoulders","fullbody"], type:"strength", markerLeft:18, markerTop:42 },
-        { machineCode:"CONVSHPR", machineNumber:20, label:"Converging Shoulder Press", goalTags:["shoulders"], type:"strength", markerLeft:24, markerTop:42 },
-        { machineCode:"LATRL", machineNumber:21, label:"Lateral Raise", goalTags:["shoulders"], type:"strength", markerLeft:30, markerTop:42 },
-        { machineCode:"BCPN", machineNumber:22, label:"Biceps Curl - Pin Loaded", goalTags:["arms"], type:"strength", markerLeft:36, markerTop:42 },
-        { machineCode:"BCPL", machineNumber:23, label:"Biceps Curl - Plate Loaded", goalTags:["arms"], type:"strength", markerLeft:42, markerTop:42 },
-        { machineCode:"TRIEX", machineNumber:24, label:"Triceps Extension Machine", goalTags:["arms"], type:"strength", markerLeft:48, markerTop:42 },
-        { machineCode:"OHBP", machineNumber:25, label:"Overhead Barbell Press", goalTags:["shoulders"], type:"strength", markerLeft:54, markerTop:42 },
-        { machineCode:"LEGPR", machineNumber:26, label:"Leg Press", goalTags:["legs","fullbody"], type:"strength", markerLeft:18, markerTop:58 },
-        { machineCode:"ANGLP", machineNumber:27, label:"Angled Leg Press", goalTags:["legs"], type:"strength", markerLeft:24, markerTop:58 },
-        { machineCode:"HKSQ", machineNumber:28, label:"Hack Squat", goalTags:["legs"], type:"strength", markerLeft:30, markerTop:58 },
-        { machineCode:"SQMT", machineNumber:29, label:"Squat Machine", goalTags:["legs"], type:"strength", markerLeft:36, markerTop:58 },
-        { machineCode:"LEGEX", machineNumber:30, label:"Leg Extension", goalTags:["legs"], type:"strength", markerLeft:42, markerTop:58 },
-        { machineCode:"LEGCUR", machineNumber:31, label:"Leg Curl", goalTags:["legs"], type:"strength", markerLeft:48, markerTop:58 },
-        { machineCode:"SLCUR", machineNumber:32, label:"Seated Leg Curl", goalTags:["legs"], type:"strength", markerLeft:54, markerTop:58 },
-        { machineCode:"SLGCUR", machineNumber:33, label:"Single Leg Curl", goalTags:["legs"], type:"strength", markerLeft:60, markerTop:58 },
-        { machineCode:"PRONECUR", machineNumber:34, label:"Prone Leg Curl", goalTags:["legs"], type:"strength", markerLeft:66, markerTop:58 },
-        { machineCode:"HIPAB", machineNumber:35, label:"Hip Abductor", goalTags:["legs"], type:"strength", markerLeft:72, markerTop:58 },
-        { machineCode:"GLUTEXT", machineNumber:36, label:"Glute Extension", goalTags:["legs"], type:"strength", markerLeft:18, markerTop:70 },
-        { machineCode:"HIPTH", machineNumber:37, label:"Hip Thrust Machine", goalTags:["legs"], type:"strength", markerLeft:24, markerTop:70 },
-        { machineCode:"CALFRAISE", machineNumber:38, label:"Calf Raise", goalTags:["legs"], type:"strength", markerLeft:30, markerTop:70 },
-        { machineCode:"DEADLUNGE", machineNumber:39, label:"Deadlift Lunge", goalTags:["legs"], type:"strength", markerLeft:36, markerTop:70 },
-        { machineCode:"ABDOM", machineNumber:40, label:"Abdominal", goalTags:["core","fullbody"], type:"strength", markerLeft:48, markerTop:70 },
-        { machineCode:"RTTOR", machineNumber:41, label:"Rotary Torso", goalTags:["core"], type:"strength", markerLeft:54, markerTop:70 },
-        { machineCode:"FBEN", machineNumber:42, label:"Flat Bench", goalTags:["chest","shoulders","arms"], type:"strength", markerLeft:64, markerTop:18 },
-        { machineCode:"IBEN", machineNumber:43, label:"Incline Bench", goalTags:["chest","shoulders"], type:"strength", markerLeft:70, markerTop:18 },
-        { machineCode:"DBEN", machineNumber:44, label:"Decline Bench", goalTags:["chest"], type:"strength", markerLeft:76, markerTop:18 },
-        { machineCode:"SMTH", machineNumber:45, label:"Smith Machine", goalTags:["chest","legs","shoulders"], type:"strength", markerLeft:64, markerTop:58 },
-        { machineCode:"SQRK", machineNumber:46, label:"Squat Rack", goalTags:["legs","shoulders"], type:"strength", markerLeft:70, markerTop:58 },
-        { machineCode:"DBRCK", machineNumber:47, label:"Dumbbell Rack", goalTags:["chest","arms","shoulders","legs"], type:"strength", markerLeft:76, markerTop:58 },
-        { machineCode:"MULTIPP", machineNumber:48, label:"Multi Pull Press", goalTags:["chest","back","shoulders"], type:"strength", markerLeft:66, markerTop:42 }
+        { machineCode:"CHPR",         machineNumber:1,  label:"Chest Press",                    goalTags:["chest","fullbody"],        type:"strength", markerLeft:18, markerTop:18 },
+        { machineCode:"INCHPR",       machineNumber:2,  label:"Incline Press",                  goalTags:["chest","shoulders"],       type:"strength", markerLeft:24, markerTop:18 },
+        { machineCode:"DECHPR",       machineNumber:3,  label:"Decline Press",                  goalTags:["chest"],                   type:"strength", markerLeft:30, markerTop:18 },
+        { machineCode:"CONVCHPR",     machineNumber:4,  label:"Converging Chest Press",         goalTags:["chest"],                   type:"strength", markerLeft:36, markerTop:18 },
+        { machineCode:"RDPEC",        machineNumber:5,  label:"Rear Delt / Pec Fly",            goalTags:["chest","shoulders"],       type:"strength", markerLeft:42, markerTop:18 },
+        { machineCode:"SEATDIPPLATE", machineNumber:6,  label:"Seated Dip - Plate Loaded",      goalTags:["chest","arms"],            type:"strength", markerLeft:48, markerTop:18 },
+        { machineCode:"SEATDIPPIN",   machineNumber:7,  label:"Seated Dip - Pin Loaded",        goalTags:["chest","arms"],            type:"strength", markerLeft:54, markerTop:18 },
+        { machineCode:"TRICEPPRESS",  machineNumber:8,  label:"Tricep Press",                   goalTags:["arms","chest"],            type:"strength", markerLeft:60, markerTop:18 },
+
+        { machineCode:"LATPD",        machineNumber:9,  label:"Lat Pulldown",                   goalTags:["back","fullbody"],         type:"strength", markerLeft:18, markerTop:30 },
+        { machineCode:"PULLDN",       machineNumber:10, label:"Pulldown",                       goalTags:["back"],                    type:"strength", markerLeft:24, markerTop:30 },
+        { machineCode:"DIVLATPD",     machineNumber:11, label:"Diverging Lat Pulldown",         goalTags:["back"],                    type:"strength", markerLeft:30, markerTop:30 },
+        { machineCode:"CABLEROW",     machineNumber:12, label:"Cable Row",                      goalTags:["back"],                    type:"strength", markerLeft:36, markerTop:30 },
+        { machineCode:"SETRW",        machineNumber:13, label:"Seated Row",                     goalTags:["back","fullbody"],         type:"strength", markerLeft:42, markerTop:30 },
+        { machineCode:"LTRW",         machineNumber:14, label:"Low Row Machine",                goalTags:["back"],                    type:"strength", markerLeft:48, markerTop:30 },
+        { machineCode:"DIVLROW",      machineNumber:15, label:"Diverging Low Row",              goalTags:["back"],                    type:"strength", markerLeft:54, markerTop:30 },
+        { machineCode:"TBRW",         machineNumber:16, label:"T-Bar Row Station",              goalTags:["back"],                    type:"strength", markerLeft:60, markerTop:30 },
+        { machineCode:"ASSTPD",       machineNumber:17, label:"Assisted Pull-Up / Dip",         goalTags:["back","arms"],             type:"strength", markerLeft:66, markerTop:30 },
+        { machineCode:"DUALPULL",     machineNumber:18, label:"Dual Adjustable Pulley",         goalTags:["back","chest","arms","shoulders"], type:"strength", markerLeft:72, markerTop:30 },
+
+        { machineCode:"SHPR",         machineNumber:19, label:"Shoulder Press",                 goalTags:["shoulders","fullbody"],    type:"strength", markerLeft:18, markerTop:42 },
+        { machineCode:"CONVSHPR",     machineNumber:20, label:"Converging Shoulder Press",      goalTags:["shoulders"],               type:"strength", markerLeft:24, markerTop:42 },
+        { machineCode:"LATRL",        machineNumber:21, label:"Lateral Raise",                  goalTags:["shoulders"],               type:"strength", markerLeft:30, markerTop:42 },
+        { machineCode:"BCPN",         machineNumber:22, label:"Biceps Curl - Pin Loaded",       goalTags:["arms"],                    type:"strength", markerLeft:36, markerTop:42 },
+        { machineCode:"BCPL",         machineNumber:23, label:"Biceps Curl - Plate Loaded",     goalTags:["arms"],                    type:"strength", markerLeft:42, markerTop:42 },
+        { machineCode:"TRIEX",        machineNumber:24, label:"Triceps Extension Machine",      goalTags:["arms"],                    type:"strength", markerLeft:48, markerTop:42 },
+        { machineCode:"OHBP",         machineNumber:25, label:"Overhead Barbell Press",         goalTags:["shoulders"],               type:"strength", markerLeft:54, markerTop:42 },
+
+        { machineCode:"LEGPR",        machineNumber:26, label:"Leg Press",                      goalTags:["legs","fullbody"],         type:"strength", markerLeft:18, markerTop:58 },
+        { machineCode:"ANGLP",        machineNumber:27, label:"Angled Leg Press",               goalTags:["legs"],                    type:"strength", markerLeft:24, markerTop:58 },
+        { machineCode:"HKSQ",         machineNumber:28, label:"Hack Squat",                     goalTags:["legs"],                    type:"strength", markerLeft:30, markerTop:58 },
+        { machineCode:"SQMT",         machineNumber:29, label:"Squat Machine",                  goalTags:["legs"],                    type:"strength", markerLeft:36, markerTop:58 },
+        { machineCode:"LEGEX",        machineNumber:30, label:"Leg Extension",                  goalTags:["legs"],                    type:"strength", markerLeft:42, markerTop:58 },
+        { machineCode:"LEGCUR",       machineNumber:31, label:"Leg Curl",                       goalTags:["legs"],                    type:"strength", markerLeft:48, markerTop:58 },
+        { machineCode:"SLCUR",        machineNumber:32, label:"Seated Leg Curl",                goalTags:["legs"],                    type:"strength", markerLeft:54, markerTop:58 },
+        { machineCode:"SLGCUR",       machineNumber:33, label:"Single Leg Curl",                goalTags:["legs"],                    type:"strength", markerLeft:60, markerTop:58 },
+        { machineCode:"PRONECUR",     machineNumber:34, label:"Prone Leg Curl",                 goalTags:["legs"],                    type:"strength", markerLeft:66, markerTop:58 },
+        { machineCode:"HIPAB",        machineNumber:35, label:"Hip Abductor",                   goalTags:["legs"],                    type:"strength", markerLeft:72, markerTop:58 },
+        { machineCode:"GLUTEXT",      machineNumber:36, label:"Glute Extension",                goalTags:["legs"],                    type:"strength", markerLeft:18, markerTop:70 },
+        { machineCode:"HIPTH",        machineNumber:37, label:"Hip Thrust Machine",             goalTags:["legs"],                    type:"strength", markerLeft:24, markerTop:70 },
+        { machineCode:"CALFRAISE",    machineNumber:38, label:"Calf Raise",                     goalTags:["legs"],                    type:"strength", markerLeft:30, markerTop:70 },
+        { machineCode:"DEADLUNGE",    machineNumber:39, label:"Deadlift Lunge",                 goalTags:["legs"],                    type:"strength", markerLeft:36, markerTop:70 },
+
+        { machineCode:"ABDOM",        machineNumber:40, label:"Abdominal",                      goalTags:["core","fullbody"],         type:"strength", markerLeft:48, markerTop:70 },
+        { machineCode:"RTTOR",        machineNumber:41, label:"Rotary Torso",                   goalTags:["core"],                    type:"strength", markerLeft:54, markerTop:70 },
+
+        { machineCode:"FBEN",         machineNumber:42, label:"Flat Bench",                     goalTags:["chest","shoulders","arms"], type:"strength", markerLeft:64, markerTop:18 },
+        { machineCode:"IBEN",         machineNumber:43, label:"Incline Bench",                  goalTags:["chest","shoulders"],       type:"strength", markerLeft:70, markerTop:18 },
+        { machineCode:"DBEN",         machineNumber:44, label:"Decline Bench",                  goalTags:["chest"],                   type:"strength", markerLeft:76, markerTop:18 },
+        { machineCode:"SMTH",         machineNumber:45, label:"Smith Machine",                  goalTags:["chest","legs","shoulders"], type:"strength", markerLeft:64, markerTop:58 },
+        { machineCode:"SQRK",         machineNumber:46, label:"Squat Rack",                     goalTags:["legs","shoulders"],        type:"strength", markerLeft:70, markerTop:58 },
+        { machineCode:"DBRCK",        machineNumber:47, label:"Dumbbell Rack",                  goalTags:["chest","arms","shoulders","legs"], type:"strength", markerLeft:76, markerTop:58 },
+        { machineCode:"MULTIPP",      machineNumber:48, label:"Multi Pull Press",               goalTags:["chest","back","shoulders"], type:"strength", markerLeft:66, markerTop:42 }
       ],
+
       "main": [
         { machineCode:"PECDK", machineNumber:1, label:"Pec Deck", goalTags:["chest","fullbody"], type:"strength", markerLeft:20, markerTop:20 },
         { machineCode:"LEGPR", machineNumber:2, label:"Leg Press", goalTags:["legs","fullbody"], type:"strength", markerLeft:32, markerTop:35 },
         { machineCode:"LATPD", machineNumber:3, label:"Lat Pulldown", goalTags:["back","fullbody"], type:"strength", markerLeft:45, markerTop:20 },
-        { machineCode:"BIKE", machineNumber:4, label:"Bike", goalTags:["cardio"], type:"cardio", markerLeft:58, markerTop:28 },
-        { machineCode:"TRED", machineNumber:5, label:"Treadmill", goalTags:["cardio"], type:"cardio", markerLeft:70, markerTop:28 }
+        { machineCode:"BIKE",  machineNumber:4, label:"Bike", goalTags:["cardio"], type:"cardio", markerLeft:58, markerTop:28 },
+        { machineCode:"TRED",  machineNumber:5, label:"Treadmill", goalTags:["cardio"], type:"cardio", markerLeft:70, markerTop:28 }
       ]
     };
 
@@ -3133,51 +2969,52 @@
       return (GYM_MACHINE_CATALOG[gid] || []).slice();
     }
 
-    const INSTALL_BRANDING = {
-      "main": {
-        pageTitle: "ScanLiftLog",
-        appleTitle: "ScanLiftLog",
-        appleTouchIcon: "/icons/icon-192.png",
-        manifest: "/manifests/main.webmanifest"
-      },
-      "pushfitness-melville": {
-        pageTitle: "Push Fitness Club",
-        appleTitle: "Push Fitness Club",
-        appleTouchIcon: "/icons/pushfitness-192.png",
-        manifest: "/manifests/pushfitness-melville.webmanifest"
-      }
-    };
+    /* ---------- Dynamic manifest / icons ---------- */
+const INSTALL_BRANDING = {
+  "main": {
+    pageTitle: "ScanLiftLog",
+    appleTitle: "ScanLiftLog",
+    appleTouchIcon: "/icons/icon-192.png",
+    manifest: "/manifests/main.webmanifest"
+  },
+  "pushfitness-melville": {
+    pageTitle: "Push Fitness Club",
+    appleTitle: "Push Fitness Club",
+    appleTouchIcon: "/icons/pushfitness-192.png",
+    manifest: "/manifests/pushfitness-melville.webmanifest"
+  }
+};
+  const INSTALL_PAGE_MAP = {
+  "pushfitness-melville": "/install/pushfitness-melville.html"
+};
 
-    const INSTALL_PAGE_MAP = {
-      "pushfitness-melville": "/install/pushfitness-melville.html"
-    };
+function getDedicatedInstallUrl(gid) {
+  return INSTALL_PAGE_MAP[String(gid || "").trim().toLowerCase()] || "";
+}
 
-    function getDedicatedInstallUrl(gid) {
-      return INSTALL_PAGE_MAP[String(gid || "").trim().toLowerCase()] || "";
-    }
+function applyInstallBranding() {
+  const brand = INSTALL_BRANDING[gymId];
+  if (!brand) return;
 
-    function applyInstallBranding() {
-      const brand = INSTALL_BRANDING[gymId];
-      if (!brand) return;
+  document.title = brand.pageTitle || document.title;
 
-      document.title = brand.pageTitle || document.title;
+  const manifestLink = document.getElementById("dynamicManifestLink");
+  if (manifestLink && brand.manifest) {
+    manifestLink.setAttribute("href", brand.manifest);
+  }
 
-      const manifestLink = document.getElementById("dynamicManifestLink");
-      if (manifestLink && brand.manifest) {
-        manifestLink.setAttribute("href", brand.manifest);
-      }
+  const appleTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+  if (appleTitleMeta && brand.appleTitle) {
+    appleTitleMeta.setAttribute("content", brand.appleTitle);
+  }
 
-      const appleTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
-      if (appleTitleMeta && brand.appleTitle) {
-        appleTitleMeta.setAttribute("content", brand.appleTitle);
-      }
+  const appleTouchIconLink = document.querySelector('link[rel="apple-touch-icon"]');
+  if (appleTouchIconLink && brand.appleTouchIcon) {
+    appleTouchIconLink.setAttribute("href", brand.appleTouchIcon);
+  }
+}
 
-      const appleTouchIconLink = document.querySelector('link[rel="apple-touch-icon"]');
-      if (appleTouchIconLink && brand.appleTouchIcon) {
-        appleTouchIconLink.setAttribute("href", brand.appleTouchIcon);
-      }
-    }
-
+    /* ---------- Machine Name ---------- */
     const key = machineId ? String(machineId).trim().toUpperCase() : "";
     const machineName = key
       ? ((window.MACHINE_MAP && window.MACHINE_MAP[key]) ? window.MACHINE_MAP[key] : `Machine (${key})`)
@@ -3188,6 +3025,7 @@
       return name.includes("ABDUCTOR") && name.includes("ADDUCTOR");
     }
 
+    /* ---------- Machine Type ---------- */
     const CARDIO_MACHINE_IDS = [
       "TRED","ELIP","STAIR","BIKE","ROW","SKIER","CURVE","STEP","SPIN","ARC","ASSLT",
       "RECBK","UPRBK","ICLMB","JACOB","VCLMB","XTRNR","SPRBK","STRDR","ADSKI","SLDM"
@@ -3254,158 +3092,167 @@
       });
     }
 
-    let deferredA2hsPrompt = null;
+/* ---------- Add to Home Screen ---------- */
+let deferredA2hsPrompt = null;
 
-    function openA2hsModal() {
-      const modal = document.getElementById("a2hsModal");
-      const note = document.getElementById("a2hsCurrentUrlNote");
-      const subText = document.getElementById("a2hsSubText");
-      const confirmBtn = document.getElementById("confirmA2hsBtn");
-      const androidList = document.getElementById("a2hsAndroidList");
-      const openGymHomeBtn = document.getElementById("openGymHomeBtn");
+function openA2hsModal() {
+  const modal = document.getElementById("a2hsModal");
+  const note = document.getElementById("a2hsCurrentUrlNote");
+  const subText = document.getElementById("a2hsSubText");
+  const confirmBtn = document.getElementById("confirmA2hsBtn");
+  const androidList = document.getElementById("a2hsAndroidList");
+  const openGymHomeBtn = document.getElementById("openGymHomeBtn");
 
-      if (!modal) return;
+  if (!modal) return;
 
-      if (note) {
-        note.textContent = machineId
-          ? "You are currently on a machine page. The installed shortcut will still open the gym-level home screen."
-          : "You are already on the gym-level page. This is the correct home screen target.";
-      }
+  if (note) {
+    note.textContent = machineId
+      ? "You are currently on a machine page. The installed shortcut will still open the gym-level home screen."
+      : "You are already on the gym-level page. This is the correct home screen target.";
+  }
 
-      if (openGymHomeBtn) {
-        openGymHomeBtn.style.display = machineId ? "" : "none";
-      }
+  if (openGymHomeBtn) {
+    openGymHomeBtn.style.display = machineId ? "" : "none";
+  }
 
-      if (isIosLike()) {
-        if (subText) {
-          subText.textContent = machineId
-            ? "On iPhone/iPad, first open the gym-level page, then use Safari’s Share menu to add it to your home screen."
-            : "On iPhone/iPad, use Safari’s Share menu to add this page to your home screen.";
-        }
-
-        if (confirmBtn) {
-          confirmBtn.textContent = machineId ? "Open Gym Home Screen Version" : "Got It";
-        }
-
-        if (androidList) {
-          androidList.innerHTML = `
-            <li>This browser does not expose the native install prompt here</li>
-            <li>Use your browser menu if you want to add a shortcut manually</li>
-          `;
-        }
-      } else if (deferredA2hsPrompt) {
-        if (subText) {
-          subText.textContent = "Tap the purple button below to open your phone’s native Add to Home Screen / Install prompt.";
-        }
-
-        if (confirmBtn) {
-          confirmBtn.textContent = "Add to Home Screen";
-        }
-
-        if (androidList) {
-          androidList.innerHTML = `
-            <li>Tap the purple button below</li>
-            <li>Confirm the native browser prompt</li>
-            <li>Your shortcut will open the gym-level page</li>
-          `;
-        }
-      } else {
-        if (subText) {
-          subText.textContent = machineId
-            ? "The native install prompt is not available right now. You can open the gym-level page and use your browser menu if needed."
-            : "The native install prompt is not available right now. Use your browser menu and choose Add to Home Screen or Install app.";
-        }
-
-        if (confirmBtn) {
-          confirmBtn.textContent = machineId ? "Open Gym Home Screen Version" : "Close";
-        }
-
-        if (androidList) {
-          androidList.innerHTML = `
-            <li>If the native prompt does not appear, open your browser menu</li>
-            <li>Tap <strong>Add to Home Screen</strong> or <strong>Install app</strong></li>
-            <li>Your shortcut should open the gym-level page</li>
-          `;
-        }
-      }
-
-      modal.classList.remove("hidden");
-      modal.setAttribute("aria-hidden", "false");
+  if (isIosLike()) {
+    if (subText) {
+      subText.textContent = machineId
+        ? "On iPhone/iPad, first open the gym-level page, then use Safari’s Share menu to add it to your home screen."
+        : "On iPhone/iPad, use Safari’s Share menu to add this page to your home screen.";
     }
 
-    function closeA2hsModal() {
-      const modal = document.getElementById("a2hsModal");
-      if (!modal) return;
-      modal.classList.add("hidden");
-      modal.setAttribute("aria-hidden", "true");
+    if (confirmBtn) {
+      confirmBtn.textContent = machineId ? "Open Gym Home Screen Version" : "Got It";
     }
 
-    function goToGymHomeVersion() {
-      const dedicatedInstallUrl = getDedicatedInstallUrl(gymId);
-
-      if (dedicatedInstallUrl) {
-        window.location.href = dedicatedInstallUrl;
-        return;
-      }
-
-      window.location.href = buildGymOnlyUrl(gymId);
+    if (androidList) {
+      androidList.innerHTML = `
+        <li>This browser does not expose the native install prompt here</li>
+        <li>Use your browser menu if you want to add a shortcut manually</li>
+      `;
+    }
+  } else if (deferredA2hsPrompt) {
+    if (subText) {
+      subText.textContent = "Tap the purple button below to open your phone’s native Add to Home Screen / Install prompt.";
     }
 
-    async function showNativeA2hsPrompt() {
-      if (!deferredA2hsPrompt) return false;
-
-      const promptEvent = deferredA2hsPrompt;
-      deferredA2hsPrompt = null;
-
-      try {
-        closeA2hsModal();
-        promptEvent.prompt();
-        await promptEvent.userChoice;
-        return true;
-      } catch (e) {
-        return false;
-      }
+    if (confirmBtn) {
+      confirmBtn.textContent = "Add to Home Screen";
     }
 
-    async function startAddToHomeScreenFlow() {
-      if (isInStandaloneMode()) return true;
-      if (!isIosLike() && deferredA2hsPrompt) {
-        return await showNativeA2hsPrompt();
-      }
-      openA2hsModal();
-      return false;
+    if (androidList) {
+      androidList.innerHTML = `
+        <li>Tap the purple button below</li>
+        <li>Confirm the native browser prompt</li>
+        <li>Your shortcut will open the gym-level page</li>
+      `;
+    }
+  } else {
+    if (subText) {
+      subText.textContent = machineId
+        ? "The native install prompt is not available right now. You can open the gym-level page and use your browser menu if needed."
+        : "The native install prompt is not available right now. Use your browser menu and choose Add to Home Screen or Install app.";
     }
 
-    async function confirmAddToHomeScreen() {
-      if (isInStandaloneMode()) {
-        closeA2hsModal();
-        return true;
-      }
-
-      if (!isIosLike() && deferredA2hsPrompt) {
-        return await showNativeA2hsPrompt();
-      }
-
-      if (machineId) {
-        goToGymHomeVersion();
-        return true;
-      }
-
-      closeA2hsModal();
-      return false;
+    if (confirmBtn) {
+      confirmBtn.textContent = machineId ? "Open Gym Home Screen Version" : "Close";
     }
 
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredA2hsPrompt = e;
-    });
+    if (androidList) {
+      androidList.innerHTML = `
+        <li>If the native prompt does not appear, open your browser menu</li>
+        <li>Tap <strong>Add to Home Screen</strong> or <strong>Install app</strong></li>
+        <li>Your shortcut should open the gym-level page</li>
+      `;
+    }
+  }
 
-    window.addEventListener("appinstalled", () => {
-      deferredA2hsPrompt = null;
-      const btn = document.getElementById("addToHomeScreenBtn");
-      if (btn) btn.classList.add("hidden");
-    });
+  modal.classList.remove("hidden");
+  modal.setAttribute("aria-hidden", "false");
+}
 
+function closeA2hsModal() {
+  const modal = document.getElementById("a2hsModal");
+  if (!modal) return;
+  modal.classList.add("hidden");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+function goToGymHomeVersion() {
+  const dedicatedInstallUrl = getDedicatedInstallUrl(gymId);
+
+  if (dedicatedInstallUrl) {
+    window.location.href = dedicatedInstallUrl;
+    return;
+  }
+
+  window.location.href = buildGymOnlyUrl(gymId);
+}
+
+async function showNativeA2hsPrompt() {
+  if (!deferredA2hsPrompt) return false;
+
+  const promptEvent = deferredA2hsPrompt;
+  deferredA2hsPrompt = null;
+
+  try {
+    closeA2hsModal();
+    promptEvent.prompt();
+    await promptEvent.userChoice;
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function startAddToHomeScreenFlow() {
+  if (isInStandaloneMode()) return true;
+
+  // On Android/Chromium, if we have the native prompt available,
+  // use it immediately from ANY page, including a machine page.
+  if (!isIosLike() && deferredA2hsPrompt) {
+    return await showNativeA2hsPrompt();
+  }
+
+  // Otherwise fall back to the instructional modal.
+  openA2hsModal();
+  return false;
+}
+
+async function confirmAddToHomeScreen() {
+  if (isInStandaloneMode()) {
+    closeA2hsModal();
+    return true;
+  }
+
+  // Android/Chromium native prompt path
+  if (!isIosLike() && deferredA2hsPrompt) {
+    return await showNativeA2hsPrompt();
+  }
+
+  // iPhone/iPad or no native prompt available
+  if (machineId) {
+    goToGymHomeVersion();
+    return true;
+  }
+
+  closeA2hsModal();
+  return false;
+}
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredA2hsPrompt = e;
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredA2hsPrompt = null;
+  const btn = document.getElementById("addToHomeScreenBtn");
+  if (btn) btn.classList.add("hidden");
+});
+
+    /* ---------- Cardio Field Definitions ---------- */
     function getCardioFieldDefs(mid) {
       const base = [
         { key: "minutes", label: "Time (minutes)", placeholder: "e.g., 20", inputMode: "numeric", required: true },
@@ -3452,12 +3299,50 @@
       }
 
       if (mid === "SKIER") return base.concat([distanceM]);
-      if (mid === "RECBK" || mid === "UPRBK") return base.concat([distanceMi, { key: "resistance", label: "Resistance (optional)", placeholder: "e.g., 12", inputMode: "numeric", required: false }]);
-      if (mid === "ICLMB") return base.concat([distanceMi, { key: "incline", label: "Incline % (optional)", placeholder: "e.g., 12", inputMode: "decimal", required: false }, { key: "speed", label: "Speed (mph, optional)", placeholder: "e.g., 3.2", inputMode: "decimal", required: false }]);
-      if (mid === "JACOB" || mid === "VCLMB") return base.concat([{ key: "level", label: "Level (optional)", placeholder: "e.g., 8", inputMode: "numeric", required: false }, { key: "steps", label: "Steps (optional)", placeholder: "e.g., 1200", inputMode: "numeric", required: false }]);
-      if (mid === "XTRNR" || mid === "STRDR") return base.concat([distanceMi, { key: "resistance", label: "Resistance (optional)", placeholder: "e.g., 10", inputMode: "numeric", required: false }, { key: "incline", label: "Incline % (optional)", placeholder: "e.g., 6", inputMode: "decimal", required: false }]);
-      if (mid === "SPRBK" || mid === "ADSKI") return base.concat([{ key: "resistance", label: "Resistance (optional)", placeholder: "e.g., 10", inputMode: "numeric", required: false }, { key: "pace", label: "Interval / Pace notes (optional)", placeholder: "e.g., 30s hard / 90s easy", inputMode: "text", required: false }]);
-      if (mid === "SLDM") return base.concat([{ key: "level", label: "Level (optional)", placeholder: "e.g., 7", inputMode: "numeric", required: false }, { key: "distance", label: "Distance (miles, optional)", placeholder: "e.g., 1.2", inputMode: "decimal", required: false }]);
+
+      if (mid === "RECBK" || mid === "UPRBK") {
+        return base.concat([
+          distanceMi,
+          { key: "resistance", label: "Resistance (optional)", placeholder: "e.g., 12", inputMode: "numeric", required: false }
+        ]);
+      }
+
+      if (mid === "ICLMB") {
+        return base.concat([
+          distanceMi,
+          { key: "incline", label: "Incline % (optional)", placeholder: "e.g., 12", inputMode: "decimal", required: false },
+          { key: "speed", label: "Speed (mph, optional)", placeholder: "e.g., 3.2", inputMode: "decimal", required: false }
+        ]);
+      }
+
+      if (mid === "JACOB" || mid === "VCLMB") {
+        return base.concat([
+          { key: "level", label: "Level (optional)", placeholder: "e.g., 8", inputMode: "numeric", required: false },
+          { key: "steps", label: "Steps (optional)", placeholder: "e.g., 1200", inputMode: "numeric", required: false }
+        ]);
+      }
+
+      if (mid === "XTRNR" || mid === "STRDR") {
+        return base.concat([
+          distanceMi,
+          { key: "resistance", label: "Resistance (optional)", placeholder: "e.g., 10", inputMode: "numeric", required: false },
+          { key: "incline", label: "Incline % (optional)", placeholder: "e.g., 6", inputMode: "decimal", required: false }
+        ]);
+      }
+
+      if (mid === "SPRBK" || mid === "ADSKI") {
+        return base.concat([
+          { key: "resistance", label: "Resistance (optional)", placeholder: "e.g., 10", inputMode: "numeric", required: false },
+          { key: "pace", label: "Interval / Pace notes (optional)", placeholder: "e.g., 30s hard / 90s easy", inputMode: "text", required: false }
+        ]);
+      }
+
+      if (mid === "SLDM") {
+        return base.concat([
+          { key: "level", label: "Level (optional)", placeholder: "e.g., 7", inputMode: "numeric", required: false },
+          { key: "distance", label: "Distance (miles, optional)", placeholder: "e.g., 1.2", inputMode: "decimal", required: false }
+        ]);
+      }
 
       return base.concat([distanceMi]);
     }
@@ -3518,6 +3403,7 @@
       inp.value = formatCardioValue(def, next);
     }
 
+    /* ---------- Rest Seconds storage ---------- */
     function restKeyFor(gid, mid) {
       return `scanliftlog_restseconds_v1:${gid}:${mid}`;
     }
@@ -3536,6 +3422,7 @@
       localStorage.setItem(restKeyFor(gymId, machineId), String(Math.floor(n)));
     }
 
+    /* ---------- Storage: workouts per user+machine ---------- */
     function storageKeyFor(mid) {
       return `scanliftlog_workouts_v1:${userId}:${orgId}:${mid}`;
     }
@@ -3550,6 +3437,7 @@
       localStorage.setItem(storageKeyFor(machineId), JSON.stringify(arr));
     }
 
+    /* ---------- Badge Storage (lifetime, separate from workout history) ---------- */
     function badgeStorageKey() {
       return `scanliftlog_badges_v1:${userId}:${orgId}`;
     }
@@ -3580,19 +3468,21 @@
       saveBadgeProgress(progress);
     }
 
+    /* ---------- Badges ---------- */
     const BADGES = [
-      { id: "rookie", name: "Rookie", milestone: 1, accent: "steel", icon: "dumbbell" },
-      { id: "novice", name: "Novice", milestone: 25, accent: "blue", icon: "target" },
-      { id: "intermediate", name: "Intermediate", milestone: 50, accent: "green", icon: "clipboard" },
-      { id: "advanced", name: "Advanced", milestone: 100, accent: "red", icon: "flame" },
-      { id: "expert", name: "Expert", milestone: 250, accent: "purple", icon: "zap" },
-      { id: "pro", name: "Pro", milestone: 500, accent: "gold", icon: "trophy" },
-      { id: "elite", name: "Elite", milestone: 1000, accent: "platinum", icon: "shield" },
-      { id: "legend", name: "Legend", milestone: 2500, accent: "platinum", icon: "crown" }
+      { id: "rookie",       name: "Rookie",       milestone: 1,    accent: "steel",    icon: "dumbbell" },
+      { id: "novice",       name: "Novice",       milestone: 25,   accent: "blue",     icon: "target" },
+      { id: "intermediate", name: "Intermediate", milestone: 50,   accent: "green",    icon: "clipboard" },
+      { id: "advanced",     name: "Advanced",     milestone: 100,  accent: "red",      icon: "flame" },
+      { id: "expert",       name: "Expert",       milestone: 250,  accent: "purple",   icon: "zap" },
+      { id: "pro",          name: "Pro",          milestone: 500,  accent: "gold",     icon: "trophy" },
+      { id: "elite",        name: "Elite",        milestone: 1000, accent: "platinum", icon: "shield" },
+      { id: "legend",       name: "Legend",       milestone: 2500, accent: "platinum", icon: "crown" }
     ];
 
     function badgeSvg(icon) {
       const common = 'width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+
       switch (icon) {
         case "dumbbell":
           return `<svg ${common}><path d="M6 9v6"/><path d="M18 9v6"/><path d="M4 10v4"/><path d="M20 10v4"/><path d="M9 8v8"/><path d="M15 8v8"/><path d="M6 12h12"/></svg>`;
@@ -3631,10 +3521,13 @@
     function getBadgeProgressPct(totalSaved) {
       const current = getCurrentBadge(totalSaved);
       const next = getNextBadge(totalSaved);
+
       if (!next) return 100;
+
       const min = current ? current.milestone : 0;
       const max = next.milestone;
       const raw = ((totalSaved - min) / (max - min)) * 100;
+
       return Math.max(0, Math.min(100, raw));
     }
 
@@ -3715,6 +3608,8 @@
       renderBadgesCard();
       renderGuidedStepBanner();
     }
+
+    /* ---------- Monthly Consistency ---------- */
     function getDaysInCurrentMonth() {
       const now = new Date();
       const year = now.getFullYear();
@@ -3779,7 +3674,11 @@
       const loggedDays = uniqueDays.size;
       const pct = daysInMonth ? Math.max(0, Math.min(100, (loggedDays / daysInMonth) * 100)) : 0;
 
-      return { loggedDays, daysInMonth, pct };
+      return {
+        loggedDays,
+        daysInMonth,
+        pct
+      };
     }
 
     function renderMonthlyConsistency() {
@@ -3797,7 +3696,7 @@
       fillEl.style.width = `${stats.pct}%`;
       subtextEl.textContent = `You have logged a workout ${stats.loggedDays} out of ${stats.daysInMonth} days this month`;
     }
-
+        /* ---------- Back Up Data ---------- */
     function downloadData() {
       const all = [];
       for (let i = 0; i < localStorage.length; i++) {
@@ -3837,6 +3736,7 @@
       URL.revokeObjectURL(url);
     }
 
+    /* ---------- Upload / Import Data ---------- */
     function isWorkoutKey(k) {
       return typeof k === "string" && k.startsWith("scanliftlog_workouts_v1:");
     }
@@ -3895,6 +3795,7 @@
       });
     }
 
+    /* ---------- Workout Report ---------- */
     function formatSavedAtForReport(savedAt, ts) {
       if (savedAt && typeof savedAt === "string") return savedAt;
       if (ts != null && Number.isFinite(ts)) return new Date(ts).toLocaleString();
@@ -3950,7 +3851,7 @@
     }
 
     function renderStrengthSetsForReport(sets) {
-      if (!sets || !sets.length) return '<p class="muted">No sets.</p>';
+      if (!sets || !sets.length) return "<p class=\"muted\">No sets.</p>";
       const rows = sets.map((s, i) =>
         `<tr><td>${i + 1}</td><td>${escapeHtml(s.weight || "")}</td><td>${escapeHtml(s.reps || "")}</td></tr>`
       ).join("");
@@ -3958,7 +3859,7 @@
     }
 
     function renderCardioForReport(cardio) {
-      if (!cardio || typeof cardio !== "object") return '<p class="muted">No cardio details.</p>';
+      if (!cardio || typeof cardio !== "object") return "<p class=\"muted\">No cardio details.</p>";
       const parts = [];
       if (cardio.minutes != null) parts.push(`Time: ${cardio.minutes} min`);
       if (cardio.calories != null) parts.push(`Calories Burned: ${cardio.calories}`);
@@ -3969,32 +3870,32 @@
       if (cardio.resistance != null) parts.push(`Resistance: ${cardio.resistance}`);
       if (cardio.level != null) parts.push(`Level: ${cardio.level}`);
       if (cardio.pace != null) parts.push(`Pace: ${escapeHtml(String(cardio.pace))}`);
-      return parts.length ? "<p>" + parts.join(" • ") + "</p>" : '<p class="muted">No cardio details.</p>';
+      return parts.length ? "<p>" + parts.join(" • ") + "</p>" : "<p class=\"muted\">No cardio details.</p>";
     }
 
     function buildPdfOnlyReportHtml(workouts) {
-      const pdfStyle = 'style="background:#fff; color:#000; font-family: system-ui, sans-serif; font-size: 12px; margin: 0; padding: 0;"';
-      const pdfTable = 'style="width:100%; border-collapse:collapse; font-size:11px; margin-top:6px;"';
-      const pdfTh = 'style="text-align:left; padding:6px 8px; border:1px solid #333; background:#f5f5f5;"';
-      const pdfTd = 'style="text-align:left; padding:6px 8px; border:1px solid #333;"';
+      const pdfStyle = "style=\"background:#fff; color:#000; font-family: system-ui, sans-serif; font-size: 12px; margin: 0; padding: 0;\"";
+      const pdfTable = "style=\"width:100%; border-collapse:collapse; font-size:11px; margin-top:6px;\"";
+      const pdfTh = "style=\"text-align:left; padding:6px 8px; border:1px solid #333; background:#f5f5f5;\"";
+      const pdfTd = "style=\"text-align:left; padding:6px 8px; border:1px solid #333;\"";
 
       let html = "<div " + pdfStyle + ">";
-      html += '<h1 style="font-size:18px; margin:0 0 12px 0; border-bottom:2px solid #000; padding-bottom:8px;">Workout Report</h1>';
-      html += `<p style="margin:0 0 12px 0;"><strong>User</strong> ${escapeHtml(userId.slice(0, 8))}… &nbsp; <strong>Total Workouts</strong> ${workouts.length} &nbsp; <strong>Generated</strong> ${escapeHtml(nowReadable())}</p>`;
+      html += "<h1 style=\"font-size:18px; margin:0 0 12px 0; border-bottom:2px solid #000; padding-bottom:8px;\">Workout Report</h1>";
+      html += "<p style=\"margin:0 0 12px 0;\"><strong>User</strong> " + escapeHtml(userId.slice(0, 8)) + "… &nbsp; <strong>Total Workouts</strong> " + workouts.length + " &nbsp; <strong>Generated</strong> " + escapeHtml(nowReadable()) + "</p>";
 
       if (!workouts.length) {
-        html += '<p style="margin:12px 0;">No saved workouts for this user on this device.</p>';
+        html += "<p style=\"margin:12px 0;\">No saved workouts for this user on this device.</p>";
       } else {
         workouts.forEach(w => {
           const savedAt = formatSavedAtForReport(w.savedAt, w.ts);
-          html += '<div style="margin:16px 0; padding:12px 0; border-top:1px solid #333;">';
-          html += `<p style="margin:0 0 8px 0; font-size:14px; font-weight:bold;">${escapeHtml(w.machineName || "—")} &nbsp; <span style="font-weight:normal; font-size:11px;">${escapeHtml(w.type || "—")}</span></p>`;
-          html += `<table ${pdfTable}><tr><th ${pdfTh}>Date</th><td ${pdfTd}>${escapeHtml(w.date || "—")}</td><th ${pdfTh}>Gym</th><td ${pdfTd}>${escapeHtml(w.gymName || "—")}</td></tr>`;
-          html += `<tr><th ${pdfTh}>Exercise</th><td ${pdfTd}>${escapeHtml(w.exercise || "—")}</td><th ${pdfTh}>Saved</th><td ${pdfTd}>${escapeHtml(savedAt || "—")}</td></tr></table>`;
-          html += `<p style="margin:8px 0 4px 0;"><strong>Notes</strong></p><p style="margin:0 0 8px 0;">${escapeHtml(w.notes || "—")}</p>`;
+          html += "<div style=\"margin:16px 0; padding:12px 0; border-top:1px solid #333;\">";
+          html += "<p style=\"margin:0 0 8px 0; font-size:14px; font-weight:bold;\">" + escapeHtml(w.machineName || "—") + " &nbsp; <span style=\"font-weight:normal; font-size:11px;\">" + escapeHtml(w.type || "—") + "</span></p>";
+          html += "<table " + pdfTable + "><tr><th " + pdfTh + ">Date</th><td " + pdfTd + ">" + escapeHtml(w.date || "—") + "</td><th " + pdfTh + ">Gym</th><td " + pdfTd + ">" + escapeHtml(w.gymName || "—") + "</td></tr>";
+          html += "<tr><th " + pdfTh + ">Exercise</th><td " + pdfTd + ">" + escapeHtml(w.exercise || "—") + "</td><th " + pdfTh + ">Saved</th><td " + pdfTd + ">" + escapeHtml(savedAt || "—") + "</td></tr></table>";
+          html += "<p style=\"margin:8px 0 4px 0;\"><strong>Notes</strong></p><p style=\"margin:0 0 8px 0;\">" + escapeHtml(w.notes || "—") + "</p>";
 
           if (w.type === "Cardio" && w.cardio) {
-            html += `<p style="margin:4px 0;"><strong>Cardio</strong></p><table ${pdfTable}><thead><tr><th ${pdfTh}>Metric</th><th ${pdfTh}>Value</th></tr></thead><tbody>`;
+            html += "<p style=\"margin:4px 0;\"><strong>Cardio</strong></p><table " + pdfTable + "><thead><tr><th " + pdfTh + ">Metric</th><th " + pdfTh + ">Value</th></tr></thead><tbody>";
             const c = w.cardio;
             [
               ["minutes", "Minutes"],
@@ -4008,14 +3909,14 @@
               ["pace", "Pace"]
             ].forEach(([k, label]) => {
               if (c[k] != null && c[k] !== "") {
-                html += `<tr><td ${pdfTd}>${escapeHtml(label)}</td><td ${pdfTd}>${escapeHtml(String(c[k]))}</td></tr>`;
+                html += "<tr><td " + pdfTd + ">" + escapeHtml(label) + "</td><td " + pdfTd + ">" + escapeHtml(String(c[k])) + "</td></tr>";
               }
             });
             html += "</tbody></table>";
           } else if (w.sets && w.sets.length) {
-            html += `<p style="margin:4px 0;"><strong>Sets</strong></p><table ${pdfTable}><thead><tr><th ${pdfTh}>Set</th><th ${pdfTh}>Weight</th><th ${pdfTh}>Reps</th></tr></thead><tbody>`;
+            html += "<p style=\"margin:4px 0;\"><strong>Sets</strong></p><table " + pdfTable + "><thead><tr><th " + pdfTh + ">Set</th><th " + pdfTh + ">Weight</th><th " + pdfTh + ">Reps</th></tr></thead><tbody>";
             w.sets.forEach((s, i) => {
-              html += `<tr><td ${pdfTd}>${i + 1}</td><td ${pdfTd}>${escapeHtml(s.weight || "—")}</td><td ${pdfTd}>${escapeHtml(s.reps || "—")}</td></tr>`;
+              html += "<tr><td " + pdfTd + ">" + (i + 1) + "</td><td " + pdfTd + ">" + escapeHtml(s.weight || "—") + "</td><td " + pdfTd + ">" + escapeHtml(s.reps || "—") + "</td></tr>";
             });
             html += "</tbody></table>";
           }
@@ -4134,6 +4035,8 @@
       w.document.close();
     }
 
+    /* ---------- DOM refs ---------- */
+    const setsContainer = document.getElementById("setsContainer");
     const dateInput = document.getElementById("dateInput");
     const notesInput = document.getElementById("notesInput");
     const exerciseInput = document.getElementById("exerciseInput");
@@ -4142,7 +4045,6 @@
     const abductorSelectWrap = document.getElementById("abductorSelectWrap");
     const abductorExerciseSelect = document.getElementById("abductorExerciseSelect");
     const machineSelect = document.getElementById("machineSelect");
-    const setsContainer = document.getElementById("setsContainer");
 
     const strengthSection = document.getElementById("strengthSection");
     const cardioSection = document.getElementById("cardioSection");
@@ -4175,43 +4077,27 @@
     const guidedTopFocusSlot = document.getElementById("guidedTopFocusSlot");
     const guidedSetsPanel = document.getElementById("guidedSetsPanel");
     const loggerActionPanel = document.getElementById("loggerActionPanel");
-    const moreOptionsToggle = document.getElementById("moreOptionsToggle");
-    const moreOptionsPanel = document.getElementById("moreOptionsPanel");
-    const moreOptionsChevron = document.getElementById("moreOptionsChevron");
 
     let cardioInputs = {};
 
-    function initMoreOptionsToggle() {
-      if (!moreOptionsToggle || !moreOptionsPanel) return;
-
-      const setOpen = (open) => {
-        moreOptionsPanel.classList.toggle("open", open);
-        moreOptionsToggle.setAttribute("aria-expanded", open ? "true" : "false");
-        if (moreOptionsChevron) {
-          moreOptionsChevron.textContent = open ? "▲" : "▼";
-        }
-      };
-
-      setOpen(false);
-
-      moreOptionsToggle.addEventListener("click", () => {
-        const isOpen = moreOptionsPanel.classList.contains("open");
-        setOpen(!isOpen);
-      });
-    }
-
+    /* ---------- Guided Focus Helpers ---------- */
     const gwUiHomes = {};
 
     function gwRememberHome(key, node) {
       if (!node || gwUiHomes[key]) return;
-      gwUiHomes[key] = { parent: node.parentNode, next: node.nextSibling };
+      gwUiHomes[key] = {
+        parent: node.parentNode,
+        next: node.nextSibling
+      };
     }
 
     function gwIsEditingGuidedStrengthFields() {
       const ae = document.activeElement;
       if (!ae) return false;
+
       const tag = String(ae.tagName || "").toUpperCase();
       if (!["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return false;
+
       return !!ae.closest("#guidedSetsPanel, #setsContainer, .setRow");
     }
 
@@ -4226,6 +4112,7 @@
       const home = gwUiHomes[key];
       if (!node || !home || !home.parent) return;
       if (node.parentNode === home.parent) return;
+
       if (home.next && home.next.parentNode === home.parent) {
         home.parent.insertBefore(node, home.next);
       } else {
@@ -4243,17 +4130,36 @@
 
       if (focusModeActive) {
         guidedTopFocusSlot.hidden = false;
-        if (guidedStepBanner) gwMoveNodeTo("guidedStepBanner", guidedStepBanner, guidedTopFocusSlot);
-        if (guidedSetsPanel) gwMoveNodeTo("guidedSetsPanel", guidedSetsPanel, guidedTopFocusSlot);
-        if (loggerActionPanel) gwMoveNodeTo("loggerActionPanel", loggerActionPanel, guidedTopFocusSlot);
+
+        if (guidedStepBanner) {
+          gwMoveNodeTo("guidedStepBanner", guidedStepBanner, guidedTopFocusSlot);
+        }
+
+        if (guidedSetsPanel) {
+          gwMoveNodeTo("guidedSetsPanel", guidedSetsPanel, guidedTopFocusSlot);
+        }
+
+        if (loggerActionPanel) {
+          gwMoveNodeTo("loggerActionPanel", loggerActionPanel, guidedTopFocusSlot);
+        }
       } else {
         guidedTopFocusSlot.hidden = true;
-        if (guidedStepBanner) gwRestoreNode("guidedStepBanner", guidedStepBanner);
-        if (guidedSetsPanel) gwRestoreNode("guidedSetsPanel", guidedSetsPanel);
-        if (loggerActionPanel) gwRestoreNode("loggerActionPanel", loggerActionPanel);
+
+        if (guidedStepBanner) {
+          gwRestoreNode("guidedStepBanner", guidedStepBanner);
+        }
+
+        if (guidedSetsPanel) {
+          gwRestoreNode("guidedSetsPanel", guidedSetsPanel);
+        }
+
+        if (loggerActionPanel) {
+          gwRestoreNode("loggerActionPanel", loggerActionPanel);
+        }
       }
     }
 
+    /* ---------- Strength: Sets UI ---------- */
     function createSetRow(setIndex, weight = "", reps = "") {
       const row = document.createElement("div");
       row.className = "setRow";
@@ -4283,7 +4189,7 @@
       r.addEventListener("input", maybeTriggerRestOnReps);
 
       const del = document.createElement("button");
-      del.className = "iconBtn";
+      del.className = "iconBtn danger";
       del.type = "button";
       del.textContent = "−";
       del.title = "Remove set";
@@ -4330,12 +4236,16 @@
       }).filter(s => s.weight || s.reps);
     }
 
+    /* ---------- Cardio ---------- */
     function clearCardioInputs() {
-      Object.values(cardioInputs).forEach(inp => { inp.value = ""; });
+      Object.values(cardioInputs).forEach(inp => {
+        inp.value = "";
+      });
     }
 
     function fillCardioInputsFromData(data) {
       if (!data || typeof data !== "object") return;
+
       Object.keys(cardioInputs).forEach(key => {
         if (!cardioInputs[key]) return;
         const val = data[key];
@@ -4361,6 +4271,7 @@
         const label = document.createElement("div");
         label.className = "cardioFieldLabel";
         label.textContent = def.label;
+
         card.appendChild(label);
 
         if (def.key === "pace") {
@@ -4504,6 +4415,7 @@
       }
     }
 
+    /* ---------- History ---------- */
     function getTopSet(sets) {
       let best = null;
       let bestW = -Infinity;
@@ -4546,8 +4458,9 @@
       }
 
       const sorted = workouts.slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
+      const isMobile = window.innerWidth <= 768;
 
-      sorted.forEach((w, index) => {
+      for (const w of sorted) {
         const isCardio = !!w.cardio;
 
         let summary = "—";
@@ -4605,7 +4518,7 @@
           <td>${escapeHtml(w.date || "")}</td>
           <td>${summary}</td>
           <td>
-            <details ${index < 3 ? "open" : ""}>
+            <details>
               <summary>View</summary>
               ${detailsHtml}
             </details>
@@ -4615,7 +4528,7 @@
         tbody.appendChild(tr);
 
         const mobileId = `historyDetails_${Math.random().toString(36).slice(2)}`;
-        const startsOpen = index < 3;
+        const startsOpen = isMobile;
         const mobileSummaryLabel = isCardio ? "Summary" : "Top Set";
 
         const card = document.createElement("div");
@@ -4640,7 +4553,7 @@
           </div>
         `;
         mobileWrap.appendChild(card);
-      });
+      }
 
       mobileWrap.querySelectorAll(".historyCardToggle").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -4669,6 +4582,7 @@
       renderGuidedStepBanner();
     }
 
+    /* ---------- Guided Workout Storage ---------- */
     const GW_ACTIVE_PLAN_PREFIX = "scanliftlog_guidedplan_v1:";
     const GW_PLAN_HISTORY_PREFIX = "scanliftlog_guidedhistory_v1:";
 
@@ -4696,46 +4610,55 @@
     function gwSaveCompletedPlanHistory(plan) {
       const key = `${GW_PLAN_HISTORY_PREFIX}${plan.userId}:${plan.gymId}`;
       let arr = [];
-      try { arr = JSON.parse(localStorage.getItem(key) || "[]"); } catch {}
+      try {
+        arr = JSON.parse(localStorage.getItem(key) || "[]");
+      } catch {}
       arr.unshift(plan);
       localStorage.setItem(key, JSON.stringify(arr.slice(0, 30)));
     }
 
+
+    /* ---------- Guided Workout Catalog ---------- */
     const WORKOUT_TEMPLATES = {
       chest: [
-        { exercise:"Chest Press", machineLabelMatch:["Chest Press","Converging Chest Press"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
+        { exercise:"Chest Press",   machineLabelMatch:["Chest Press","Converging Chest Press"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
         { exercise:"Incline Press", machineLabelMatch:["Incline Press","Incline Bench"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Pec Fly", machineLabelMatch:["Rear Delt / Pec Fly"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} },
-        { exercise:"Dip Press", machineLabelMatch:["Seated Dip - Plate Loaded","Seated Dip - Pin Loaded"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:10,advanced:8} }
+        { exercise:"Pec Fly",       machineLabelMatch:["Rear Delt / Pec Fly"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} },
+        { exercise:"Dip Press",     machineLabelMatch:["Seated Dip - Plate Loaded","Seated Dip - Pin Loaded"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:10,advanced:8} }
       ],
+
       back: [
-        { exercise:"Lat Pulldown", machineLabelMatch:["Lat Pulldown","Diverging Lat Pulldown","Pulldown"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Seated Row", machineLabelMatch:["Seated Row","Cable Row"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Low Row", machineLabelMatch:["Low Row Machine","Diverging Low Row"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:10,advanced:8} },
-        { exercise:"T-Bar Row", machineLabelMatch:["T-Bar Row Station"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:10,advanced:8} }
+        { exercise:"Lat Pulldown",  machineLabelMatch:["Lat Pulldown","Diverging Lat Pulldown","Pulldown"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
+        { exercise:"Seated Row",    machineLabelMatch:["Seated Row","Cable Row"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
+        { exercise:"Low Row",       machineLabelMatch:["Low Row Machine","Diverging Low Row"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:10,advanced:8} },
+        { exercise:"T-Bar Row",     machineLabelMatch:["T-Bar Row Station"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:10,advanced:8} }
       ],
+
       legs: [
-        { exercise:"Leg Press", machineLabelMatch:["Leg Press","Angled Leg Press"], sets:{beginner:3,intermediate:4,advanced:4}, reps:{beginner:12,intermediate:10,advanced:8} },
-        { exercise:"Hack Squat", machineLabelMatch:["Hack Squat","Squat Machine"], sets:{beginner:2,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
+        { exercise:"Leg Press",     machineLabelMatch:["Leg Press","Angled Leg Press"], sets:{beginner:3,intermediate:4,advanced:4}, reps:{beginner:12,intermediate:10,advanced:8} },
+        { exercise:"Hack Squat",    machineLabelMatch:["Hack Squat","Squat Machine"], sets:{beginner:2,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
         { exercise:"Leg Extension", machineLabelMatch:["Leg Extension"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} },
-        { exercise:"Leg Curl", machineLabelMatch:["Leg Curl","Seated Leg Curl","Prone Leg Curl","Single Leg Curl"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} }
+        { exercise:"Leg Curl",      machineLabelMatch:["Leg Curl","Seated Leg Curl","Prone Leg Curl","Single Leg Curl"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} }
       ],
+
       shoulders: [
         { exercise:"Shoulder Press", machineLabelMatch:["Shoulder Press","Converging Shoulder Press"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Lateral Raise", machineLabelMatch:["Lateral Raise"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} },
+        { exercise:"Lateral Raise",  machineLabelMatch:["Lateral Raise"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} },
         { exercise:"Overhead Press", machineLabelMatch:["Overhead Barbell Press","Smith Machine"], sets:{beginner:2,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Rear Delt Fly", machineLabelMatch:["Rear Delt / Pec Fly"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:15,intermediate:12,advanced:12} }
+        { exercise:"Rear Delt Fly",  machineLabelMatch:["Rear Delt / Pec Fly"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:15,intermediate:12,advanced:12} }
       ],
+
       arms: [
-        { exercise:"Biceps Curl", machineLabelMatch:["Biceps Curl - Pin Loaded","Biceps Curl - Plate Loaded"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:12,intermediate:10,advanced:8} },
-        { exercise:"Triceps Press", machineLabelMatch:["Tricep Press","Triceps Extension Machine"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:12,intermediate:10,advanced:8} },
+        { exercise:"Biceps Curl",      machineLabelMatch:["Biceps Curl - Pin Loaded","Biceps Curl - Plate Loaded"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:12,intermediate:10,advanced:8} },
+        { exercise:"Triceps Press",    machineLabelMatch:["Tricep Press","Triceps Extension Machine"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:12,intermediate:10,advanced:8} },
         { exercise:"Assisted Dip / Pull", machineLabelMatch:["Assisted Pull-Up / Dip"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Cable Arm Work", machineLabelMatch:["Dual Adjustable Pulley"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} }
+        { exercise:"Cable Arm Work",   machineLabelMatch:["Dual Adjustable Pulley"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} }
       ],
+
       fullbody: [
-        { exercise:"Chest Press", machineLabelMatch:["Chest Press","Converging Chest Press"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Lat Pulldown", machineLabelMatch:["Lat Pulldown","Pulldown"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Leg Press", machineLabelMatch:["Leg Press","Angled Leg Press"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:10,advanced:8} },
+        { exercise:"Chest Press",    machineLabelMatch:["Chest Press","Converging Chest Press"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:10,intermediate:10,advanced:8} },
+        { exercise:"Lat Pulldown",   machineLabelMatch:["Lat Pulldown","Pulldown"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:10,intermediate:10,advanced:8} },
+        { exercise:"Leg Press",      machineLabelMatch:["Leg Press","Angled Leg Press"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:10,advanced:8} },
         { exercise:"Shoulder Press", machineLabelMatch:["Shoulder Press","Converging Shoulder Press"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:10,intermediate:10,advanced:8} }
       ]
     };
@@ -4764,12 +4687,24 @@
     }
 
     function gwGetUserHistorySummary() {
-      return { hasHistory: false, recentMachineCodes: [], recentMuscleGroups: [] };
+      return {
+        hasHistory: false,
+        recentMachineCodes: [],
+        recentMuscleGroups: []
+      };
     }
 
     function gwGenerateAIExplanation(goal, level, duration, promptText, plan) {
       const count = plan?.steps?.length || 0;
-      const goalLabelMap = { chest:"chest", back:"back", legs:"leg", shoulders:"shoulder", arms:"arm", fullbody:"full-body" };
+      const goalLabelMap = {
+        chest: "chest",
+        back: "back",
+        legs: "leg",
+        shoulders: "shoulder",
+        arms: "arm",
+        fullbody: "full-body"
+      };
+
       const goalLabel = goalLabelMap[goal] || goal;
       const customPrompt = String(promptText || "").trim();
 
@@ -4784,6 +4719,7 @@
       const templates = WORKOUT_TEMPLATES[goal] || [];
       const desiredCount = gwGetStepCountForDuration(duration);
       const history = useHistory ? gwGetUserHistorySummary() : null;
+
       const chosenSteps = [];
       const usedMachineCodes = new Set();
 
@@ -4829,6 +4765,7 @@
       };
 
       plan.aiExplanation = gwGenerateAIExplanation(goal, level, duration, promptText, plan);
+
       return plan;
     }
 
@@ -4836,7 +4773,9 @@
       if (!plan) return null;
 
       const current = gwGetCurrentStep(plan);
-      if (current && current.status === "upcoming") current.status = "completed";
+      if (current && current.status === "upcoming") {
+        current.status = "completed";
+      }
 
       let nextIndex = -1;
       for (let i = plan.currentStepIndex + 1; i < plan.steps.length; i++) {
@@ -4874,6 +4813,7 @@
       if (!aiDisclaimerModal) return;
       aiDisclaimerModal.classList.remove("hidden");
       aiDisclaimerModal.setAttribute("aria-hidden", "false");
+
       if (aiDisclaimerAgree) aiDisclaimerAgree.checked = false;
       if (acceptAiDisclaimerBtn) acceptAiDisclaimerBtn.disabled = true;
     }
@@ -4921,6 +4861,7 @@
       guidedWorkoutModal.setAttribute("aria-hidden", "true");
     }
 
+  
     function gwRenderSteps(plan) {
       if (!plannerStepsList) return;
       plannerStepsList.innerHTML = "";
@@ -4991,15 +4932,16 @@
       if (!guidedStepBanner) return;
 
       const activePlan = gwLoadActivePlan(gymId, userId);
+      const aiEntryWrap = document.querySelector(".plannerEntryWrap");
 
       if (!activePlan || activePlan.status !== "active") {
         guidedStepBanner.style.display = "none";
-        if (planWorkoutBtn) planWorkoutBtn.style.display = machineId ? "" : "none";
+        if (aiEntryWrap) aiEntryWrap.style.display = machineId ? "" : "none";
         if (!gwIsEditingGuidedStrengthFields()) gwSyncFocusedGuidedUI();
         return;
       }
 
-      if (planWorkoutBtn) planWorkoutBtn.style.display = "none";
+      if (aiEntryWrap) aiEntryWrap.style.display = "none";
 
       const current = gwGetCurrentStep(activePlan);
 
@@ -5019,64 +4961,76 @@
       }
 
       guidedStepBanner.style.display = "";
-      if (guidedStepBannerPill) guidedStepBannerPill.textContent = `Step ${activePlan.currentStepIndex + 1} of ${activePlan.steps.length}`;
-      if (guidedStepBannerTitle) guidedStepBannerTitle.textContent = current.machineName;
-      if (guidedStepBannerMeta) guidedStepBannerMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
-      if (guidedStepBannerHint) guidedStepBannerHint.textContent = "Finish this machine, then tap Save Workout to move to the next step.";
+      if (guidedStepBannerPill) {
+        guidedStepBannerPill.textContent = `Step ${activePlan.currentStepIndex + 1} of ${activePlan.steps.length}`;
+      }
+      if (guidedStepBannerTitle) {
+        guidedStepBannerTitle.textContent = current.machineName;
+      }
+      if (guidedStepBannerMeta) {
+        guidedStepBannerMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
+      }
+      if (guidedStepBannerHint) {
+        guidedStepBannerHint.textContent = "Finish this machine, then tap Save Workout to move to the next step.";
+      }
 
       if (!gwIsEditingGuidedStrengthFields()) gwSyncFocusedGuidedUI();
     }
 
     function gwRenderPlanUI(plan) {
-      if (!plan || !Array.isArray(plan.steps) || !plan.steps.length) {
-        gwCloseGuidedWorkoutModal();
-        renderGuidedStepBanner();
-        gwSyncFocusedGuidedUI();
-        return;
-      }
+  if (!plan || !Array.isArray(plan.steps) || !plan.steps.length) {
+    gwCloseGuidedWorkoutModal();
+    renderGuidedStepBanner();
+    gwSyncFocusedGuidedUI();
+    return;
+  }
 
-      const isCompleted = plan.status === "completed";
+  const isCompleted = plan.status === "completed";
 
-      if (guidedWorkoutTitle) guidedWorkoutTitle.textContent = `Guided Workout — ${String(plan.goal || "").toUpperCase()}`;
-      if (guidedWorkoutSub) {
-        guidedWorkoutSub.textContent = isCompleted
-          ? `Workout complete • ${plan.duration} min • ${plan.level} • ${plan.style}`
-          : `${plan.duration} min • ${plan.level} • ${plan.style}`;
-      }
+  if (guidedWorkoutTitle) {
+    guidedWorkoutTitle.textContent = `Guided Workout — ${String(plan.goal || "").toUpperCase()}`;
+  }
 
-      if (plannerAIText) {
-        plannerAIText.textContent = plan.aiExplanation || "Your guided workout explanation will appear here.";
-      }
+  if (guidedWorkoutSub) {
+    guidedWorkoutSub.textContent = isCompleted
+      ? `Workout complete • ${plan.duration} min • ${plan.level} • ${plan.style}`
+      : `${plan.duration} min • ${plan.level} • ${plan.style}`;
+  }
 
-      if (guidedWorkoutCompletionNote) {
-        if (isCompleted) {
-          guidedWorkoutCompletionNote.style.display = "";
-          guidedWorkoutCompletionNote.textContent = "Workout complete — nice work";
-        } else {
-          guidedWorkoutCompletionNote.style.display = "none";
-          guidedWorkoutCompletionNote.textContent = "";
-        }
-      }
+  if (plannerAIText) {
+    plannerAIText.textContent =
+      plan.aiExplanation || "Your guided workout explanation will appear here.";
+  }
 
-      if (exitGuidedWorkoutBtn) {
-        exitGuidedWorkoutBtn.textContent = isCompleted ? "Finished" : "Exit Guided Workout";
-      }
-
-      if (
-        !Number.isInteger(plan.currentStepIndex) ||
-        plan.currentStepIndex < 0 ||
-        plan.currentStepIndex >= plan.steps.length
-      ) {
-        const firstUpcomingIndex = plan.steps.findIndex(step => step.status === "upcoming");
-        plan.currentStepIndex = firstUpcomingIndex >= 0 ? firstUpcomingIndex : 0;
-      }
-
-      gwSaveActivePlan(plan);
-      gwRenderSteps(plan);
-      gwOpenGuidedWorkoutModal();
-      renderGuidedStepBanner();
-      gwSyncFocusedGuidedUI();
+  if (guidedWorkoutCompletionNote) {
+    if (isCompleted) {
+      guidedWorkoutCompletionNote.style.display = "";
+      guidedWorkoutCompletionNote.textContent = "Workout complete — nice work";
+    } else {
+      guidedWorkoutCompletionNote.style.display = "none";
+      guidedWorkoutCompletionNote.textContent = "";
     }
+  }
+
+  if (exitGuidedWorkoutBtn) {
+    exitGuidedWorkoutBtn.textContent = isCompleted ? "Finished" : "Exit Guided Workout";
+  }
+
+  if (
+    !Number.isInteger(plan.currentStepIndex) ||
+    plan.currentStepIndex < 0 ||
+    plan.currentStepIndex >= plan.steps.length
+  ) {
+    const firstUpcomingIndex = plan.steps.findIndex(step => step.status === "upcoming");
+    plan.currentStepIndex = firstUpcomingIndex >= 0 ? firstUpcomingIndex : 0;
+  }
+
+  gwSaveActivePlan(plan);
+  gwRenderSteps(plan);
+  gwOpenGuidedWorkoutModal();
+  renderGuidedStepBanner();
+  gwSyncFocusedGuidedUI();
+}
 
     function gwGeneratePlanFromForm() {
       const goalEl = document.getElementById("plannerGoal");
@@ -5120,14 +5074,18 @@
 
       window.location.replace(url.toString());
     }
-
-    function gwInitPlanner() {
+        function gwInitPlanner() {
       if (planWorkoutBtn) {
         planWorkoutBtn.addEventListener("click", aiHandlePlanWorkoutEntry);
       }
 
-      if (closeAiDisclaimerBtn) closeAiDisclaimerBtn.addEventListener("click", aiCloseDisclaimerModal);
-      if (cancelAiDisclaimerBtn) cancelAiDisclaimerBtn.addEventListener("click", aiCloseDisclaimerModal);
+      if (closeAiDisclaimerBtn) {
+        closeAiDisclaimerBtn.addEventListener("click", aiCloseDisclaimerModal);
+      }
+
+      if (cancelAiDisclaimerBtn) {
+        cancelAiDisclaimerBtn.addEventListener("click", aiCloseDisclaimerModal);
+      }
 
       if (aiDisclaimerAgree && acceptAiDisclaimerBtn) {
         aiDisclaimerAgree.addEventListener("change", () => {
@@ -5146,69 +5104,86 @@
 
       if (aiDisclaimerModal) {
         aiDisclaimerModal.addEventListener("click", (e) => {
-          if (e.target === aiDisclaimerModal) aiCloseDisclaimerModal();
-        });
-      }
-
-      if (closePlannerSetupBtn) closePlannerSetupBtn.addEventListener("click", gwCloseSetupModal);
-      if (generateWorkoutBtn) generateWorkoutBtn.addEventListener("click", gwGeneratePlanFromForm);
-      if (closeGuidedWorkoutBtn) closeGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
-      if (exitGuidedWorkoutBtn) exitGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
-    }
-
-    function setupGuidedWorkoutBackHandler() {
-      // Intentionally disabled.
-    }
-
-    function initA2hsUi() {
-      const addBtn = document.getElementById("addToHomeScreenBtn");
-      const closeBtn = document.getElementById("closeA2hsBtn");
-      const modal = document.getElementById("a2hsModal");
-      const openGymHomeBtn = document.getElementById("openGymHomeBtn");
-      const confirmBtn = document.getElementById("confirmA2hsBtn");
-
-      if (!addBtn) return;
-
-      if (isInStandaloneMode()) {
-        addBtn.classList.add("hidden");
-        return;
-      }
-
-      addBtn.addEventListener("click", async () => {
-        await startAddToHomeScreenFlow();
-      });
-
-      if (closeBtn) closeBtn.addEventListener("click", closeA2hsModal);
-
-      if (modal) {
-        modal.addEventListener("click", (e) => {
-          if (e.target === modal || e.target.classList.contains("a2hsBackdrop")) {
-            closeA2hsModal();
+          if (e.target === aiDisclaimerModal) {
+            aiCloseDisclaimerModal();
           }
         });
       }
 
-      if (openGymHomeBtn) {
-        openGymHomeBtn.addEventListener("click", () => {
-          goToGymHomeVersion();
-        });
+      if (closePlannerSetupBtn) {
+        closePlannerSetupBtn.addEventListener("click", gwCloseSetupModal);
       }
 
-      if (confirmBtn) {
-        confirmBtn.addEventListener("click", async () => {
-          await confirmAddToHomeScreen();
-        });
+      if (generateWorkoutBtn) {
+        generateWorkoutBtn.addEventListener("click", gwGeneratePlanFromForm);
+      }
+
+      if (closeGuidedWorkoutBtn) {
+        closeGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
+      }
+
+      if (exitGuidedWorkoutBtn) {
+        exitGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
       }
     }
 
-    function initMachineDropdown() {
-      populateMachineDropdown();
-      if (machineSelect) {
-        machineSelect.addEventListener("change", () => {
-          handleMachineDropdownChange(machineSelect.value);
-        });
+ function setupGuidedWorkoutBackHandler() {
+  // Intentionally disabled for now.
+  // Guided workout should not add browser history entries.
+}
+
+function initA2hsUi() {
+  const addBtn = document.getElementById("addToHomeScreenBtn");
+  const closeBtn = document.getElementById("closeA2hsBtn");
+  const modal = document.getElementById("a2hsModal");
+  const openGymHomeBtn = document.getElementById("openGymHomeBtn");
+  const confirmBtn = document.getElementById("confirmA2hsBtn");
+
+  if (!addBtn) return;
+
+  if (isInStandaloneMode()) {
+    addBtn.classList.add("hidden");
+    return;
+  }
+
+  addBtn.addEventListener("click", async () => {
+    await startAddToHomeScreenFlow();
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeA2hsModal);
+  }
+
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal || e.target.classList.contains("a2hsBackdrop")) {
+        closeA2hsModal();
       }
-    }
+    });
+  }
+
+  if (openGymHomeBtn) {
+    openGymHomeBtn.addEventListener("click", () => {
+      goToGymHomeVersion();
+    });
+  }
+
+  if (confirmBtn) {
+    confirmBtn.addEventListener("click", async () => {
+      await confirmAddToHomeScreen();
+    });
+  }
+}
+
+function initMachineDropdown() {
+  populateMachineDropdown();
+
+  if (machineSelect) {
+    machineSelect.addEventListener("change", () => {
+      handleMachineDropdownChange(machineSelect.value);
+    });
+  }
+}
 
     function updateHeaderContext() {
       const gymNameText = document.getElementById("gymNameText");
@@ -5244,18 +5219,22 @@
       hideMachineSelectionGate();
     }
 
+    /* ================================
+       INIT
+       ================================ */
     (async () => {
       applyInstallBranding();
 
       const isPrivateLikely = await detectPrivateModeLikely();
-      if (isPrivateLikely) showPrivateModeModal();
+      if (isPrivateLikely) {
+        showPrivateModeModal();
+      }
 
       document.getElementById("year").textContent = String(new Date().getFullYear());
-      if (dateInput) dateInput.value = todayISO();
+      dateInput.value = todayISO();
 
       initA2hsUi();
       initMachineDropdown();
-      initMoreOptionsToggle();
       updateHeaderContext();
 
       const promoBannerEl = document.getElementById("promoBanner");
@@ -5298,6 +5277,7 @@
 
         promoBannerLink.addEventListener("click", () => {
           if (!bannerHref) return;
+
           logEvent(gymId, machineId || null, machineName || "PROMO_BANNER", userId, "banner_click", {
             bannerTargetUrl: bannerHref
           });
@@ -5373,6 +5353,7 @@
             alert("No previous cardio workout found for this machine yet.");
             return;
           }
+
           fillCardioInputsFromData(last.cardio);
         });
       }
@@ -5448,7 +5429,7 @@
 
           if (exerciseInput) exerciseInput.value = "";
           if (abductorExerciseSelect) abductorExerciseSelect.value = "";
-          if (notesInput) notesInput.value = "";
+          notesInput.value = "";
           clearCardioInputs();
           renderHistory();
           renderBadgeUI();
@@ -5499,7 +5480,7 @@
 
         if (exerciseInput) exerciseInput.value = "";
         if (abductorExerciseSelect) abductorExerciseSelect.value = "";
-        if (notesInput) notesInput.value = "";
+        notesInput.value = "";
         clearCurrentSets();
         renderHistory();
         renderBadgeUI();
