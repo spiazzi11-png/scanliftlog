@@ -1625,90 +1625,6 @@
       gap:16px;
     }
 
-    .plannerMapPanel {
-      min-width:0;
-    }
-
-    .plannerMapWrap {
-      position:relative;
-      width:100%;
-      border-radius:22px;
-      overflow:hidden;
-      background:#0f1117;
-      border:1px solid rgba(255,255,255,.08);
-      min-height:460px;
-    }
-
-    .plannerMapImage {
-      display:block;
-      width:100%;
-      height:auto;
-      min-height:460px;
-      object-fit:cover;
-      background:#11141b;
-    }
-
-    .plannerMapPlaceholder {
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:24px;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.5;
-      pointer-events:none;
-    }
-
-    #plannerMapMarkers {
-      position:absolute;
-      inset:0;
-    }
-
-    .plannerMarker {
-      position:absolute;
-      width:34px;
-      height:34px;
-      border-radius:999px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:.88rem;
-      font-weight:800;
-      color:#fff;
-      background:rgba(255,255,255,.18);
-      border:2px solid rgba(255,255,255,.35);
-      transform:translate(-50%,-50%);
-      box-shadow:0 8px 18px rgba(0,0,0,.3);
-      transition:.2s ease;
-      user-select:none;
-      cursor:pointer;
-    }
-
-    .plannerMarker.upcoming {
-      background:rgba(255,255,255,.16);
-      border-color:rgba(255,255,255,.35);
-    }
-
-    .plannerMarker.active {
-      background:var(--plannerActive);
-      border-color:#fff;
-      transform:translate(-50%,-50%) scale(1.15);
-      box-shadow:0 0 0 10px rgba(220,38,38,.15), 0 12px 24px rgba(0,0,0,.35);
-    }
-
-    .plannerMarker.completed {
-      background:var(--plannerComplete);
-      border-color:#dcfce7;
-    }
-
-    .plannerMarker.skipped {
-      background:var(--plannerSkipped);
-      border-color:#e5e7eb;
-    }
-
     .plannerCurrentCard,
     .plannerStepsCard,
     .plannerAICard {
@@ -2071,17 +1987,6 @@
 
       .plannerGrid {
         grid-template-columns:1fr;
-      }
-
-      .plannerMapWrap,
-      .plannerMapImage {
-        min-height:320px;
-      }
-
-      .plannerMarker {
-        width:30px;
-        height:30px;
-        font-size:.78rem;
       }
 
       .guidedStepBanner {
@@ -2461,7 +2366,7 @@
         <div>
           <h2>AI Guided Workout</h2>
           <div class="plannerSubText">
-            Build a guided 3–4 machine workout for this gym. The map will highlight each machine number one step at a time.
+            Build a guided 3–4 machine workout for this gym. Follow one machine at a time in the order provided.
           </div>
         </div>
         <button id="closePlannerSetupBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
@@ -2538,7 +2443,7 @@
         <div>
           <h2 id="guidedWorkoutTitle">Guided Workout</h2>
           <div id="guidedWorkoutSub" class="plannerSubText">
-            Follow the highlighted machine numbers on the map.
+            Follow the workout steps in order.
           </div>
         </div>
         <button id="closeGuidedWorkoutBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
@@ -2552,21 +2457,6 @@
           </div>
         </div>
 
-        <div class="plannerMapPanel" data-ui="planner-map">
-          <div class="plannerMapWrap" id="plannerMapWrap">
-            <img
-              id="plannerMapImage"
-              class="plannerMapImage"
-              src=""
-              alt="Gym map"
-            />
-            <div id="plannerMapPlaceholder" class="plannerMapPlaceholder">
-              Add your top-down Push Fitness Melville map image by setting the correct image path in the code.
-            </div>
-            <div id="plannerMapMarkers"></div>
-          </div>
-        </div>
-
         <div class="plannerStepsCard">
           <div class="plannerStepsTitle">Workout Steps</div>
           <div id="plannerStepsList" class="plannerStepsList"></div>
@@ -2577,7 +2467,7 @@
           <div class="plannerCurrentTitle" id="plannerCurrentTitle">Machine 1 — Chest Press</div>
           <div class="plannerCurrentMeta" id="plannerCurrentMeta">3 sets × 10 reps</div>
           <div class="plannerCurrentHint" id="plannerCurrentHint">
-            Find the highlighted machine number on the map, then log your workout.
+             Review this machine, then log your workout.
           </div>
 
           <div class="plannerCurrentActions">
@@ -2622,6 +2512,9 @@
     </div>
   </div>
 </div>
+  
+<script src="/machine-map.js"></script>  
+<script>
     /* ================================
        IMPORTANT DEPLOYMENT NOTE
        ================================
@@ -3080,7 +2973,7 @@
   const INSTALL_BRANDING = {
   "pushfitness-melville": {
     pageTitle: "Push Fitness Club",
-    appleTitle: "Push Fitness",
+    appleTitle: "Push Fitness Club",
     appleTouchIcon: "/icons/pushfitness-192.png",
     manifest: "/manifests/pushfitness-melville.webmanifest"
   }
@@ -4144,9 +4037,6 @@ window.addEventListener("appinstalled", () => {
     const closePlannerSetupBtn = document.getElementById("closePlannerSetupBtn");
     const generateWorkoutBtn = document.getElementById("generateWorkoutBtn");
     const closeGuidedWorkoutBtn = document.getElementById("closeGuidedWorkoutBtn");
-    const plannerMapImage = document.getElementById("plannerMapImage");
-    const plannerMapPlaceholder = document.getElementById("plannerMapPlaceholder");
-    const plannerMapMarkers = document.getElementById("plannerMapMarkers");
     const plannerStepsList = document.getElementById("plannerStepsList");
     const plannerStepKicker = document.getElementById("plannerStepKicker");
     const plannerCurrentTitle = document.getElementById("plannerCurrentTitle");
@@ -4711,32 +4601,6 @@ window.addEventListener("appinstalled", () => {
       localStorage.setItem(key, JSON.stringify(arr.slice(0, 30)));
     }
 
-    /* ---------- Guided Workout Map Image ---------- */
-    const GYM_MAP_IMAGE = {
-      "pushfitness-melville": "maps/pushfitness-melville-map.png",
-      "main": ""
-    };
-
-    function applyPlannerMapImage(gid) {
-      const src = GYM_MAP_IMAGE[gid] || "";
-      if (!plannerMapImage || !plannerMapPlaceholder) return;
-
-      if (!src) {
-        plannerMapImage.src = "";
-        plannerMapPlaceholder.style.display = "flex";
-        return;
-      }
-
-      plannerMapImage.onerror = () => {
-        plannerMapPlaceholder.style.display = "flex";
-      };
-
-      plannerMapImage.onload = () => {
-        plannerMapPlaceholder.style.display = "none";
-      };
-
-      plannerMapImage.src = src;
-    }
 
     /* ---------- Guided Workout Catalog ---------- */
     const WORKOUT_TEMPLATES = {
@@ -4829,10 +4693,10 @@ window.addEventListener("appinstalled", () => {
       const customPrompt = String(promptText || "").trim();
 
       if (customPrompt) {
-        return `Based on your request — "${customPrompt}" — I built a ${count}-machine ${goalLabel} workout for about ${duration} minutes at a ${level} level. Follow the highlighted machine numbers in order and log each station as you go.`;
+        return `Based on your request — "${customPrompt}" — I built a ${count}-machine ${goalLabel} workout for about ${duration} minutes at a ${level} level. Follow the workout steps in order and log each station as you go.`;
       }
 
-      return `I built a ${count}-machine ${goalLabel} workout for about ${duration} minutes at a ${level} level. Start with the highlighted machine, complete your sets, log the workout, then move to the next highlighted number on the map.`;
+      return `I built a ${count}-machine ${goalLabel} workout for about ${duration} minutes at a ${level} level. Start with the first machine, complete your sets, log the workout, then move to the next step.`;
     }
 
     function gwBuildWorkoutPlan({ gymId, goal, duration, level, style, useHistory, promptText }) {
@@ -4981,40 +4845,7 @@ window.addEventListener("appinstalled", () => {
       guidedWorkoutModal.setAttribute("aria-hidden", "true");
     }
 
-    function gwRenderMarkers(plan) {
-      if (!plannerMapMarkers) return;
-      plannerMapMarkers.innerHTML = "";
-
-      plan.steps.forEach((step, stepIndex) => {
-        const el = document.createElement("button");
-        el.type = "button";
-        el.className = "plannerMarker upcoming";
-        el.style.left = `${step.markerLeft}%`;
-        el.style.top = `${step.markerTop}%`;
-        el.textContent = step.machineNumber;
-        el.title = `Machine ${step.machineNumber} — ${step.machineName}`;
-
-        if (step.status === "completed") {
-          el.className = "plannerMarker completed";
-        } else if (step.status === "skipped") {
-          el.className = "plannerMarker skipped";
-        } else if (stepIndex === plan.currentStepIndex && plan.status === "active") {
-          el.className = "plannerMarker active";
-        } else {
-          el.className = "plannerMarker upcoming";
-        }
-
-        el.addEventListener("click", () => {
-          if (plan.status !== "active") return;
-          plan.currentStepIndex = stepIndex;
-          gwSaveActivePlan(plan);
-          gwRenderPlanUI(plan);
-        });
-
-        plannerMapMarkers.appendChild(el);
-      });
-    }
-
+  
     function gwRenderSteps(plan) {
       if (!plannerStepsList) return;
       plannerStepsList.innerHTML = "";
@@ -5138,7 +4969,6 @@ window.addEventListener("appinstalled", () => {
         return;
       }
 
-      applyPlannerMapImage(plan.gymId);
 
       if (guidedWorkoutTitle) {
         guidedWorkoutTitle.textContent = `Guided Workout — ${String(plan.goal || "").toUpperCase()}`;
@@ -5198,7 +5028,7 @@ window.addEventListener("appinstalled", () => {
         }
 
         if (plannerCurrentHint) {
-          plannerCurrentHint.textContent = "Find the highlighted machine number on the map, then log your workout.";
+          plannerCurrentHint.textContent = "Review this machine, then log your workout.";
         }
 
         if (openLoggingBtn) {
@@ -5208,7 +5038,6 @@ window.addEventListener("appinstalled", () => {
       }
 
       gwSaveActivePlan(plan);
-      gwRenderMarkers(plan);
       gwRenderSteps(plan);
       gwOpenGuidedWorkoutModal();
       renderGuidedStepBanner();
