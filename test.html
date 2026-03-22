@@ -2248,7 +2248,7 @@
             <div id="guidedStepBannerPill" class="guidedStepBannerPill">Step 1 of 4</div>
           </div>
 
-        <div class="plannerCurrentTitle" id="plannerCurrentTitle">Chest Press</div>
+        <div id="guidedStepBannerTitle" class="guidedStepBannerTitle">Chest Press</div>
 
           <div id="guidedStepBannerMeta" class="guidedStepBannerMeta">
             3 sets × 10 reps
@@ -2458,11 +2458,6 @@
         <div class="plannerStepsCard">
           <div class="plannerStepsTitle">Workout Steps</div>
           <div id="plannerStepsList" class="plannerStepsList"></div>
-        </div>
-
-            class="plannerCurrentActions">
-            <button id="openLoggingBtn" class="primary" type="button">Log This Machine</button>
-          </div>
         </div>
 
         <div class="plannerBottomActions">
@@ -4947,65 +4942,41 @@ window.addEventListener("appinstalled", () => {
     }
 
     function gwRenderPlanUI(plan) {
-      if (!plan || !Array.isArray(plan.steps) || !plan.steps.length) {
-        gwCloseGuidedWorkoutModal();
-        renderGuidedStepBanner();
-        gwSyncFocusedGuidedUI();
-        return;
-      }
+  if (!plan || !Array.isArray(plan.steps) || !plan.steps.length) {
+    gwCloseGuidedWorkoutModal();
+    renderGuidedStepBanner();
+    gwSyncFocusedGuidedUI();
+    return;
+  }
 
+  if (guidedWorkoutTitle) {
+    guidedWorkoutTitle.textContent = `Guided Workout — ${String(plan.goal || "").toUpperCase()}`;
+  }
 
-      if (guidedWorkoutTitle) {
-        guidedWorkoutTitle.textContent = `Guided Workout — ${String(plan.goal || "").toUpperCase()}`;
-      }
+  if (guidedWorkoutSub) {
+    guidedWorkoutSub.textContent = `${plan.duration} min • ${plan.level} • ${plan.style}`;
+  }
 
-      if (guidedWorkoutSub) {
-        guidedWorkoutSub.textContent = `${plan.duration} min • ${plan.level} • ${plan.style}`;
-      }
+  if (plannerAIText) {
+    plannerAIText.textContent =
+      plan.aiExplanation || "Your guided workout explanation will appear here.";
+  }
 
-      if (plannerAIText) {
-        plannerAIText.textContent = plan.aiExplanation || "Your guided workout explanation will appear here.";
-      }
+  if (
+    !Number.isInteger(plan.currentStepIndex) ||
+    plan.currentStepIndex < 0 ||
+    plan.currentStepIndex >= plan.steps.length
+  ) {
+    const firstUpcomingIndex = plan.steps.findIndex(step => step.status === "upcoming");
+    plan.currentStepIndex = firstUpcomingIndex >= 0 ? firstUpcomingIndex : 0;
+  }
 
-      if (
-        !Number.isInteger(plan.currentStepIndex) ||
-        plan.currentStepIndex < 0 ||
-        plan.currentStepIndex >= plan.steps.length
-      ) {
-        const firstUpcomingIndex = plan.steps.findIndex(step => step.status === "upcoming");
-        plan.currentStepIndex = firstUpcomingIndex >= 0 ? firstUpcomingIndex : 0;
-      }
-
-      let current = plan.steps[plan.currentStepIndex] || null;
-
-      if (plan.status === "completed") {
-        if (plannerStepKicker) plannerStepKicker.textContent = "Workout Complete";
-        if (plannerCurrentTitle) plannerCurrentTitle.textContent = "Nice work";
-        if (plannerCurrentMeta) plannerCurrentMeta.textContent = "All planned steps are finished.";
-        if (plannerCurrentHint) plannerCurrentHint.textContent = "Tap Done to exit guided workout and return to the machine page.";
-
-        if (openLoggingBtn) {
-          openLoggingBtn.disabled = false;
-          openLoggingBtn.textContent = "Done";
-        }
-      } else {
-        if (!current) {
-          const firstUpcomingIndex = plan.steps.findIndex(step => step.status === "upcoming");
-          if (firstUpcomingIndex >= 0) {
-            plan.currentStepIndex = firstUpcomingIndex;
-            current = plan.steps[firstUpcomingIndex];
-          } else {
-            plan.currentStepIndex = 0;
-            current = plan.steps[0];
-          }
-        }
-
-      gwSaveActivePlan(plan);
-      gwRenderSteps(plan);
-      gwOpenGuidedWorkoutModal();
-      renderGuidedStepBanner();
-      gwSyncFocusedGuidedUI();
-    }
+  gwSaveActivePlan(plan);
+  gwRenderSteps(plan);
+  gwOpenGuidedWorkoutModal();
+  renderGuidedStepBanner();
+  gwSyncFocusedGuidedUI();
+}
 
     function gwGeneratePlanFromForm() {
       const goalEl = document.getElementById("plannerGoal");
