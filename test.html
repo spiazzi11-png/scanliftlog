@@ -2248,9 +2248,7 @@
             <div id="guidedStepBannerPill" class="guidedStepBannerPill">Step 1 of 4</div>
           </div>
 
-          <div id="guidedStepBannerTitle" class="guidedStepBannerTitle">
-            Machine 1 — Chest Press
-          </div>
+        <div class="plannerCurrentTitle" id="plannerCurrentTitle">Chest Press</div>
 
           <div id="guidedStepBannerMeta" class="guidedStepBannerMeta">
             3 sets × 10 reps
@@ -4859,7 +4857,7 @@ window.addEventListener("appinstalled", () => {
 
         div.innerHTML = `
           <div class="plannerStepRow1">
-            <span>Machine ${step.machineNumber} — ${step.machineName}</span>
+            <span>${step.machineName}</span>
             <span>${idx + 1}</span>
           </div>
           <div class="plannerStepRow2">
@@ -4949,7 +4947,7 @@ window.addEventListener("appinstalled", () => {
         guidedStepBannerPill.textContent = `Step ${activePlan.currentStepIndex + 1} of ${activePlan.steps.length}`;
       }
       if (guidedStepBannerTitle) {
-        guidedStepBannerTitle.textContent = `Machine ${current.machineNumber} — ${current.machineName}`;
+        guidedStepBannerTitle.textContent = current.machineName;
       }
       if (guidedStepBannerMeta) {
         guidedStepBannerMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
@@ -5020,7 +5018,7 @@ window.addEventListener("appinstalled", () => {
         }
 
         if (plannerCurrentTitle) {
-          plannerCurrentTitle.textContent = `Machine ${current.machineNumber} — ${current.machineName}`;
+          plannerCurrentTitle.textContent = current.machineName;
         }
 
         if (plannerCurrentMeta) {
