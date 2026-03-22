@@ -2460,15 +2460,7 @@
           <div id="plannerStepsList" class="plannerStepsList"></div>
         </div>
 
-        <div class="plannerCurrentCard">
-          <div class="plannerStepKicker" id="plannerStepKicker">Step 1 of 4</div>
-          <div class="plannerCurrentTitle" id="plannerCurrentTitle">Machine 1 — Chest Press</div>
-          <div class="plannerCurrentMeta" id="plannerCurrentMeta">3 sets × 10 reps</div>
-          <div class="plannerCurrentHint" id="plannerCurrentHint">
-             Review this machine, then log your workout.
-          </div>
-
-          <div class="plannerCurrentActions">
+            class="plannerCurrentActions">
             <button id="openLoggingBtn" class="primary" type="button">Log This Machine</button>
           </div>
         </div>
@@ -4036,10 +4028,6 @@ window.addEventListener("appinstalled", () => {
     const generateWorkoutBtn = document.getElementById("generateWorkoutBtn");
     const closeGuidedWorkoutBtn = document.getElementById("closeGuidedWorkoutBtn");
     const plannerStepsList = document.getElementById("plannerStepsList");
-    const plannerStepKicker = document.getElementById("plannerStepKicker");
-    const plannerCurrentTitle = document.getElementById("plannerCurrentTitle");
-    const plannerCurrentMeta = document.getElementById("plannerCurrentMeta");
-    const plannerCurrentHint = document.getElementById("plannerCurrentHint");
     const guidedWorkoutTitle = document.getElementById("guidedWorkoutTitle");
     const guidedWorkoutSub = document.getElementById("guidedWorkoutSub");
     const plannerAIText = document.getElementById("plannerAIText");
@@ -4049,7 +4037,6 @@ window.addEventListener("appinstalled", () => {
     const guidedStepBannerTitle = document.getElementById("guidedStepBannerTitle");
     const guidedStepBannerMeta = document.getElementById("guidedStepBannerMeta");
     const guidedStepBannerHint = document.getElementById("guidedStepBannerHint");
-    const openLoggingBtn = document.getElementById("openLoggingBtn");
     const exitGuidedWorkoutBtn = document.getElementById("exitGuidedWorkoutBtn");
     const aiDisclaimerModal = document.getElementById("aiDisclaimerModal");
     const closeAiDisclaimerBtn = document.getElementById("closeAiDisclaimerBtn");
@@ -5013,28 +5000,6 @@ window.addEventListener("appinstalled", () => {
           }
         }
 
-        if (plannerStepKicker) {
-          plannerStepKicker.textContent = `Step ${plan.currentStepIndex + 1} of ${plan.steps.length}`;
-        }
-
-        if (plannerCurrentTitle) {
-          plannerCurrentTitle.textContent = current.machineName;
-        }
-
-        if (plannerCurrentMeta) {
-          plannerCurrentMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
-        }
-
-        if (plannerCurrentHint) {
-          plannerCurrentHint.textContent = "Review this machine, then log your workout.";
-        }
-
-        if (openLoggingBtn) {
-          openLoggingBtn.disabled = false;
-          openLoggingBtn.textContent = "Log This Machine";
-        }
-      }
-
       gwSaveActivePlan(plan);
       gwRenderSteps(plan);
       gwOpenGuidedWorkoutModal();
@@ -5067,36 +5032,6 @@ window.addEventListener("appinstalled", () => {
       gwSaveActivePlan(plan);
       gwCloseSetupModal();
       gwRenderPlanUI(plan);
-    }
-
-    function gwOpenCurrentStepLogging() {
-      const plan = gwLoadActivePlan(gymId, userId);
-      if (!plan) return;
-
-      if (plan.status === "completed") {
-        gwExitGuidedWorkout();
-        return;
-      }
-
-      const current = gwGetCurrentStep(plan);
-      if (!current) return;
-
-      const targetMachine = String(current.machineCode || "").toUpperCase();
-      const currentMachine = String(machineId || "").toUpperCase();
-
-      if (targetMachine === currentMachine) {
-        gwCloseGuidedWorkoutModal();
-        renderGuidedStepBanner();
-        gwSyncFocusedGuidedUI();
-        return;
-      }
-
-      sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
-
-      gwSetParamAndNavigate({
-        gym: gymId,
-        machine: targetMachine
-      });
     }
 
     function gwSetParamAndNavigate(params) {
@@ -5160,10 +5095,6 @@ window.addEventListener("appinstalled", () => {
 
       if (closeGuidedWorkoutBtn) {
         closeGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
-      }
-
-      if (openLoggingBtn) {
-        openLoggingBtn.addEventListener("click", gwOpenCurrentStepLogging);
       }
 
       if (exitGuidedWorkoutBtn) {
