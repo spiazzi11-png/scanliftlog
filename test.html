@@ -10,8 +10,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="ScanLiftLog" />
 
-<link id="dynamicManifestLink" rel="manifest" href="/manifests/main.webmanifest" />
-<link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  <link id="dynamicManifestLink" rel="manifest" href="/manifests/main.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
   <style>
     :root {
@@ -345,6 +345,89 @@
       color:var(--muted);
       font-size:12px;
       line-height:1.4;
+    }
+
+    .compactMachineCard {
+      padding:10px 10px 9px;
+    }
+
+    .compactContextBar {
+      padding:10px 10px 8px;
+      gap:10px;
+      align-items:stretch;
+    }
+
+    .compactContextBar .contextItem {
+      min-width:0;
+      flex:1;
+    }
+
+    .compactContextBar .contextItemPrimary {
+      flex:1.45;
+    }
+
+    .compactContextBar .contextValue {
+      margin-top:4px;
+      font-size:16px;
+      line-height:1.2;
+    }
+
+    .compactContextBar .contextSelect {
+      font-size:15px;
+      padding:10px 11px;
+      border-radius:12px;
+    }
+
+    .compactContextBar .contextHint {
+      margin-top:4px;
+      font-size:10px;
+      line-height:1.25;
+      opacity:.72;
+    }
+
+    .plannerEntryCard {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:8px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(139,92,246,.18);
+      background: linear-gradient(180deg, rgba(139,92,246,.08), rgba(255,255,255,.02));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    .plannerEntryEyebrow,
+    .loggerEyebrow {
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      font-weight:900;
+    }
+
+    .plannerEntryTitle,
+    .loggerTitle {
+      margin-top:3px;
+      font-size:14px;
+      font-weight:800;
+      line-height:1.35;
+    }
+
+    .loggerHeader {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:8px;
+    }
+
+    .sectionHeadingRow {
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
     }
 
     .setsHeader {
@@ -737,7 +820,7 @@
     }
 
     .guidedSetsPanel {
-      margin-top:18px;
+      margin-top:8px;
     }
 
     #logger .guidedSetsPanel {
@@ -763,9 +846,9 @@
 
     /* ===== Monthly Consistency ===== */
     .consistencyCard{
-      margin:12px 0 16px;
-      padding:12px 14px;
-      border-radius:18px;
+      margin:12px 0 14px;
+      padding:10px 12px;
+      border-radius:16px;
       background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       border:1px solid rgba(255,255,255,.08);
       box-shadow:0 10px 30px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.04);
@@ -778,11 +861,11 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      margin-bottom:8px;
+      margin-bottom:6px;
     }
 
     .consistencyLabel{
-      font-size:.9rem;
+      font-size:.72rem;
       font-weight:800;
       letter-spacing:.08em;
       text-transform:uppercase;
@@ -790,14 +873,14 @@
     }
 
     .consistencyValue{
-      font-size:.95rem;
+      font-size:.85rem;
       font-weight:800;
       color:var(--text);
       white-space:nowrap;
     }
 
     .consistencyBar{
-      height:8px;
+      height:6px;
       width:100%;
       border-radius:999px;
       overflow:hidden;
@@ -815,8 +898,8 @@
     }
 
     .consistencySubtext{
-      margin-top:8px;
-      font-size:.92rem;
+      margin-top:6px;
+      font-size:.8rem;
       color:var(--muted);
       line-height:1.35;
     }
@@ -833,9 +916,9 @@
     .historyCardMobile {
       border:1px solid var(--line);
       background: rgba(255,255,255,.03);
-      border-radius:16px;
-      padding:12px;
-      margin-top:10px;
+      border-radius:14px;
+      padding:10px;
+      margin-top:8px;
     }
 
     .historyCardTop {
@@ -853,13 +936,13 @@
     }
 
     .historyCardSaved {
-      margin-top:8px;
-      font-size:12px;
+      margin-top:6px;
+      font-size:11px;
       color:var(--muted);
     }
 
     .historyCardSection {
-      margin-top:10px;
+      margin-top:8px;
     }
 
     .historyCardLabel {
@@ -954,9 +1037,63 @@
       background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
       border: 1px solid rgba(255,255,255,.08);
       border-radius: 18px;
-      padding: 14px;
+      padding: 12px;
       margin: 16px 0 0;
       box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    }
+
+    .badgeProgressCard {
+      padding:0;
+      overflow:hidden;
+    }
+
+    .badgeProgressSummaryBtn,
+    .badgesSummaryBtn {
+      width:100%;
+      border:0;
+      background:transparent;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px;
+      text-align:left;
+      cursor:pointer;
+    }
+
+    .badgeProgressSummaryMain {
+      min-width:0;
+      flex:1;
+    }
+
+    .badgeProgressSummaryMeta {
+      margin-top:4px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
+    }
+
+    .badgeToggleChevron {
+      font-size:18px;
+      color:var(--muted);
+      transition:transform .2s ease;
+    }
+
+    .badgeProgressCard.is-expanded .badgeToggleChevron,
+    .badgesCard.is-expanded .badgeToggleChevron {
+      transform:rotate(180deg);
+    }
+
+    .badgeProgressBody,
+    .badgesBody {
+      display:none;
+      padding:0 14px 14px;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    .badgeProgressCard.is-expanded .badgeProgressBody,
+    .badgesCard.is-expanded .badgesBody {
+      display:block;
     }
 
     .badgeProgressTop {
@@ -1026,7 +1163,7 @@
       justify-content:space-between;
       align-items:center;
       gap:10px;
-      margin-bottom:12px;
+      margin-bottom:10px;
     }
 
     .badgesHeaderTitle {
@@ -1054,8 +1191,8 @@
     .badgeTile {
       position:relative;
       border-radius:18px;
-      padding:12px;
-      min-height:126px;
+      padding:10px;
+      min-height:110px;
       background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
       border:1px solid rgba(255,255,255,.08);
       display:flex;
@@ -1084,15 +1221,96 @@
     }
 
     .badgeTileTitle {
-      font-size:14px;
+      font-size:13px;
       font-weight:800;
       line-height:1.2;
     }
 
     .badgeTileSub {
-      font-size:12px;
+      font-size:11px;
       opacity:.76;
       line-height:1.3;
+    }
+
+    .compactDetails {
+      margin-top:14px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      box-shadow:0 10px 24px rgba(0,0,0,.14);
+      overflow:hidden;
+    }
+
+    .compactDetails summary {
+      list-style:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      cursor:pointer;
+    }
+
+    .compactDetails summary::-webkit-details-marker {
+      display:none;
+    }
+
+    .compactDetailsMeta {
+      font-size:11px;
+      color:var(--muted);
+      font-weight:700;
+      text-align:right;
+    }
+
+    .compactDetailsSummaryText {
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+      min-width:0;
+    }
+
+    .compactDetailsSummaryTail {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex:0 0 auto;
+    }
+
+    .compactDetailsChevron {
+      font-size:14px;
+      color:var(--muted);
+      transition:transform .2s ease;
+    }
+
+    .compactDetails[open] .compactDetailsChevron {
+      transform:rotate(180deg);
+    }
+
+    .compactDetailsBody {
+      padding:0 14px 14px;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    .workoutOptionsDetails {
+      margin-top:14px;
+    }
+
+    .toolsPills {
+      gap:8px;
+    }
+
+    .loggerSecondaryActions {
+      gap:8px;
+    }
+
+    .loggerSecondaryActions button {
+      flex:0 1 auto;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:700;
+      border-color:rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      color:rgba(233,233,238,.82);
     }
 
     .badgeLock {
@@ -1868,12 +2086,13 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        padding:10px;
       }
 
       .contextBar {
         order: -1;
         margin-top: 0;
-        margin-bottom: 12px;
+        margin-bottom: 0;
         gap: 10px;
         flex-direction: column;
         width: 100%;
@@ -1884,18 +2103,18 @@
         min-width: 0;
         max-width: 100%;
         box-sizing: border-box;
-        padding: 12px 14px;
+        padding: 9px 10px;
       }
 
       .contextValue {
-        font-size: 20px;
-        line-height: 1.08;
+        font-size: 17px;
+        line-height: 1.1;
         word-break: break-word;
       }
 
       .contextSelect {
-        font-size:16px;
-        padding:11px 12px;
+        font-size:15px;
+        padding:10px 11px;
       }
 
       .top {
@@ -1983,6 +2202,37 @@
 
       .consistencyValue {
         white-space:normal;
+      }
+
+      .plannerEntryCard {
+        align-items:flex-start;
+        flex-direction:column;
+        padding:10px;
+        gap:8px;
+      }
+
+      .plannerEntryCard button {
+        width:100%;
+        padding:10px 12px;
+        font-size:14px;
+      }
+
+      #logger {
+        margin-top:10px;
+        padding:12px;
+      }
+
+      .compactDetails summary {
+        align-items:center;
+        flex-direction:row;
+      }
+
+      .compactDetailsSummaryText {
+        min-width:0;
+      }
+
+      .compactDetailsMeta {
+        text-align:left;
       }
 
       .historyTableWrap {
@@ -2108,62 +2358,14 @@
   <div class="wrap">
     <div id="guidedTopFocusSlot" hidden></div>
 
-    <div class="consistencyCard" id="consistencyCard" data-ui="monthly-consistency">
-      <div class="consistencyTop">
-        <div class="consistencyLabel">Monthly Consistency</div>
-        <div class="consistencyValue" id="consistencyValue">0 / 30 days</div>
-      </div>
-
-      <div class="consistencyBar">
-        <div class="consistencyBarFill" id="consistencyBarFill"></div>
-      </div>
-
-      <div class="consistencySubtext" id="consistencySubtext">
-        You have logged a workout 0 out of 30 days this month
-      </div>
-    </div>
-
-    <div class="card headerCard">
-      <div class="top">
-        <div></div>
-
-        <div class="pills">
-          <div class="pill">
-            <div class="tipWrap">
-              <button class="pillBtn" id="downloadBtn" type="button">Back Up Data</button>
-              <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
-              <div class="tipBox">
-                Clearing browser data can erase workout history.
-                Export occasionally to keep a backup.
-              </div>
-            </div>
-          </div>
-
-          <div class="pill">
-            <button class="pillBtn" id="uploadBtn" type="button">Restore Data</button>
-          </div>
-
-          <input id="uploadFileInput" type="file" accept="application/json,.json" style="display:none;" />
-
-          <div class="pill reportPill">
-            <button class="pillBtn" id="reportBtn" type="button">Workout Report</button>
-          </div>
-        </div>
-
-        <div class="backupNoteRow">
-          <div class="backupNote">
-            Download your data before clearing browser cache. Private/incognito browsing will not save workout history.
-          </div>
-        </div>
-      </div>
-
-      <div class="contextBar" data-ui="gym-machine-pill">
+    <div class="card headerCard compactMachineCard">
+      <div class="contextBar compactContextBar" data-ui="gym-machine-pill">
         <div class="contextItem">
-          <div class="contextLabel">Gym Name</div>
+          <div class="contextLabel">Gym</div>
           <div class="contextValue" id="gymNameText">…</div>
         </div>
 
-        <div class="contextItem">
+        <div class="contextItem contextItemPrimary">
           <div class="contextLabel">Machine</div>
           <div class="contextSelectWrap">
             <select id="machineSelect" class="contextSelect">
@@ -2175,8 +2377,16 @@
           </div>
         </div>
       </div>
+
+      <div class="plannerEntryCard">
+        <div>
+          <div class="plannerEntryEyebrow">AI Guided Workout</div>
+          <div class="plannerEntryTitle">Build a guided machine workout for this gym.</div>
+        </div>
+        <button id="planWorkoutBtn" class="primary" type="button">Start Guided Workout</button>
+      </div>
     </div>
-        <div class="card" id="inactiveGate" style="display:none;">
+    <div class="card" id="inactiveGate" style="display:none;">
       <div style="font-weight:900; font-size:18px;">Service Inactive</div>
       <div class="muted" style="margin-top:8px; line-height:1.5;">
         This gym is not currently active on ScanLiftLog.
@@ -2196,64 +2406,15 @@
       </div>
     </div>
 
-    <div id="badgeProgressCard" class="badgeProgressCard" style="display:none;" data-ui="current-badge"></div>
-
-    <div class="plannerEntryWrap">
-      <button id="planWorkoutBtn" class="primary" type="button">AI Guided Workout</button>
-    </div>
-
     <div class="card" id="logger">
-      <div class="row" style="align-items:flex-end;">
-        <div class="col">
-          <label>Date</label>
-          <input id="dateInput" type="date" />
-        </div>
-        <div class="col">
-          <label>Notes (optional)</label>
-          <input id="notesInput" placeholder="e.g., controlled reps, last set to failure" />
+      <div class="loggerHeader">
+        <div>
+          <div class="loggerEyebrow">Quick Log</div>
+          <div class="loggerTitle">Log this machine fast.</div>
         </div>
       </div>
-
-      <div class="row" id="exerciseRow" style="align-items:flex-end; margin-top:12px;">
-        <div class="col" id="exerciseInputWrap">
-          <label>Exercise (optional)</label>
-          <input id="exerciseInput" placeholder="e.g., Dumbbell Flys, DB Press, Incline DB Row" />
-        </div>
-
-        <div class="col" id="abductorSelectWrap" style="display:none;">
-          <label>Exercise</label>
-          <select id="abductorExerciseSelect">
-            <option value="">Select movement</option>
-            <option value="Hip Abductor - Inner">Hip Abductor - Inner</option>
-            <option value="Hip Adductor - Outer">Hip Adductor - Outer</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="hr"></div>
 
       <div id="strengthSection">
-        <div class="row" style="align-items:flex-end; margin-top:12px;">
-          <div class="col" style="max-width:220px;">
-            <label>Rest Timer (seconds)</label>
-            <input id="restSecondsInput" type="number" min="0" step="5" value="120" />
-          </div>
-
-          <div class="col" style="max-width:220px;">
-            <label>Countdown</label>
-            <input id="restCountdownDisplay" type="text" value="02:00" readonly />
-          </div>
-
-          <div class="col" style="max-width:320px;">
-            <label>&nbsp;</label>
-            <div class="btnrow">
-              <button class="iconBtn primary" id="restStartBtn" type="button">▶</button>
-              <button class="iconBtn" id="restStopBtn" type="button">■</button>
-              <div class="muted" id="restStatus" style="margin-left:6px;">Ready</div>
-            </div>
-          </div>
-        </div>
-
         <div id="guidedStepBanner" class="guidedStepBanner" style="display:none;">
           <div class="guidedStepBannerTop">
             <div class="guidedStepBannerEyebrow">AI Guided Workout Active</div>
@@ -2272,8 +2433,12 @@
         </div>
 
         <div id="guidedSetsPanel" class="guidedSetsPanel" data-ui="guided-sets-panel">
-          <div style="font-weight:900;">Sets</div>
-          <div class="muted" style="margin-top:6px;">Use + to add sets. Each set stores weight and reps.</div>
+          <div class="sectionHeadingRow">
+            <div>
+              <div style="font-weight:900;">Sets</div>
+              <div class="muted" style="margin-top:6px;">Weight and reps first. Save when finished.</div>
+            </div>
+          </div>
 
           <div class="setsHeader">
             <div class="muted">Set</div>
@@ -2314,12 +2479,91 @@
           </button>
         </div>
 
-        <div class="btnrow">
-          <button id="clearCurrentBtn" type="button" style="flex:1; min-width:0;">Clear Current</button>
-          <button class="danger" id="clearHistoryBtn" type="button" style="flex:1; min-width:0;">Clear All History</button>
+        <div class="btnrow loggerSecondaryActions">
+          <button id="clearCurrentBtn" type="button">Clear Current</button>
+          <button id="clearHistoryBtn" type="button">Clear All History</button>
         </div>
       </div>
+
+      <details class="compactDetails workoutOptionsDetails" id="workoutOptionsDetails">
+        <summary>
+          <span class="compactDetailsSummaryText">
+            <span>Workout Options</span>
+            <span class="compactDetailsMeta">Date, notes, exercise, rest timer</span>
+          </span>
+          <span class="compactDetailsSummaryTail">
+            <span class="compactDetailsChevron" aria-hidden="true">⌄</span>
+          </span>
+        </summary>
+
+        <div class="compactDetailsBody">
+          <div class="row" style="align-items:flex-end;">
+            <div class="col">
+              <label>Date</label>
+              <input id="dateInput" type="date" />
+            </div>
+            <div class="col">
+              <label>Notes (optional)</label>
+              <input id="notesInput" placeholder="e.g., controlled reps, last set to failure" />
+            </div>
+          </div>
+
+          <div class="row" id="exerciseRow" style="align-items:flex-end; margin-top:12px;">
+            <div class="col" id="exerciseInputWrap">
+              <label>Exercise (optional)</label>
+              <input id="exerciseInput" placeholder="e.g., Dumbbell Flys, DB Press, Incline DB Row" />
+            </div>
+
+            <div class="col" id="abductorSelectWrap" style="display:none;">
+              <label>Exercise</label>
+              <select id="abductorExerciseSelect">
+                <option value="">Select movement</option>
+                <option value="Hip Abductor - Inner">Hip Abductor - Inner</option>
+                <option value="Hip Adductor - Outer">Hip Adductor - Outer</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row workoutOptionsRestRow" style="align-items:flex-end; margin-top:12px;">
+            <div class="col" style="max-width:220px;">
+              <label>Rest Timer (seconds)</label>
+              <input id="restSecondsInput" type="number" min="0" step="5" value="120" />
+            </div>
+
+            <div class="col" style="max-width:220px;">
+              <label>Countdown</label>
+              <input id="restCountdownDisplay" type="text" value="02:00" readonly />
+            </div>
+
+            <div class="col" style="max-width:320px;">
+              <label>&nbsp;</label>
+              <div class="btnrow">
+                <button class="iconBtn primary" id="restStartBtn" type="button">▶</button>
+                <button class="iconBtn" id="restStopBtn" type="button">■</button>
+                <div class="muted" id="restStatus" style="margin-left:6px;">Ready</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
     </div>
+
+    <div class="consistencyCard compactSurface" id="consistencyCard" data-ui="monthly-consistency">
+      <div class="consistencyTop">
+        <div class="consistencyLabel">Monthly Consistency</div>
+        <div class="consistencyValue" id="consistencyValue">0 / 30 days</div>
+      </div>
+
+      <div class="consistencyBar">
+        <div class="consistencyBarFill" id="consistencyBarFill"></div>
+      </div>
+
+      <div class="consistencySubtext" id="consistencySubtext">
+        You have logged a workout 0 out of 30 days this month
+      </div>
+    </div>
+
+    <div id="badgeProgressCard" class="badgeProgressCard" style="display:none;" data-ui="current-badge"></div>
 
     <div class="card" id="historyCard">
       <div class="row" style="align-items:center; justify-content:space-between;">
@@ -2349,6 +2593,49 @@
     </div>
 
     <div id="badgesCard" class="badgesCard" style="display:none;"></div>
+
+    <details class="compactDetails toolsDetails" id="toolsDetails">
+      <summary>
+        <span class="compactDetailsSummaryText">
+          <span>More Tools</span>
+          <span class="compactDetailsMeta">Backup, restore, and reports</span>
+        </span>
+        <span class="compactDetailsSummaryTail">
+          <span class="compactDetailsChevron" aria-hidden="true">⌄</span>
+        </span>
+      </summary>
+
+      <div class="compactDetailsBody">
+        <div class="pills toolsPills">
+          <div class="pill">
+            <div class="tipWrap">
+              <button class="pillBtn" id="downloadBtn" type="button">Back Up Data</button>
+              <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
+              <div class="tipBox">
+                Clearing browser data can erase workout history.
+                Export occasionally to keep a backup.
+              </div>
+            </div>
+          </div>
+
+          <div class="pill">
+            <button class="pillBtn" id="uploadBtn" type="button">Restore Data</button>
+          </div>
+
+          <input id="uploadFileInput" type="file" accept="application/json,.json" style="display:none;" />
+
+          <div class="pill reportPill">
+            <button class="pillBtn" id="reportBtn" type="button">Workout Report</button>
+          </div>
+        </div>
+
+        <div class="backupNoteRow">
+          <div class="backupNote">
+            Download your data before clearing browser cache. Private/incognito browsing will not save workout history.
+          </div>
+        </div>
+      </div>
+    </details>
 
     <footer>
       © <span id="year"></span> ScanLiftLog •
@@ -2474,7 +2761,7 @@
 
                 <div class="plannerBottomActions">
           <div id="guidedWorkoutCompletionNote" class="plannerCompletionNote" style="display:none;">
-            Nice work — you completed your guided workout.
+            Workout complete — nice work
           </div>
           <button id="exitGuidedWorkoutBtn" type="button">Exit Guided Workout</button>
         </div>
@@ -3555,19 +3842,22 @@ window.addEventListener("appinstalled", () => {
       const currentIcon = current ? badgeSvg(current.icon) : badgeSvg("dumbbell");
 
       el.innerHTML = `
-        <div class="badgeProgressTop">
+        <button class="badgeProgressSummaryBtn" type="button" aria-expanded="${el.classList.contains("is-expanded") ? "true" : "false"}">
           <div class="badgeProgressIconWrap">${currentIcon}</div>
-          <div class="badgeProgressText">
+          <div class="badgeProgressSummaryMain">
             <div class="badgeEyebrow">Current Badge</div>
             <div class="badgeTitle">${currentTitle}</div>
-            <div class="badgeSub">${totalSaved.toLocaleString()} lifetime ${totalSaved === 1 ? "save" : "saves"} in this gym</div>
+            <div class="badgeProgressSummaryMeta">${totalSaved.toLocaleString()} lifetime ${totalSaved === 1 ? "save" : "saves"} in this gym • ${progressText}</div>
           </div>
+          <div class="badgeToggleChevron" aria-hidden="true">⌄</div>
+        </button>
+        <div class="badgeProgressBody">
+          <div class="badgeProgressLine">${progressText}</div>
+          <div class="badgeBar">
+            <div class="badgeBarFill" style="width:${pct}%"></div>
+          </div>
+          <div class="badgeSub" style="margin-top:8px;">${nextText}</div>
         </div>
-        <div class="badgeProgressLine">${progressText}</div>
-        <div class="badgeBar">
-          <div class="badgeBarFill" style="width:${pct}%"></div>
-        </div>
-        <div class="badgeSub" style="margin-top:8px;">${nextText}</div>
       `;
     }
 
@@ -3591,14 +3881,22 @@ window.addEventListener("appinstalled", () => {
 
       el.style.display = "";
       el.innerHTML = `
-        <div class="badgesHeader">
+        <button class="badgesSummaryBtn" type="button" aria-expanded="${el.classList.contains("is-expanded") ? "true" : "false"}">
           <div>
             <div class="badgesHeaderTitle">My Badges</div>
             <div class="badgesHeaderSub">Unlocked by lifetime saves in this gym</div>
           </div>
-          <div class="badgesHeaderSub">${totalSaved.toLocaleString()} lifetime ${totalSaved === 1 ? "save" : "saves"}</div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="badgesHeaderSub">${totalSaved.toLocaleString()} lifetime ${totalSaved === 1 ? "save" : "saves"}</div>
+            <div class="badgeToggleChevron" aria-hidden="true">⌄</div>
+          </div>
+        </button>
+        <div class="badgesBody">
+          <div class="badgesHeader">
+            <div class="badgesHeaderSub">Badges unlock from repeated saves on this gym’s machines.</div>
+          </div>
+          <div class="badgesGrid">${tiles}</div>
         </div>
-        <div class="badgesGrid">${tiles}</div>
       `;
     }
 
@@ -3607,6 +3905,31 @@ window.addEventListener("appinstalled", () => {
       renderBadgeProgressCard();
       renderBadgesCard();
       renderGuidedStepBanner();
+      bindCompactUiControls();
+    }
+
+    function bindCompactUiControls() {
+      const badgeProgressCard = document.getElementById("badgeProgressCard");
+      if (badgeProgressCard) {
+        const btn = badgeProgressCard.querySelector(".badgeProgressSummaryBtn");
+        if (btn) {
+          btn.onclick = () => {
+            const expanded = badgeProgressCard.classList.toggle("is-expanded");
+            btn.setAttribute("aria-expanded", expanded ? "true" : "false");
+          };
+        }
+      }
+
+      const badgesCard = document.getElementById("badgesCard");
+      if (badgesCard) {
+        const btn = badgesCard.querySelector(".badgesSummaryBtn");
+        if (btn) {
+          btn.onclick = () => {
+            const expanded = badgesCard.classList.toggle("is-expanded");
+            btn.setAttribute("aria-expanded", expanded ? "true" : "false");
+          };
+        }
+      }
     }
 
     /* ---------- Monthly Consistency ---------- */
@@ -4077,8 +4400,10 @@ window.addEventListener("appinstalled", () => {
     const guidedTopFocusSlot = document.getElementById("guidedTopFocusSlot");
     const guidedSetsPanel = document.getElementById("guidedSetsPanel");
     const loggerActionPanel = document.getElementById("loggerActionPanel");
+    const loggerCard = document.getElementById("logger");
 
     let cardioInputs = {};
+    let didAutoFocusLogger = false;
 
     /* ---------- Guided Focus Helpers ---------- */
     const gwUiHomes = {};
@@ -4460,7 +4785,7 @@ window.addEventListener("appinstalled", () => {
       const sorted = workouts.slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
       const isMobile = window.innerWidth <= 768;
 
-      for (const w of sorted) {
+      sorted.forEach((w, idx) => {
         const isCardio = !!w.cardio;
 
         let summary = "—";
@@ -4528,7 +4853,7 @@ window.addEventListener("appinstalled", () => {
         tbody.appendChild(tr);
 
         const mobileId = `historyDetails_${Math.random().toString(36).slice(2)}`;
-        const startsOpen = isMobile;
+        const startsOpen = isMobile && idx < 3;
         const mobileSummaryLabel = isCardio ? "Summary" : "Top Set";
 
         const card = document.createElement("div");
@@ -4553,7 +4878,7 @@ window.addEventListener("appinstalled", () => {
           </div>
         `;
         mobileWrap.appendChild(card);
-      }
+      });
 
       mobileWrap.querySelectorAll(".historyCardToggle").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -5005,7 +5330,7 @@ window.addEventListener("appinstalled", () => {
   if (guidedWorkoutCompletionNote) {
     if (isCompleted) {
       guidedWorkoutCompletionNote.style.display = "";
-      guidedWorkoutCompletionNote.textContent = "Nice work — you completed your guided workout.";
+      guidedWorkoutCompletionNote.textContent = "Workout complete — nice work";
     } else {
       guidedWorkoutCompletionNote.style.display = "none";
       guidedWorkoutCompletionNote.textContent = "";
@@ -5217,6 +5542,24 @@ function initMachineDropdown() {
       }
 
       hideMachineSelectionGate();
+    }
+
+    function maybeAutoFocusLogger() {
+      if (didAutoFocusLogger) return;
+      if (!machineId || !loggerCard) return;
+      if (window.innerWidth > 768) return;
+      if (document.body.classList.contains("guided-focus-active")) return;
+      if (plannerSetupModal && !plannerSetupModal.classList.contains("hidden")) return;
+      if (guidedWorkoutModal && !guidedWorkoutModal.classList.contains("hidden")) return;
+      if (aiDisclaimerModal && !aiDisclaimerModal.classList.contains("hidden")) return;
+
+      const rect = loggerCard.getBoundingClientRect();
+      if (rect.top <= 120) return;
+
+      didAutoFocusLogger = true;
+      window.setTimeout(() => {
+        loggerCard.scrollIntoView({ behavior:"smooth", block:"start" });
+      }, 180);
     }
 
     /* ================================
@@ -5551,6 +5894,7 @@ function initMachineDropdown() {
       }
 
       applyMachineSelectedState();
+      maybeAutoFocusLogger();
 
       window.addEventListener("resize", () => {
         if (machineId) renderHistory();
