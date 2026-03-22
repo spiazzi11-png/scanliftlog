@@ -126,7 +126,7 @@
 
     .card.loggerCard {
       margin-top:8px;
-      padding:14px 14px 16px;
+      padding:10px 14px 16px;
       border:2px solid rgba(220,38,38,.55);
       background:
         radial-gradient(120% 90% at 50% 0%, rgba(220,38,38,.12), transparent 48%),
@@ -533,6 +533,15 @@
       color:#f87171;
     }
 
+    .actionTileBtnAi {
+      color:#fff !important;
+      text-shadow: 0 1px 2px rgba(0,0,0,.45);
+    }
+
+    .actionTileBtnAi:hover {
+      color:#f3f4f6 !important;
+    }
+
     .headerCardCompact {
       margin-top:0;
       padding:10px 12px;
@@ -564,14 +573,52 @@
       font-size:10px;
     }
 
+    .loggerSetsHeadingRow {
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:10px;
+      margin:0;
+      padding:0;
+      flex-wrap:nowrap;
+    }
+
     .loggerMainTitle {
-      margin:0 0 8px;
-      text-align:center;
-      font-size:16px;
+      margin:0;
+      text-align:left;
+      font-size:15px;
       font-weight:900;
       letter-spacing:.02em;
       color:#ef4444;
-      line-height:1.25;
+      line-height:1.2;
+      flex:1;
+      min-width:0;
+    }
+
+    .loggerSetsSideTitle {
+      font-size:15px;
+      font-weight:900;
+      color:#ef4444;
+      line-height:1.2;
+      white-space:nowrap;
+      flex:0 0 auto;
+    }
+
+    .loggerSetsSubhint {
+      margin-top:6px;
+    }
+
+    #logger #cardioSection {
+      margin-top:0;
+      padding-top:0;
+    }
+
+    #logger #cardioSection .loggerSetsHeadingRow {
+      margin-bottom:0;
+    }
+
+    #logger #cardioSection .loggerCardioHint {
+      margin-top:6px;
     }
 
     .featureGrid {
@@ -850,9 +897,8 @@
       color:#fff;
     }
 
-    .cardioHeader {
-      font-weight:900;
-      color:#ef4444;
+    #logger .guidedStepBanner {
+      margin-top:6px;
     }
 
     #restStatus.go {
@@ -1137,6 +1183,7 @@
     }
 
     #logger .guidedSetsPanel {
+      margin-top:4px;
       background:transparent;
       border:0;
       border-radius:0;
@@ -1144,9 +1191,8 @@
       box-shadow:none;
     }
 
-    #logger .guidedSetsPanel > div:first-child {
-      color:#ef4444;
-      font-size:15px;
+    #logger #strengthSection {
+      margin-top:0;
     }
 
     body.guided-focus-active #guidedTopFocusSlot .guidedSetsPanel {
@@ -2581,10 +2627,10 @@
 
     <div class="actionTileGrid actionTileGridTight" data-ui="action-tiles" aria-label="Quick actions">
       <div class="actionTile">
-        <button class="actionTileBtn" id="planWorkoutBtn" type="button">AI Workout Assistant</button>
+        <button class="actionTileBtn actionTileBtnAi" id="planWorkoutBtn" type="button">AI Workout Assistant</button>
       </div>
       <div class="actionTile">
-        <button class="actionTileBtn" id="scrollToBadgesBtn" type="button">Badges Achievements</button>
+        <button class="actionTileBtn" id="scrollToBadgesBtn" type="button">Achievements</button>
       </div>
       <div class="actionTile actionTileStack">
         <div class="tipWrap actionTileTipWrap">
@@ -2627,8 +2673,6 @@
     </div>
 
     <div class="card loggerCard" id="logger">
-      <h2 class="loggerMainTitle">Indepth Workout Tracking</h2>
-
       <div id="guidedStepBanner" class="guidedStepBanner" style="display:none;">
         <div class="guidedStepBannerTop">
           <div class="guidedStepBannerEyebrow">AI Guided Workout Active</div>
@@ -2648,8 +2692,11 @@
 
       <div id="strengthSection">
         <div id="guidedSetsPanel" class="guidedSetsPanel" data-ui="guided-sets-panel">
-          <div style="font-weight:900;">Sets</div>
-          <div class="muted" style="margin-top:6px;">Use + to add sets. Each set stores weight and reps.</div>
+          <div class="loggerSetsHeadingRow">
+            <h2 class="loggerMainTitle">Workout Tracking</h2>
+            <div class="loggerSetsSideTitle">Sets</div>
+          </div>
+          <div class="muted loggerSetsSubhint">Use + to add sets. Each set stores weight and reps.</div>
 
           <div class="setsHeader">
             <div class="muted">Set</div>
@@ -2668,8 +2715,11 @@
       </div>
 
       <div id="cardioSection" style="display:none;">
-        <div class="cardioHeader">Cardio</div>
-        <div class="muted" style="margin-top:6px;">Log time and machine stats. Minutes is required.</div>
+        <div class="loggerSetsHeadingRow">
+          <h2 class="loggerMainTitle">Workout Tracking</h2>
+          <div class="loggerSetsSideTitle">Cardio</div>
+        </div>
+        <div class="muted loggerCardioHint">Log time and machine stats. Minutes is required.</div>
 
         <div class="cardioQuickActions">
           <button class="cardioQuickBtn" id="useLastCardioBtn" type="button">Use Last Workout</button>
