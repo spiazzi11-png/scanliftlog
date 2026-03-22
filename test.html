@@ -476,23 +476,6 @@
       line-height:1.15;
     }
 
-    .actionTileGridTight .actionTileBtnGhost {
-      font-size:8px;
-      padding:5px 4px;
-    }
-
-    .actionTileGridTight .actionTileStack {
-      padding:5px 6px 6px;
-      gap:4px;
-    }
-
-    .actionTileStack {
-      flex-direction:column;
-      gap:6px;
-      min-height:0;
-      padding:8px 8px 10px;
-    }
-
     .actionTileTipWrap {
       width:100%;
       justify-content:center;
@@ -517,20 +500,6 @@
 
     .actionTileBtn:hover {
       color:#fca5a5;
-    }
-
-    .actionTileBtnGhost {
-      padding:8px 6px;
-      font-size:10px;
-      font-weight:800;
-      color:rgba(252,165,165,.88);
-      border:1px solid rgba(220,38,38,.22);
-      border-radius:10px;
-      background: rgba(255,255,255,.03);
-    }
-
-    .actionTileBtnDanger {
-      color:#f87171;
     }
 
     .actionTileBtnAi {
@@ -574,13 +543,8 @@
     }
 
     .loggerSetsHeadingRow {
-      display:flex;
-      align-items:baseline;
-      justify-content:space-between;
-      gap:10px;
       margin:0;
       padding:0;
-      flex-wrap:nowrap;
     }
 
     .loggerMainTitle {
@@ -591,17 +555,6 @@
       letter-spacing:.02em;
       color:#ef4444;
       line-height:1.2;
-      flex:1;
-      min-width:0;
-    }
-
-    .loggerSetsSideTitle {
-      font-size:15px;
-      font-weight:900;
-      color:#ef4444;
-      line-height:1.2;
-      white-space:nowrap;
-      flex:0 0 auto;
     }
 
     .loggerSetsSubhint {
@@ -2632,7 +2585,7 @@
       <div class="actionTile">
         <button class="actionTileBtn" id="scrollToBadgesBtn" type="button">Achievements</button>
       </div>
-      <div class="actionTile actionTileStack">
+      <div class="actionTile">
         <div class="tipWrap actionTileTipWrap">
           <button class="actionTileBtn" id="downloadBtn" type="button">Back Up Data</button>
           <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
@@ -2641,16 +2594,16 @@
             Export occasionally to keep a backup.
           </div>
         </div>
-        <button class="actionTileBtn actionTileBtnGhost" id="uploadBtn" type="button">Restore Data</button>
-        <input id="uploadFileInput" type="file" accept="application/json,.json" style="display:none;" />
       </div>
       <div class="actionTile">
         <button class="actionTileBtn" id="reportBtn" type="button">Workout Report</button>
       </div>
       <div class="actionTile">
-        <button class="actionTileBtn actionTileBtnDanger" id="resetDataBtn" type="button">Reset Data</button>
+        <button class="actionTileBtn" id="uploadBtn" type="button">Restore Data</button>
       </div>
     </div>
+
+    <input id="uploadFileInput" type="file" accept="application/json,.json" style="display:none;" />
 
     <div class="card" id="inactiveGate" style="display:none;">
       <div style="font-weight:900; font-size:18px;">Service Inactive</div>
@@ -2694,7 +2647,6 @@
         <div id="guidedSetsPanel" class="guidedSetsPanel" data-ui="guided-sets-panel">
           <div class="loggerSetsHeadingRow">
             <h2 class="loggerMainTitle">Workout Tracking</h2>
-            <div class="loggerSetsSideTitle">Sets</div>
           </div>
           <div class="muted loggerSetsSubhint">Use + to add sets. Each set stores weight and reps.</div>
 
@@ -2717,7 +2669,6 @@
       <div id="cardioSection" style="display:none;">
         <div class="loggerSetsHeadingRow">
           <h2 class="loggerMainTitle">Workout Tracking</h2>
-          <div class="loggerSetsSideTitle">Cardio</div>
         </div>
         <div class="muted loggerCardioHint">Log time and machine stats. Minutes is required.</div>
 
@@ -5574,16 +5525,6 @@
         });
       }
 
-      const resetDataBtn = document.getElementById("resetDataBtn");
-      if (resetDataBtn) {
-        resetDataBtn.addEventListener("click", () => {
-          if (!confirm("Reset the current workout form? This clears sets, notes, and related fields on this screen.")) return;
-          clearCurrent();
-          renderGuidedStepBanner();
-          gwSyncFocusedGuidedUI();
-        });
-      }
-
       updateHeaderContext();
 
       const promoBannerEl = document.getElementById("promoBanner");
@@ -5668,25 +5609,27 @@
       const uploadBtn = document.getElementById("uploadBtn");
       const uploadFileInput = document.getElementById("uploadFileInput");
 
-      uploadBtn.addEventListener("click", () => {
-        uploadFileInput.value = "";
-        uploadFileInput.click();
-      });
+      if (uploadBtn && uploadFileInput) {
+        uploadBtn.addEventListener("click", () => {
+          uploadFileInput.value = "";
+          uploadFileInput.click();
+        });
 
-      uploadFileInput.addEventListener("change", async () => {
-        const file = uploadFileInput.files && uploadFileInput.files[0];
-        if (!file) return;
+        uploadFileInput.addEventListener("change", async () => {
+          const file = uploadFileInput.files && uploadFileInput.files[0];
+          if (!file) return;
 
-        try {
-          const didImport = await handleUploadFile(file);
-          if (didImport) {
-            alert("Import complete. The page will now refresh.");
-            location.reload();
+          try {
+            const didImport = await handleUploadFile(file);
+            if (didImport) {
+              alert("Import complete. The page will now refresh.");
+              location.reload();
+            }
+          } catch (err) {
+            alert(err instanceof Error ? err.message : "Import failed.");
           }
-        } catch (err) {
-          alert(err instanceof Error ? err.message : "Import failed.");
-        }
-      });
+        });
+      }
 
       document.getElementById("addSetBtn").addEventListener("click", () => addSet("", ""));
       document.getElementById("clearCurrentBtn").addEventListener("click", () => {
