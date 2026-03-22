@@ -10,8 +10,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="ScanLiftLog" />
 
-<link id="dynamicManifestLink" rel="manifest" href="/manifests/main.webmanifest" />
-<link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  <link id="dynamicManifestLink" rel="manifest" href="/manifests/main.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
   <style>
     :root {
@@ -2474,7 +2474,7 @@
 
                 <div class="plannerBottomActions">
           <div id="guidedWorkoutCompletionNote" class="plannerCompletionNote" style="display:none;">
-            Nice work — you completed your guided workout.
+            Workout complete — nice work
           </div>
           <button id="exitGuidedWorkoutBtn" type="button">Exit Guided Workout</button>
         </div>
@@ -5005,7 +5005,7 @@ window.addEventListener("appinstalled", () => {
   if (guidedWorkoutCompletionNote) {
     if (isCompleted) {
       guidedWorkoutCompletionNote.style.display = "";
-      guidedWorkoutCompletionNote.textContent = "Nice work — you completed your guided workout.";
+      guidedWorkoutCompletionNote.textContent = "Workout complete — nice work";
     } else {
       guidedWorkoutCompletionNote.style.display = "none";
       guidedWorkoutCompletionNote.textContent = "";
