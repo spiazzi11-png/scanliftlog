@@ -2969,6 +2969,13 @@ const INSTALL_BRANDING = {
     manifest: "/manifests/pushfitness-melville.webmanifest"
   }
 };
+  const INSTALL_PAGE_MAP = {
+  "pushfitness-melville": "/install/pushfitness-melville.html"
+};
+
+function getDedicatedInstallUrl(gid) {
+  return INSTALL_PAGE_MAP[String(gid || "").trim().toLowerCase()] || "";
+}
 
 function applyInstallBranding() {
   const brand = INSTALL_BRANDING[gymId];
@@ -3158,6 +3165,13 @@ function closeA2hsModal() {
 }
 
 function goToGymHomeVersion() {
+  const dedicatedInstallUrl = getDedicatedInstallUrl(gymId);
+
+  if (dedicatedInstallUrl) {
+    window.location.href = dedicatedInstallUrl;
+    return;
+  }
+
   window.location.href = buildGymOnlyUrl(gymId);
 }
 
