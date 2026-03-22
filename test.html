@@ -2593,43 +2593,35 @@
   </div>
 
   <!-- ===== AI Guided Workout Disclaimer Modal ===== -->
-  <div id="aiDisclaimerModal" class="aiDisclaimerModal hidden" aria-hidden="true">
-    <div class="aiDisclaimerCard" role="dialog" aria-modal="true" aria-labelledby="aiDisclaimerTitle">
-      <div class="aiDisclaimerHeader">
-        <div>
-          <h2 id="aiDisclaimerTitle">Before starting an AI-guided workout</h2>
-          <div class="aiDisclaimerSub">
-            <div class="aiDisclaimerSub">
-  This feature is a general workout aid only. It is not medical advice or a substitute for a qualified trainer or healthcare professional.
-</div>
-          </div>
+<div id="aiDisclaimerModal" class="aiDisclaimerModal hidden" aria-hidden="true">
+  <div class="aiDisclaimerCard" role="dialog" aria-modal="true" aria-labelledby="aiDisclaimerTitle">
+    <div class="aiDisclaimerHeader">
+      <div>
+        <h2 id="aiDisclaimerTitle">Before starting an AI-guided workout</h2>
+        <div class="aiDisclaimerSub">
+          This feature is a general workout aid only. It is not medical advice or a substitute for a qualified trainer or healthcare professional.
         </div>
-        <button id="closeAiDisclaimerBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
       </div>
+      <button id="closeAiDisclaimerBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
+    </div>
 
-      <div class="aiDisclaimerAlert">
-        <div class="aiDisclaimerAlert">
-  Use this feature at your own risk. Choose safe weight, use proper form, and stop immediately if you feel pain, dizziness, or discomfort.
-</div>
-      </div>
+    <div class="aiDisclaimerAlert">
+      Use this feature at your own risk. Choose safe weight, use proper form, and stop immediately if you feel pain, dizziness, or discomfort.
+    </div>
 
-      <div class="aiDisclaimerCheckRow">
-        <input type="checkbox" id="aiDisclaimerAgree" />
-        <label for="aiDisclaimerAgree" style="margin:0; color:var(--text); line-height:1.5;">
-          <label for="aiDisclaimerAgree" style="margin:0; color:var(--text); line-height:1.5;">
-  I understand this is only a general workout aid, not medical or professional training advice, and I accept responsibility for how I use it during this session.
-</label>
-      </div>
+    <div class="aiDisclaimerCheckRow">
+      <input type="checkbox" id="aiDisclaimerAgree" />
+      <label for="aiDisclaimerAgree" style="margin:0; color:var(--text); line-height:1.5;">
+        I understand this is only a general workout aid, not medical or professional training advice, and I accept responsibility for how I use it during this session.
+      </label>
+    </div>
 
-      <div class="aiDisclaimerActions">
-        <button id="cancelAiDisclaimerBtn" type="button">Cancel</button>
-        <button id="acceptAiDisclaimerBtn" class="primary" type="button" disabled>I Understand & Continue</button>
-      </div>
+    <div class="aiDisclaimerActions">
+      <button id="cancelAiDisclaimerBtn" type="button">Cancel</button>
+      <button id="acceptAiDisclaimerBtn" class="primary" type="button" disabled>I Understand & Continue</button>
     </div>
   </div>
-    <script src="/machine-map.js"></script>
-
-  <script>
+</div>
     /* ================================
        IMPORTANT DEPLOYMENT NOTE
        ================================
