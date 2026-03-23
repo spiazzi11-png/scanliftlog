@@ -3530,6 +3530,15 @@
 
     let deferredA2hsPrompt = null;
 
+    function removeA2hsInstallDebugFooters() {
+      const modal = document.getElementById("a2hsModal");
+      if (!modal) return;
+      modal.querySelectorAll("p, div, small").forEach((el) => {
+        const t = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (/test install page points to/i.test(t)) el.remove();
+      });
+    }
+
     function openA2hsModal() {
       const modal = document.getElementById("a2hsModal");
       const note = document.getElementById("a2hsCurrentUrlNote");
@@ -3537,8 +3546,16 @@
       const confirmBtn = document.getElementById("confirmA2hsBtn");
       const androidList = document.getElementById("a2hsAndroidList");
       const openGymHomeBtn = document.getElementById("openGymHomeBtn");
+      const iosSection = document.getElementById("a2hsIosSection");
+      const androidSection = document.getElementById("a2hsAndroidSection");
 
       if (!modal) return;
+
+      removeA2hsInstallDebugFooters();
+
+      const onIos = isIosLike();
+      if (iosSection) iosSection.toggleAttribute("hidden", !onIos);
+      if (androidSection) androidSection.toggleAttribute("hidden", onIos);
 
       if (note) {
         note.textContent = machineId
@@ -3555,13 +3572,6 @@
 
         if (confirmBtn) {
           confirmBtn.textContent = machineId ? "Open Gym Home Screen Version" : "Got It";
-        }
-
-        if (androidList) {
-          androidList.innerHTML = `
-            <li>This browser does not expose the native install prompt here</li>
-            <li>Use your browser menu if you want to add a shortcut manually</li>
-          `;
         }
       } else if (deferredA2hsPrompt) {
         if (subText) {
@@ -5438,6 +5448,8 @@
     }
 
     function initA2hsUi() {
+      removeA2hsInstallDebugFooters();
+
       const addBtn = document.getElementById("addToHomeScreenBtn");
       const closeBtn = document.getElementById("closeA2hsBtn");
       const modal = document.getElementById("a2hsModal");
