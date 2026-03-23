@@ -3546,10 +3546,6 @@
           : "You are already on the gym-level page. This is the correct home screen target.";
       }
 
-      if (openGymHomeBtn) {
-        openGymHomeBtn.style.display = machineId ? "" : "none";
-      }
-
       if (isIosLike()) {
         if (subText) {
           subText.textContent = machineId
@@ -3601,6 +3597,13 @@
             <li>Your shortcut should open the gym-level page</li>
           `;
         }
+      }
+
+      if (openGymHomeBtn) {
+        const redundantOpenGym =
+          !!machineId && (isIosLike() || !deferredA2hsPrompt);
+        openGymHomeBtn.style.display =
+          machineId && !redundantOpenGym ? "" : "none";
       }
 
       modal.classList.remove("hidden");
