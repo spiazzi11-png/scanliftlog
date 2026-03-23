@@ -2079,27 +2079,6 @@
       min-width:auto;
     }
 
-    .plannerAIPromptWrap {
-      margin-top:14px;
-      padding:14px;
-      border-radius:16px;
-      background: rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .plannerAIPromptTitle {
-      font-size:13px;
-      font-weight:900;
-      margin-bottom:8px;
-    }
-
-    .plannerAIPromptHint {
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.45;
-      margin-top:8px;
-    }
-
     .plannerActions {
       margin-top:18px;
       display:flex;
@@ -2883,7 +2862,7 @@
         <div>
           <h2>AI Guided Workout</h2>
           <div class="plannerSubText">
-            Build a guided 3–4 machine workout for this gym. Follow one machine at a time in the order provided.
+            This will put together a guided 3–6 machine workout for you using this gym’s equipment. Just move through each machine in the order provided.
           </div>
         </div>
         <button id="closePlannerSetupBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
@@ -2925,18 +2904,6 @@
           <input type="checkbox" id="plannerUseHistory" checked />
           <span>Use my past history when possible</span>
         </label>
-      </div>
-
-      <div class="plannerAIPromptWrap">
-        <div class="plannerAIPromptTitle">AI Assistant Request (optional)</div>
-        <input
-          id="plannerAIPrompt"
-          type="text"
-          placeholder="e.g., I want a chest workout with upper chest focus and nothing too crazy"
-        />
-        <div class="plannerAIPromptHint">
-          Add anything you want to focus on, and we’ll try to shape the workout around it.
-        </div>
       </div>
 
       <div class="plannerActions">
@@ -4495,7 +4462,6 @@
     const guidedWorkoutTitle = document.getElementById("guidedWorkoutTitle");
     const guidedWorkoutSub = document.getElementById("guidedWorkoutSub");
     const plannerAIText = document.getElementById("plannerAIText");
-    const plannerAIPrompt = document.getElementById("plannerAIPrompt");
     const guidedStepBanner = document.getElementById("guidedStepBanner");
     const guidedStepBannerPill = document.getElementById("guidedStepBannerPill");
     const guidedStepBannerTitle = document.getElementById("guidedStepBannerTitle");
@@ -5541,20 +5507,15 @@
       return { hasHistory: false, recentMachineCodes: [], recentMuscleGroups: [] };
     }
 
-    function gwGenerateAIExplanation(goal, level, duration, promptText, plan) {
+    function gwGenerateAIExplanation(goal, level, duration, plan) {
       const count = plan?.steps?.length || 0;
       const goalLabelMap = { chest:"chest", back:"back", legs:"leg", shoulders:"shoulder", arms:"arm", fullbody:"full-body" };
       const goalLabel = goalLabelMap[goal] || goal;
-      const customPrompt = String(promptText || "").trim();
-
-      if (customPrompt) {
-        return `Based on your request — "${customPrompt}" — I built a ${count}-machine ${goalLabel} workout for about ${duration} minutes at a ${level} level. Follow the workout steps in order and log each station as you go.`;
-      }
 
       return `I built a ${count}-machine ${goalLabel} workout for about ${duration} minutes at a ${level} level. Start with the first machine, complete your sets, log the workout, then move to the next step.`;
     }
 
-    function gwBuildWorkoutPlan({ gymId, goal, duration, level, useHistory, promptText }) {
+    function gwBuildWorkoutPlan({ gymId, goal, duration, level, useHistory }) {
       void useHistory;
       const levelNorm = String(level || "intermediate").toLowerCase();
       const durBucket = gwDurationBucket(duration);
@@ -5580,7 +5541,6 @@
         goal,
         duration: Number(duration),
         level: levelNorm,
-        promptText: String(promptText || "").trim(),
         createdAt: Date.now(),
         currentStepIndex: 0,
         status: "active",
@@ -5588,7 +5548,7 @@
         templateVariantId: stepsFromCatalog && variant && variant.id ? variant.id : "legacy"
       };
 
-      plan.aiExplanation = gwGenerateAIExplanation(goal, levelNorm, duration, promptText, plan);
+      plan.aiExplanation = gwGenerateAIExplanation(goal, levelNorm, duration, plan);
       return plan;
     }
 
@@ -6041,8 +6001,7 @@
         goal: goalEl ? goalEl.value : "chest",
         duration: durationEl ? durationEl.value : "30",
         level: levelEl ? levelEl.value : "intermediate",
-        useHistory: !!(useHistoryEl && useHistoryEl.checked),
-        promptText: plannerAIPrompt ? plannerAIPrompt.value : ""
+        useHistory: !!(useHistoryEl && useHistoryEl.checked)
       });
 
       if (!plan.steps.length) {
