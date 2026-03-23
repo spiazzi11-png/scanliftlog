@@ -2911,14 +2911,6 @@
           </select>
         </label>
 
-        <label class="plannerField">
-          <span>Style</span>
-          <select id="plannerStyle">
-            <option value="machines" selected>Machines Only</option>
-            <option value="mixed">Mixed</option>
-          </select>
-        </label>
-
         <label class="plannerField plannerCheckbox">
           <input type="checkbox" id="plannerUseHistory" checked />
           <span>Use my past history when possible</span>
@@ -5119,7 +5111,7 @@
       return `I built a ${count}-machine ${goalLabel} workout for about ${duration} minutes at a ${level} level. Start with the first machine, complete your sets, log the workout, then move to the next step.`;
     }
 
-    function gwBuildWorkoutPlan({ gymId, goal, duration, level, style, useHistory, promptText }) {
+    function gwBuildWorkoutPlan({ gymId, goal, duration, level, useHistory, promptText }) {
       const templates = WORKOUT_TEMPLATES[goal] || [];
       const desiredCount = gwGetStepCountForDuration(duration);
       const history = useHistory ? gwGetUserHistorySummary() : null;
@@ -5159,7 +5151,6 @@
         goal,
         duration: Number(duration),
         level,
-        style,
         promptText: String(promptText || "").trim(),
         createdAt: Date.now(),
         currentStepIndex: 0,
@@ -5379,8 +5370,8 @@
       if (guidedWorkoutTitle) guidedWorkoutTitle.textContent = `Guided Workout — ${String(plan.goal || "").toUpperCase()}`;
       if (guidedWorkoutSub) {
         guidedWorkoutSub.textContent = isCompleted
-          ? `Workout complete • ${plan.duration} min • ${plan.level} • ${plan.style}`
-          : `${plan.duration} min • ${plan.level} • ${plan.style}`;
+          ? `Workout complete • ${plan.duration} min • ${plan.level}`
+          : `${plan.duration} min • ${plan.level}`;
       }
 
       if (plannerAIText) {
@@ -5421,7 +5412,6 @@
       const goalEl = document.getElementById("plannerGoal");
       const durationEl = document.getElementById("plannerDuration");
       const levelEl = document.getElementById("plannerLevel");
-      const styleEl = document.getElementById("plannerStyle");
       const useHistoryEl = document.getElementById("plannerUseHistory");
 
       const plan = gwBuildWorkoutPlan({
@@ -5429,7 +5419,6 @@
         goal: goalEl ? goalEl.value : "chest",
         duration: durationEl ? durationEl.value : "30",
         level: levelEl ? levelEl.value : "intermediate",
-        style: styleEl ? styleEl.value : "machines",
         useHistory: !!(useHistoryEl && useHistoryEl.checked),
         promptText: plannerAIPrompt ? plannerAIPrompt.value : ""
       });
