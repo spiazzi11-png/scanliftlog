@@ -40,6 +40,10 @@
       box-sizing:border-box;
     }
 
+    html {
+      overflow-x: hidden;
+    }
+
     body {
       margin:0;
       overflow-x:hidden;
@@ -965,24 +969,31 @@
     }
 
     .promoBanner {
-      width:100%;
-      overflow:hidden;
+      width: calc(100% - 24px);
+      max-width: 760px;
+      margin: 0 auto;
+      overflow: hidden;
       background: rgba(8,9,11,.96);
-      border-bottom:2px solid rgba(220,38,38,.45);
+      border-bottom: 2px solid rgba(220,38,38,.45);
       box-shadow: 0 12px 28px rgba(0,0,0,.35);
+      border-radius: 0 0 12px 12px;
+      box-sizing: border-box;
     }
 
     .promoBanner img {
-      width:100%;
-      height:auto;
-      max-height:118px;
-      object-fit:cover;
-      display:block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      max-height: 118px;
+      object-fit: cover;
+      display: block;
     }
 
     .promoBanner a {
-      display:block;
-      text-decoration:none;
+      display: block;
+      text-decoration: none;
+      max-width: 100%;
+      overflow: hidden;
     }
 
     @media (min-width: 769px) {
