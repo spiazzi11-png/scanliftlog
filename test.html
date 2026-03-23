@@ -891,7 +891,7 @@
     }
 
     #logger .guidedStepBanner {
-      margin-top:6px;
+      margin-top:4px;
     }
 
     #restStatus.go {
@@ -1151,7 +1151,7 @@
 
     #guidedTopFocusSlot {
       display:none;
-      margin:0 0 14px;
+      margin:0 0 8px;
     }
 
     #guidedTopFocusSlot[hidden] {
@@ -1179,11 +1179,11 @@
     }
 
     .guidedSetsPanel {
-      margin-top:14px;
+      margin-top:8px;
     }
 
     #logger .guidedSetsPanel {
-      margin-top:4px;
+      margin-top:2px;
       background:transparent;
       border:0;
       border-radius:0;
@@ -1199,13 +1199,23 @@
       margin-top:0;
       background: rgba(18,19,24,.78);
       border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:16px;
+      border-radius:14px;
+      padding:10px 12px;
       box-shadow: var(--shadow);
     }
 
     body.guided-focus-active #guidedTopFocusSlot .guidedStepBanner {
       margin:0;
+    }
+
+    body.guided-focus-active #guidedTopFocusSlot .loggerActionPanel {
+      margin-top:8px;
+    }
+
+    body.guided-focus-active #guidedTopFocusSlot .saveBtnMain {
+      padding:12px 14px !important;
+      font-size:15px !important;
+      border-radius:14px !important;
     }
 
     .consistencyCard {
@@ -1367,59 +1377,59 @@
     }
 
     .guidedStepBanner {
-      margin-top:14px;
-      padding:14px;
-      border-radius:18px;
+      margin-top:8px;
+      padding:10px 12px;
+      border-radius:14px;
       background: linear-gradient(180deg, rgba(127,29,29,.34), rgba(69,10,10,.18));
       border:1px solid rgba(239,68,68,.24);
-      box-shadow: 0 10px 28px rgba(0,0,0,.18);
+      box-shadow: 0 6px 18px rgba(0,0,0,.14);
     }
 
     .guidedStepBannerTop {
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
+      gap:8px;
       flex-wrap:wrap;
-      margin-bottom:8px;
+      margin-bottom:5px;
     }
 
     .guidedStepBannerEyebrow {
-      font-size:11px;
+      font-size:10px;
       font-weight:900;
-      letter-spacing:.08em;
+      letter-spacing:.07em;
       text-transform:uppercase;
       color:#fecaca;
     }
 
     .guidedStepBannerPill {
-      font-size:11px;
+      font-size:10px;
       font-weight:900;
       color:#fff;
       background: rgba(255,255,255,.10);
       border:1px solid rgba(255,255,255,.14);
       border-radius:999px;
-      padding:6px 10px;
+      padding:4px 8px;
     }
 
     .guidedStepBannerTitle {
-      font-size:1.02rem;
+      font-size:.95rem;
       font-weight:900;
       color:var(--text);
-      line-height:1.3;
+      line-height:1.25;
     }
 
     .guidedStepBannerMeta {
-      margin-top:6px;
-      font-size:.94rem;
+      margin-top:4px;
+      font-size:.86rem;
       font-weight:800;
       color:#f5d0d0;
     }
 
     .guidedStepBannerHint {
-      margin-top:8px;
-      font-size:.88rem;
-      line-height:1.45;
+      margin-top:5px;
+      font-size:.8rem;
+      line-height:1.4;
       color:rgba(243,244,246,.86);
     }
 
@@ -2465,20 +2475,20 @@
       }
 
       .guidedStepBanner {
-        padding:12px;
+        padding:8px 10px;
       }
 
       .guidedStepBannerTitle {
-        font-size:.98rem;
+        font-size:.92rem;
       }
 
       .guidedStepBannerMeta,
       .guidedStepBannerHint {
-        font-size:.9rem;
+        font-size:.82rem;
       }
 
       #guidedTopFocusSlot {
-        margin-bottom:12px;
+        margin-bottom:6px;
       }
 
       .a2hsCard {
@@ -2696,7 +2706,7 @@
         </div>
 
         <div id="guidedStepBannerHint" class="guidedStepBannerHint">
-          Complete this machine, then save your workout to continue your guided plan.
+          Complete your workout, then tap Save Workout to move to the next step.
         </div>
       </div>
 
@@ -5190,33 +5200,136 @@
       return plan;
     }
 
-    function gwParseRepsFromSavedSets(sets) {
-      const nums = [];
-      for (const s of sets || []) {
+    /** One entry per saved set row: rep count or null if reps missing/invalid */
+    function gwCoachingRepsSequence(savedSets) {
+      return (savedSets || []).map((s) => {
         const raw = String(s.reps || "").trim();
         const m = raw.match(/\d+/);
-        if (!m) continue;
+        if (!m) return null;
         const n = parseInt(m[0], 10);
-        if (Number.isFinite(n) && n > 0) nums.push(n);
-      }
-      return nums;
+        return Number.isFinite(n) && n > 0 ? n : null;
+      });
     }
 
-    function gwBuildGuidedSaveCoachingLine(savedSets, targetReps) {
-      const target = Math.max(1, Number(targetReps) || 10);
-      const repsList = gwParseRepsFromSavedSets(savedSets);
-      if (!repsList.length) {
+    function gwBuildGuidedSaveCoachingLine(savedSets, targetReps, targetSets) {
+      const targetR = Math.max(1, Number(targetReps) || 10);
+      const targetN = Math.max(1, Number(targetSets) || 3);
+      const seq = gwCoachingRepsSequence(savedSets);
+
+      if (!seq.length) {
         return "Nice work logging this station.";
       }
-      const maxR = Math.max(...repsList);
 
-      if (maxR >= target) {
-        return "Nice work. You hit your target reps — ready to move up next session when form stays solid.";
+      const firstN = seq.slice(0, targetN);
+      const enoughRows = seq.length >= targetN;
+      const allRepsFilled = firstN.every((r) => r != null);
+      const allHitTarget = enoughRows && allRepsFilled && firstN.every((r) => r >= targetR);
+
+      if (allHitTarget) {
+        const positives = [
+          "Nice work — every prescribed set hit your rep target. You're set up to progress next session.",
+          "Strong job: all sets reached the goal reps. Keep form dialed before you add load.",
+          "You ran the table on reps — that's the consistency this plan is built for.",
+        ];
+        return positives[Math.floor(Math.random() * positives.length)];
       }
-      if (maxR < Math.max(5, target - 4) || maxR < target * 0.65) {
-        return "That looked tough based on your reps. Keep this weight next time and aim for cleaner sets.";
+
+      if (!enoughRows) {
+        const logged = seq.length;
+        const lines = [
+          `You logged ${logged} of ${targetN} sets — aim for all ${targetN} at ${targetR}+ reps to match the workout.`,
+          `Good effort with ${logged} set${logged === 1 ? "" : "s"} logged. Next time try to complete every prescribed set.`,
+        ];
+        return lines[Math.floor(Math.random() * lines.length)];
       }
-      return "Solid work — you're close to the target. Small nudges to weight or reps over time add up.";
+
+      if (!allRepsFilled) {
+        const lines = [
+          "Fill in reps for each set so we can tell if you hit the target on every one.",
+          "A set is missing reps — next round log every set to track the full picture.",
+        ];
+        return lines[Math.floor(Math.random() * lines.length)];
+      }
+
+      const numeric = firstN.filter((r) => r != null);
+      const below = numeric.filter((r) => r < targetR);
+      const maxR = Math.max(...numeric);
+
+      if (below.length === numeric.length) {
+        if (maxR < Math.max(5, targetR - 4) || maxR < targetR * 0.65) {
+          return "That looked demanding across the board. Hold this weight next time and chase cleaner reps.";
+        }
+        return "Reps came in under target on every set — keep the same weight and chip away at the goal.";
+      }
+
+      if (below.length >= 1) {
+        const mixed = [
+          "Some sets hit the target reps; others didn't. Stay at this weight until they're all there.",
+          "Mixed set quality today — tighten the low sets next visit before moving up.",
+        ];
+        return mixed[Math.floor(Math.random() * mixed.length)];
+      }
+
+      return "Solid work — keep building session to session.";
+    }
+
+    function gwPickGuidedCheerLine({ completedNow, total }) {
+      if (total < 2 || completedNow < 1) return "";
+
+      if (completedNow === 1) {
+        const lines = [
+          "First machine wrapped — great way to open the round.",
+          "Strong start — carry that energy to the next station.",
+          "One down — momentum is on your side.",
+        ];
+        return lines[Math.floor(Math.random() * lines.length)];
+      }
+
+      if (total >= 4 && total % 2 === 0 && completedNow === total / 2) {
+        const lines = [
+          "You're halfway through this guided workout — steady breathing, steady reps.",
+          "Halfway there — treat the back half like a fresh start.",
+        ];
+        return lines[Math.floor(Math.random() * lines.length)];
+      }
+
+      if (completedNow === 2 && total >= 3) {
+        const lines = [
+          "Two machines down — your rhythm is building.",
+          "Second stop complete — nice discipline sticking to the plan.",
+          "Two in the books — you're stringing a real workout together.",
+        ];
+        return lines[Math.floor(Math.random() * lines.length)];
+      }
+
+      if (total >= 3 && completedNow / total >= 0.5 && completedNow < total) {
+        const lines = [
+          "Past the midpoint — finish strong, one station at a time.",
+          "More done than left to go — stay locked in.",
+        ];
+        return lines[Math.floor(Math.random() * lines.length)];
+      }
+
+      if (completedNow >= 3 && completedNow < total) {
+        const lines = [
+          "Keep stacking wins — each stop gets you closer to the finish.",
+          "Deep in the circuit now — stay focused on the next machine.",
+          "Almost there — don't rush the last pieces.",
+        ];
+        return lines[Math.floor(Math.random() * lines.length)];
+      }
+
+      return "";
+    }
+
+    function gwPickGuidedFinaleCheer(total) {
+      const lines = [
+        "That full circuit is in the books — celebrate the consistency.",
+        `All ${total} stations logged — outstanding follow-through.`,
+        "You closed out every step of the plan. That's real commitment.",
+        "You saw the whole guided workout through — that's a win worth owning.",
+      ];
+      return lines[Math.floor(Math.random() * lines.length)];
     }
 
     /**
@@ -5234,18 +5347,28 @@
       }
 
       const targetReps = Number(current.reps) || 10;
+      const targetSets = Number(current.sets) || 3;
       current.status = "completed";
       gwAdvancePlan(activePlan);
 
       const completedNow = activePlan.steps.filter((s) => s.status === "completed").length;
       const total = activePlan.steps.length;
       const next = gwGetCurrentStep(activePlan);
+      const planJustCompleted = activePlan.status === "completed";
 
-      const coachingLine = isCardio
+      let coachingLine = isCardio
         ? "Nice work logging this station."
-        : gwBuildGuidedSaveCoachingLine(savedSets, targetReps);
+        : gwBuildGuidedSaveCoachingLine(savedSets, targetReps, targetSets);
 
-      if (activePlan.status === "completed") {
+      if (!isCardio && planJustCompleted) {
+        const finale = gwPickGuidedFinaleCheer(total);
+        if (finale) coachingLine = `${coachingLine} ${finale}`;
+      } else if (!isCardio && !planJustCompleted) {
+        const cheer = gwPickGuidedCheerLine({ completedNow, total });
+        if (cheer) coachingLine = `${coachingLine} ${cheer}`;
+      }
+
+      if (planJustCompleted) {
         gwSaveCompletedPlanHistory(activePlan);
         gwSaveActivePlan(activePlan);
         const body = `${coachingLine}\n\nYou finished all ${total} steps in this guided workout.`;
@@ -5431,7 +5554,7 @@
       if (guidedStepBannerPill) guidedStepBannerPill.textContent = `Step ${activePlan.currentStepIndex + 1} of ${activePlan.steps.length}`;
       if (guidedStepBannerTitle) guidedStepBannerTitle.textContent = current.machineName;
       if (guidedStepBannerMeta) guidedStepBannerMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
-      if (guidedStepBannerHint) guidedStepBannerHint.textContent = "Finish this machine, then tap Save Workout to move to the next step.";
+      if (guidedStepBannerHint) guidedStepBannerHint.textContent = "Complete your workout, then tap Save Workout to move to the next step.";
 
       if (!gwIsEditingGuidedStrengthFields()) gwSyncFocusedGuidedUI();
     }
