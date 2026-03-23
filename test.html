@@ -514,17 +514,6 @@
       justify-content:center;
     }
 
-    .actionTileStack {
-      flex-direction:column;
-      gap:5px;
-      align-items:stretch;
-      justify-content:center;
-    }
-
-    .actionTileStack > .tipWrap {
-      width:100%;
-    }
-
     a.actionTileBtn {
       display:block;
       text-decoration:none;
@@ -2645,15 +2634,7 @@
       <div class="actionTile">
         <button class="actionTileBtn" id="scrollToBadgesBtn" type="button">Achievements</button>
       </div>
-      <div class="actionTile actionTileStack">
-        <div class="tipWrap actionTileTipWrap">
-          <button class="actionTileBtn" id="downloadBtn" type="button">Back Up Data</button>
-          <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
-          <div class="tipBox">
-            Clearing browser data can erase workout history.
-            Export occasionally to keep a backup.
-          </div>
-        </div>
+      <div class="actionTile">
         <button class="actionTileBtn" id="uploadBtn" type="button">Restore Data</button>
       </div>
       <div class="actionTile">
@@ -2666,6 +2647,16 @@
           target="_blank"
           rel="noopener noreferrer"
         >Class Schedules</a>
+      </div>
+      <div class="actionTile">
+        <div class="tipWrap actionTileTipWrap">
+          <button class="actionTileBtn" id="downloadBtn" type="button">Back Up Data</button>
+          <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
+          <div class="tipBox">
+            Clearing browser data can erase workout history.
+            Export occasionally to keep a backup.
+          </div>
+        </div>
       </div>
     </div>
 
