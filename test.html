@@ -514,6 +514,24 @@
       justify-content:center;
     }
 
+    .actionTileStack {
+      flex-direction:column;
+      gap:5px;
+      align-items:stretch;
+      justify-content:center;
+    }
+
+    .actionTileStack > .tipWrap {
+      width:100%;
+    }
+
+    a.actionTileBtn {
+      display:block;
+      text-decoration:none;
+      text-align:center;
+      box-sizing:border-box;
+    }
+
     .actionTileBtn {
       width:100%;
       margin:0;
@@ -2627,7 +2645,7 @@
       <div class="actionTile">
         <button class="actionTileBtn" id="scrollToBadgesBtn" type="button">Achievements</button>
       </div>
-      <div class="actionTile">
+      <div class="actionTile actionTileStack">
         <div class="tipWrap actionTileTipWrap">
           <button class="actionTileBtn" id="downloadBtn" type="button">Back Up Data</button>
           <span class="tipIcon" tabindex="0" role="button" aria-label="Backup tip" title="Backup tip">ⓘ</span>
@@ -2636,12 +2654,18 @@
             Export occasionally to keep a backup.
           </div>
         </div>
+        <button class="actionTileBtn" id="uploadBtn" type="button">Restore Data</button>
       </div>
       <div class="actionTile">
         <button class="actionTileBtn" id="reportBtn" type="button">Workout Report</button>
       </div>
       <div class="actionTile">
-        <button class="actionTileBtn" id="uploadBtn" type="button">Restore Data</button>
+        <a
+          class="actionTileBtn"
+          href="https://www.pushfitnessclub.com/classes/?utm_term=push+fitness+of+melville&amp;utm_campaign=Brand&amp;utm_source=adwords&amp;utm_medium=ppc&amp;hsa_acc=1770197758&amp;hsa_cam=21310870749&amp;hsa_grp=163581655878&amp;hsa_ad=700371486676&amp;hsa_src=g&amp;hsa_tgt=kwd-2304550438300&amp;hsa_kw=push+fitness+of+melville&amp;hsa_mt=p&amp;hsa_net=adwords&amp;hsa_ver=3&amp;gad_source=1&amp;gad_campaignid=21310870749&amp;gbraid=0AAAAACuZg8eRwkojnBblHQWophP4OpMjk&amp;gclid=CjwKCAjwyYPOBhBxEiwAgpT8P8GD0PW1-_p2iUDJHAsDcM391amXS-wjqf_ehnG8B6pGDgrC0idqsRoCtkYQAvD_BwE"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Class Schedules</a>
       </div>
     </div>
 
