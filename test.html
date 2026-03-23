@@ -3729,8 +3729,17 @@
       }
     }
 
+    function normalizeQrPayloadText(raw) {
+      return String(raw || "")
+        .trim()
+        .replace(/[\u200B-\u200D\uFEFF\u2060]/g, "")
+        .replace(/\r\n/g, "")
+        .replace(/\r/g, "")
+        .replace(/\n/g, "");
+    }
+
     function navigateToScannedQrPayload(raw) {
-      const text = String(raw || "").trim();
+      const text = normalizeQrPayloadText(raw);
       if (!text) return false;
       let u;
       try {
@@ -3749,7 +3758,7 @@
         return true;
       }
       stopQrScanModal();
-      window.location.href = u.toString();
+      window.location.replace(u.href);
       return true;
     }
 
