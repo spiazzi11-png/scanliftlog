@@ -5042,45 +5042,345 @@
       localStorage.setItem(key, JSON.stringify(arr.slice(0, 30)));
     }
 
-    const WORKOUT_TEMPLATES = {
-      chest: [
-        { exercise:"Chest Press", machineLabelMatch:["Chest Press","Converging Chest Press"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Incline Press", machineLabelMatch:["Incline Press","Incline Bench"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Pec Fly", machineLabelMatch:["Rear Delt / Pec Fly"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} },
-        { exercise:"Dip Press", machineLabelMatch:["Seated Dip - Plate Loaded","Seated Dip - Pin Loaded"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:10,advanced:8} }
-      ],
-      back: [
-        { exercise:"Lat Pulldown", machineLabelMatch:["Lat Pulldown","Diverging Lat Pulldown","Pulldown"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Seated Row", machineLabelMatch:["Seated Row","Cable Row"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Low Row", machineLabelMatch:["Low Row Machine","Diverging Low Row"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:10,advanced:8} },
-        { exercise:"T-Bar Row", machineLabelMatch:["T-Bar Row Station"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:10,advanced:8} }
-      ],
-      legs: [
-        { exercise:"Leg Press", machineLabelMatch:["Leg Press","Angled Leg Press"], sets:{beginner:3,intermediate:4,advanced:4}, reps:{beginner:12,intermediate:10,advanced:8} },
-        { exercise:"Hack Squat", machineLabelMatch:["Hack Squat","Squat Machine"], sets:{beginner:2,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Leg Extension", machineLabelMatch:["Leg Extension"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} },
-        { exercise:"Leg Curl", machineLabelMatch:["Leg Curl","Seated Leg Curl","Prone Leg Curl","Single Leg Curl"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} }
-      ],
-      shoulders: [
-        { exercise:"Shoulder Press", machineLabelMatch:["Shoulder Press","Converging Shoulder Press"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Lateral Raise", machineLabelMatch:["Lateral Raise"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} },
-        { exercise:"Overhead Press", machineLabelMatch:["Overhead Barbell Press","Smith Machine"], sets:{beginner:2,intermediate:3,advanced:4}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Rear Delt Fly", machineLabelMatch:["Rear Delt / Pec Fly"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:15,intermediate:12,advanced:12} }
-      ],
-      arms: [
-        { exercise:"Biceps Curl", machineLabelMatch:["Biceps Curl - Pin Loaded","Biceps Curl - Plate Loaded"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:12,intermediate:10,advanced:8} },
-        { exercise:"Triceps Press", machineLabelMatch:["Tricep Press","Triceps Extension Machine"], sets:{beginner:3,intermediate:3,advanced:4}, reps:{beginner:12,intermediate:10,advanced:8} },
-        { exercise:"Assisted Dip / Pull", machineLabelMatch:["Assisted Pull-Up / Dip"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Cable Arm Work", machineLabelMatch:["Dual Adjustable Pulley"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:12,advanced:10} }
-      ],
-      fullbody: [
-        { exercise:"Chest Press", machineLabelMatch:["Chest Press","Converging Chest Press"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Lat Pulldown", machineLabelMatch:["Lat Pulldown","Pulldown"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:10,intermediate:10,advanced:8} },
-        { exercise:"Leg Press", machineLabelMatch:["Leg Press","Angled Leg Press"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:12,intermediate:10,advanced:8} },
-        { exercise:"Shoulder Press", machineLabelMatch:["Shoulder Press","Converging Shoulder Press"], sets:{beginner:2,intermediate:3,advanced:3}, reps:{beginner:10,intermediate:10,advanced:8} }
-      ]
+    const GW_TEMPLATE_ROT_PREFIX = "scanliftlog_gw_tpl_rot_v1:";
+
+    const GW_V = {
+      main: { sets: { beginner: 3, intermediate: 3, advanced: 4 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+      side: { sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 12, intermediate: 12, advanced: 10 } },
+      fin: { sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 12, intermediate: 10, advanced: 8 } },
+      leg: { sets: { beginner: 3, intermediate: 4, advanced: 5 }, reps: { beginner: 12, intermediate: 10, advanced: 8 } },
+      legIso: { sets: { beginner: 2, intermediate: 3, advanced: 4 }, reps: { beginner: 12, intermediate: 12, advanced: 10 } },
+      heavy: { sets: { beginner: 3, intermediate: 4, advanced: 5 }, reps: { beginner: 8, intermediate: 8, advanced: 6 } },
+      fb: { sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+      fbLeg: { sets: { beginner: 2, intermediate: 3, advanced: 4 }, reps: { beginner: 12, intermediate: 10, advanced: 8 } },
+      ohp: { sets: { beginner: 2, intermediate: 3, advanced: 4 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
     };
 
+    function gwSlot(exercise, machineLabelMatch, volKey, substituteGoalTags) {
+      const v = GW_V[volKey] || GW_V.main;
+      return {
+        exercise,
+        machineLabelMatch,
+        sets: { ...v.sets },
+        reps: { ...v.reps },
+        substituteGoalTags: substituteGoalTags || null,
+      };
+    }
+
+    const GW_SLOT_DEFS = {
+      CHPR: gwSlot("Chest Press", ["Chest Press", "Converging Chest Press"], "main", ["chest"]),
+      INCP: gwSlot("Incline Press", ["Incline Press", "Incline Bench"], "main", ["chest"]),
+      DECP: gwSlot("Decline Press", ["Decline Press", "Decline Bench"], "main", ["chest"]),
+      CONVCP: gwSlot("Converging Chest Press", ["Converging Chest Press", "Chest Press"], "main", ["chest"]),
+      RDFLY: gwSlot("Rear Delt / Pec Fly", ["Rear Delt / Pec Fly"], "side", ["chest", "shoulders"]),
+      DIPPL: gwSlot("Seated Dip", ["Seated Dip - Plate Loaded"], "fin", ["chest", "arms"]),
+      DIPPIN: gwSlot("Seated Dip", ["Seated Dip - Pin Loaded"], "fin", ["chest", "arms"]),
+      TRIPR: gwSlot("Triceps Press", ["Tricep Press", "Triceps Extension Machine"], "main", ["arms", "chest"]),
+      LATPD: gwSlot("Lat Pulldown", ["Lat Pulldown", "Diverging Lat Pulldown", "Pulldown"], "main", ["back"]),
+      PULL: gwSlot("Pulldown", ["Pulldown", "Lat Pulldown"], "main", ["back"]),
+      DLAT: gwSlot("Diverging Lat Pulldown", ["Diverging Lat Pulldown", "Lat Pulldown"], "main", ["back"]),
+      CROW: gwSlot("Cable Row", ["Cable Row", "Seated Row"], "main", ["back"]),
+      SROW: gwSlot("Seated Row", ["Seated Row", "Cable Row"], "main", ["back"]),
+      LROW: gwSlot("Low Row", ["Low Row Machine", "Diverging Low Row"], "side", ["back"]),
+      TBAR: gwSlot("T-Bar Row", ["T-Bar Row Station"], "side", ["back"]),
+      ASST: gwSlot("Assisted Pull-Up / Dip", ["Assisted Pull-Up / Dip"], "fin", ["back", "arms"]),
+      DUAL: gwSlot("Dual Pulley", ["Dual Adjustable Pulley"], "side", ["arms", "back", "chest"]),
+      SHPR: gwSlot("Shoulder Press", ["Shoulder Press", "Converging Shoulder Press"], "main", ["shoulders"]),
+      CSHPR: gwSlot("Converging Shoulder Press", ["Converging Shoulder Press", "Shoulder Press"], "main", ["shoulders"]),
+      LATR: gwSlot("Lateral Raise", ["Lateral Raise"], "side", ["shoulders"]),
+      OHBP: gwSlot("Overhead Press", ["Overhead Barbell Press", "Smith Machine"], "ohp", ["shoulders"]),
+      BCPN: gwSlot("Biceps Curl", ["Biceps Curl - Pin Loaded", "Biceps Curl - Plate Loaded"], "main", ["arms"]),
+      BCPL: gwSlot("Biceps Curl", ["Biceps Curl - Plate Loaded", "Biceps Curl - Pin Loaded"], "main", ["arms"]),
+      TRIEX: gwSlot("Triceps Extension", ["Triceps Extension Machine", "Tricep Press"], "main", ["arms"]),
+      LEGPR: gwSlot("Leg Press", ["Leg Press", "Angled Leg Press"], "leg", ["legs"]),
+      AGLP: gwSlot("Angled Leg Press", ["Angled Leg Press", "Leg Press"], "leg", ["legs"]),
+      HACK: gwSlot("Hack Squat", ["Hack Squat", "Squat Machine"], "heavy", ["legs"]),
+      SQMT: gwSlot("Squat Machine", ["Squat Machine", "Hack Squat"], "heavy", ["legs"]),
+      LEGEX: gwSlot("Leg Extension", ["Leg Extension"], "legIso", ["legs"]),
+      LEGCUR: gwSlot("Leg Curl", ["Leg Curl", "Seated Leg Curl", "Prone Leg Curl", "Single Leg Curl"], "legIso", ["legs"]),
+      SLCUR: gwSlot("Seated Leg Curl", ["Seated Leg Curl", "Leg Curl"], "legIso", ["legs"]),
+      CALF: gwSlot("Calf Raise", ["Calf Raise"], "side", ["legs"]),
+      GLUTE: gwSlot("Glute Extension", ["Glute Extension"], "side", ["legs"]),
+      HTHR: gwSlot("Hip Thrust", ["Hip Thrust Machine"], "side", ["legs"]),
+      SMTH: gwSlot("Smith Machine", ["Smith Machine"], "ohp", ["shoulders", "legs", "chest"]),
+      MULTIPP: gwSlot("Multi Pull Press", ["Multi Pull Press"], "main", ["chest", "back", "shoulders"]),
+    };
+
+    const GW_TEMPLATE_CATALOG = {
+      chest: {
+        "20": [
+          { id: "chest_20_a", slotKeys: ["CHPR", "INCP", "RDFLY"] },
+          { id: "chest_20_b", slotKeys: ["CONVCP", "DECP", "DIPPL"] },
+          { id: "chest_20_c", slotKeys: ["INCP", "CHPR", "DIPPIN"] },
+        ],
+        "30": [
+          { id: "chest_30_a", slotKeys: ["CHPR", "INCP", "RDFLY", "DIPPL"] },
+          { id: "chest_30_b", slotKeys: ["CONVCP", "INCP", "RDFLY", "TRIPR"] },
+          { id: "chest_30_c", slotKeys: ["DECP", "CHPR", "RDFLY", "DIPPIN"] },
+          { id: "chest_30_d", slotKeys: ["INCP", "DECP", "CONVCP", "RDFLY"] },
+        ],
+        "30_beginner": [
+          { id: "chest_30bg_a", slotKeys: ["RDFLY", "CHPR", "INCP", "DIPPL"] },
+          { id: "chest_30bg_b", slotKeys: ["CHPR", "RDFLY", "DIPPIN", "DIPPL"] },
+        ],
+        "30_advanced": [
+          { id: "chest_30ad_a", slotKeys: ["CONVCP", "INCP", "CHPR", "TRIPR"] },
+          { id: "chest_30ad_b", slotKeys: ["DECP", "CONVCP", "INCP", "RDFLY"] },
+        ],
+        "45": [
+          { id: "chest_45_a", slotKeys: ["CHPR", "INCP", "CONVCP", "RDFLY", "DIPPL"] },
+          { id: "chest_45_b", slotKeys: ["INCP", "DECP", "CHPR", "RDFLY", "TRIPR"] },
+          { id: "chest_45_c", slotKeys: ["CONVCP", "CHPR", "INCP", "RDFLY", "DIPPIN"] },
+        ],
+        "60": [
+          { id: "chest_60_a", slotKeys: ["CHPR", "INCP", "DECP", "CONVCP", "RDFLY", "DIPPL"] },
+          { id: "chest_60_b", slotKeys: ["CONVCP", "INCP", "CHPR", "DECP", "RDFLY", "TRIPR"] },
+          { id: "chest_60_c", slotKeys: ["CHPR", "CONVCP", "INCP", "RDFLY", "DIPPIN", "TRIPR"] },
+        ],
+        "60_beginner": [
+          { id: "chest_60bg_a", slotKeys: ["RDFLY", "CHPR", "INCP", "CONVCP", "DIPPL", "DIPPIN"] },
+          { id: "chest_60bg_b", slotKeys: ["CHPR", "INCP", "RDFLY", "DECP", "DIPPL", "TRIPR"] },
+        ],
+        "60_advanced": [
+          { id: "chest_60ad_a", slotKeys: ["CONVCP", "INCP", "DECP", "CHPR", "RDFLY", "TRIPR"] },
+          { id: "chest_60ad_b", slotKeys: ["DECP", "CONVCP", "CHPR", "INCP", "RDFLY", "DIPPL"] },
+        ],
+      },
+      back: {
+        "20": [
+          { id: "back_20_a", slotKeys: ["LATPD", "SROW", "LROW"] },
+          { id: "back_20_b", slotKeys: ["DLAT", "CROW", "TBAR"] },
+          { id: "back_20_c", slotKeys: ["PULL", "SROW", "ASST"] },
+        ],
+        "30": [
+          { id: "back_30_a", slotKeys: ["LATPD", "SROW", "LROW", "TBAR"] },
+          { id: "back_30_b", slotKeys: ["DLAT", "CROW", "SROW", "ASST"] },
+          { id: "back_30_c", slotKeys: ["PULL", "LATPD", "LROW", "DUAL"] },
+          { id: "back_30_d", slotKeys: ["LATPD", "CROW", "SROW", "TBAR"] },
+        ],
+        "30_beginner": [
+          { id: "back_30bg_a", slotKeys: ["LATPD", "SROW", "ASST", "LROW"] },
+          { id: "back_30bg_b", slotKeys: ["PULL", "CROW", "SROW", "ASST"] },
+        ],
+        "30_advanced": [
+          { id: "back_30ad_a", slotKeys: ["DLAT", "LATPD", "CROW", "TBAR"] },
+          { id: "back_30ad_b", slotKeys: ["LATPD", "LROW", "SROW", "DUAL"] },
+        ],
+        "45": [
+          { id: "back_45_a", slotKeys: ["LATPD", "DLAT", "SROW", "LROW", "TBAR"] },
+          { id: "back_45_b", slotKeys: ["PULL", "LATPD", "CROW", "SROW", "ASST"] },
+          { id: "back_45_c", slotKeys: ["LATPD", "SROW", "LROW", "TBAR", "DUAL"] },
+        ],
+        "60": [
+          { id: "back_60_a", slotKeys: ["LATPD", "DLAT", "CROW", "SROW", "LROW", "TBAR"] },
+          { id: "back_60_b", slotKeys: ["PULL", "LATPD", "SROW", "LROW", "ASST", "DUAL"] },
+          { id: "back_60_c", slotKeys: ["LATPD", "CROW", "SROW", "LROW", "TBAR", "ASST"] },
+        ],
+        "60_beginner": [
+          { id: "back_60bg_a", slotKeys: ["LATPD", "SROW", "ASST", "LROW", "PULL", "CROW"] },
+          { id: "back_60bg_b", slotKeys: ["PULL", "LATPD", "SROW", "ASST", "LROW", "DUAL"] },
+        ],
+        "60_advanced": [
+          { id: "back_60ad_a", slotKeys: ["DLAT", "LATPD", "CROW", "SROW", "LROW", "TBAR"] },
+          { id: "back_60ad_b", slotKeys: ["LATPD", "DLAT", "SROW", "TBAR", "DUAL", "ASST"] },
+        ],
+      },
+      shoulders: {
+        "20": [
+          { id: "sh_20_a", slotKeys: ["SHPR", "LATR", "RDFLY"] },
+          { id: "sh_20_b", slotKeys: ["CSHPR", "OHBP", "LATR"] },
+          { id: "sh_20_c", slotKeys: ["SHPR", "LATR", "DUAL"] },
+        ],
+        "30": [
+          { id: "sh_30_a", slotKeys: ["SHPR", "LATR", "RDFLY", "OHBP"] },
+          { id: "sh_30_b", slotKeys: ["CSHPR", "LATR", "RDFLY", "DUAL"] },
+          { id: "sh_30_c", slotKeys: ["SHPR", "OHBP", "LATR", "RDFLY"] },
+          { id: "sh_30_d", slotKeys: ["LATR", "SHPR", "CSHPR", "RDFLY"] },
+        ],
+        "30_beginner": [
+          { id: "sh_30bg_a", slotKeys: ["LATR", "SHPR", "RDFLY", "OHBP"] },
+          { id: "sh_30bg_b", slotKeys: ["SHPR", "LATR", "RDFLY", "DUAL"] },
+        ],
+        "30_advanced": [
+          { id: "sh_30ad_a", slotKeys: ["SHPR", "CSHPR", "LATR", "RDFLY", "OHBP"] },
+          { id: "sh_30ad_b", slotKeys: ["CSHPR", "SHPR", "LATR", "OHBP", "MULTIPP"] },
+        ],
+        "45": [
+          { id: "sh_45_a", slotKeys: ["SHPR", "CSHPR", "LATR", "RDFLY", "OHBP"] },
+          { id: "sh_45_b", slotKeys: ["SHPR", "LATR", "RDFLY", "DUAL", "OHBP"] },
+          { id: "sh_45_c", slotKeys: ["CSHPR", "LATR", "SHPR", "RDFLY", "SMTH"] },
+        ],
+        "60": [
+          { id: "sh_60_a", slotKeys: ["SHPR", "CSHPR", "LATR", "RDFLY", "OHBP", "DUAL"] },
+          { id: "sh_60_b", slotKeys: ["SHPR", "LATR", "RDFLY", "OHBP", "DUAL", "SMTH"] },
+          { id: "sh_60_c", slotKeys: ["LATR", "SHPR", "CSHPR", "RDFLY", "OHBP", "MULTIPP"] },
+        ],
+        "60_beginner": [
+          { id: "sh_60bg_a", slotKeys: ["LATR", "SHPR", "RDFLY", "OHBP", "DUAL", "SMTH"] },
+          { id: "sh_60bg_b", slotKeys: ["SHPR", "LATR", "RDFLY", "CSHPR", "OHBP", "DUAL"] },
+        ],
+        "60_advanced": [
+          { id: "sh_60ad_a", slotKeys: ["SHPR", "CSHPR", "LATR", "OHBP", "RDFLY", "MULTIPP"] },
+          { id: "sh_60ad_b", slotKeys: ["CSHPR", "SHPR", "OHBP", "LATR", "RDFLY", "DUAL"] },
+        ],
+      },
+      arms: {
+        "20": [
+          { id: "arm_20_a", slotKeys: ["BCPN", "TRIEX", "ASST"] },
+          { id: "arm_20_b", slotKeys: ["BCPL", "TRIPR", "DUAL"] },
+          { id: "arm_20_c", slotKeys: ["BCPN", "TRIPR", "ASST"] },
+        ],
+        "30": [
+          { id: "arm_30_a", slotKeys: ["BCPN", "BCPL", "TRIEX", "TRIPR"] },
+          { id: "arm_30_b", slotKeys: ["BCPL", "BCPN", "TRIPR", "DUAL"] },
+          { id: "arm_30_c", slotKeys: ["BCPN", "TRIEX", "ASST", "DUAL"] },
+          { id: "arm_30_d", slotKeys: ["BCPL", "TRIEX", "TRIPR", "ASST"] },
+        ],
+        "30_beginner": [
+          { id: "arm_30bg_a", slotKeys: ["BCPN", "TRIEX", "ASST", "DUAL"] },
+          { id: "arm_30bg_b", slotKeys: ["BCPL", "TRIPR", "ASST", "DUAL"] },
+        ],
+        "30_advanced": [
+          { id: "arm_30ad_a", slotKeys: ["BCPN", "BCPL", "TRIEX", "TRIPR"] },
+          { id: "arm_30ad_b", slotKeys: ["BCPL", "BCPN", "TRIPR", "TRIEX"] },
+        ],
+        "45": [
+          { id: "arm_45_a", slotKeys: ["BCPN", "BCPL", "TRIEX", "TRIPR", "DUAL"] },
+          { id: "arm_45_b", slotKeys: ["BCPN", "TRIPR", "TRIEX", "ASST", "DUAL"] },
+          { id: "arm_45_c", slotKeys: ["BCPL", "BCPN", "TRIEX", "ASST", "TRIPR"] },
+        ],
+        "60": [
+          { id: "arm_60_a", slotKeys: ["BCPN", "BCPL", "TRIEX", "TRIPR", "ASST", "DUAL"] },
+          { id: "arm_60_b", slotKeys: ["BCPL", "BCPN", "TRIPR", "TRIEX", "DUAL", "ASST"] },
+          { id: "arm_60_c", slotKeys: ["BCPN", "TRIEX", "BCPL", "TRIPR", "DUAL", "ASST"] },
+        ],
+        "60_beginner": [
+          { id: "arm_60bg_a", slotKeys: ["BCPN", "TRIEX", "ASST", "DUAL", "BCPL", "TRIPR"] },
+          { id: "arm_60bg_b", slotKeys: ["BCPL", "BCPN", "ASST", "TRIEX", "DUAL", "TRIPR"] },
+        ],
+        "60_advanced": [
+          { id: "arm_60ad_a", slotKeys: ["BCPN", "BCPL", "TRIEX", "TRIPR", "DUAL", "ASST"] },
+          { id: "arm_60ad_b", slotKeys: ["BCPL", "BCPN", "TRIPR", "TRIEX", "DUAL", "ASST"] },
+        ],
+      },
+      legs: {
+        "20": [
+          { id: "leg_20_a", slotKeys: ["LEGPR", "LEGEX", "LEGCUR"] },
+          { id: "leg_20_b", slotKeys: ["AGLP", "HACK", "SLCUR"] },
+          { id: "leg_20_c", slotKeys: ["LEGPR", "SQMT", "CALF"] },
+        ],
+        "30": [
+          { id: "leg_30_a", slotKeys: ["LEGPR", "HACK", "LEGEX", "LEGCUR"] },
+          { id: "leg_30_b", slotKeys: ["AGLP", "SQMT", "LEGEX", "SLCUR"] },
+          { id: "leg_30_c", slotKeys: ["LEGPR", "LEGEX", "LEGCUR", "GLUTE"] },
+          { id: "leg_30_d", slotKeys: ["HACK", "LEGPR", "LEGCUR", "CALF"] },
+        ],
+        "30_beginner": [
+          { id: "leg_30bg_a", slotKeys: ["LEGPR", "LEGEX", "LEGCUR", "CALF"] },
+          { id: "leg_30bg_b", slotKeys: ["AGLP", "LEGEX", "SLCUR", "GLUTE"] },
+        ],
+        "30_advanced": [
+          { id: "leg_30ad_a", slotKeys: ["LEGPR", "HACK", "SQMT", "LEGEX"] },
+          { id: "leg_30ad_b", slotKeys: ["HACK", "LEGPR", "LEGEX", "LEGCUR"] },
+        ],
+        "45": [
+          { id: "leg_45_a", slotKeys: ["LEGPR", "HACK", "LEGEX", "LEGCUR", "CALF"] },
+          { id: "leg_45_b", slotKeys: ["AGLP", "SQMT", "LEGEX", "SLCUR", "GLUTE"] },
+          { id: "leg_45_c", slotKeys: ["LEGPR", "HACK", "LEGEX", "LEGCUR", "HTHR"] },
+        ],
+        "60": [
+          { id: "leg_60_a", slotKeys: ["LEGPR", "HACK", "SQMT", "LEGEX", "LEGCUR", "CALF"] },
+          { id: "leg_60_b", slotKeys: ["AGLP", "LEGPR", "HACK", "LEGEX", "SLCUR", "GLUTE"] },
+          { id: "leg_60_c", slotKeys: ["LEGPR", "HACK", "LEGEX", "LEGCUR", "HTHR", "CALF"] },
+        ],
+        "60_beginner": [
+          { id: "leg_60bg_a", slotKeys: ["LEGPR", "LEGEX", "LEGCUR", "CALF", "GLUTE", "SLCUR"] },
+          { id: "leg_60bg_b", slotKeys: ["AGLP", "LEGEX", "SLCUR", "CALF", "GLUTE", "HTHR"] },
+        ],
+        "60_advanced": [
+          { id: "leg_60ad_a", slotKeys: ["LEGPR", "HACK", "SQMT", "LEGEX", "LEGCUR", "HTHR"] },
+          { id: "leg_60ad_b", slotKeys: ["HACK", "LEGPR", "SQMT", "LEGEX", "LEGCUR", "CALF"] },
+        ],
+      },
+      fullbody: {
+        "20": [
+          { id: "fb_20_a", slotKeys: ["CHPR", "LATPD", "LEGPR"] },
+          { id: "fb_20_b", slotKeys: ["INCP", "SROW", "LEGEX"] },
+          { id: "fb_20_c", slotKeys: ["SHPR", "LATPD", "LEGCUR"] },
+        ],
+        "30": [
+          { id: "fb_30_a", slotKeys: ["CHPR", "LATPD", "LEGPR", "SHPR"] },
+          { id: "fb_30_b", slotKeys: ["INCP", "SROW", "HACK", "RDFLY"] },
+          { id: "fb_30_c", slotKeys: ["SHPR", "LATPD", "LEGEX", "LEGCUR"] },
+          { id: "fb_30_d", slotKeys: ["CONVCP", "CROW", "AGLP", "LATR"] },
+        ],
+        "30_beginner": [
+          { id: "fb_30bg_a", slotKeys: ["CHPR", "LATPD", "LEGPR", "SHPR"] },
+          { id: "fb_30bg_b", slotKeys: ["SHPR", "LATPD", "LEGEX", "RDFLY"] },
+        ],
+        "30_advanced": [
+          { id: "fb_30ad_a", slotKeys: ["CONVCP", "LATPD", "HACK", "SHPR"] },
+          { id: "fb_30ad_b", slotKeys: ["INCP", "CROW", "AGLP", "LATR"] },
+        ],
+        "45": [
+          { id: "fb_45_a", slotKeys: ["CHPR", "LATPD", "SROW", "LEGPR", "SHPR"] },
+          { id: "fb_45_b", slotKeys: ["INCP", "LATPD", "HACK", "LEGEX", "RDFLY"] },
+          { id: "fb_45_c", slotKeys: ["SHPR", "CROW", "LEGPR", "LEGCUR", "LATR"] },
+        ],
+        "60": [
+          { id: "fb_60_a", slotKeys: ["CHPR", "LATPD", "SROW", "LEGPR", "SHPR", "LEGCUR"] },
+          { id: "fb_60_b", slotKeys: ["INCP", "LATPD", "CROW", "HACK", "LEGEX", "RDFLY"] },
+          { id: "fb_60_c", slotKeys: ["SHPR", "LATPD", "LEGPR", "SQMT", "RDFLY", "LATR"] },
+        ],
+        "60_beginner": [
+          { id: "fb_60bg_a", slotKeys: ["CHPR", "LATPD", "LEGPR", "SHPR", "SROW", "LEGCUR"] },
+          { id: "fb_60bg_b", slotKeys: ["SHPR", "LATPD", "LEGEX", "RDFLY", "CROW", "AGLP"] },
+        ],
+        "60_advanced": [
+          { id: "fb_60ad_a", slotKeys: ["CONVCP", "LATPD", "HACK", "LEGPR", "SHPR", "SROW"] },
+          { id: "fb_60ad_b", slotKeys: ["INCP", "LATPD", "CROW", "SQMT", "RDFLY", "LATR"] },
+        ],
+      },
+    };
+
+    const GW_LEGACY_FALLBACK_TEMPLATES = {
+      chest: [
+        { exercise: "Chest Press", machineLabelMatch: ["Chest Press", "Converging Chest Press"], sets: { beginner: 3, intermediate: 3, advanced: 4 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+        { exercise: "Incline Press", machineLabelMatch: ["Incline Press", "Incline Bench"], sets: { beginner: 3, intermediate: 3, advanced: 4 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+        { exercise: "Pec Fly", machineLabelMatch: ["Rear Delt / Pec Fly"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 12, intermediate: 12, advanced: 10 } },
+        { exercise: "Dip Press", machineLabelMatch: ["Seated Dip - Plate Loaded", "Seated Dip - Pin Loaded"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 12, intermediate: 10, advanced: 8 } },
+      ],
+      back: [
+        { exercise: "Lat Pulldown", machineLabelMatch: ["Lat Pulldown", "Diverging Lat Pulldown", "Pulldown"], sets: { beginner: 3, intermediate: 3, advanced: 4 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+        { exercise: "Seated Row", machineLabelMatch: ["Seated Row", "Cable Row"], sets: { beginner: 3, intermediate: 3, advanced: 4 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+        { exercise: "Low Row", machineLabelMatch: ["Low Row Machine", "Diverging Low Row"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 12, intermediate: 10, advanced: 8 } },
+        { exercise: "T-Bar Row", machineLabelMatch: ["T-Bar Row Station"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 12, intermediate: 10, advanced: 8 } },
+      ],
+      legs: [
+        { exercise: "Leg Press", machineLabelMatch: ["Leg Press", "Angled Leg Press"], sets: { beginner: 3, intermediate: 4, advanced: 4 }, reps: { beginner: 12, intermediate: 10, advanced: 8 } },
+        { exercise: "Hack Squat", machineLabelMatch: ["Hack Squat", "Squat Machine"], sets: { beginner: 2, intermediate: 3, advanced: 4 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+        { exercise: "Leg Extension", machineLabelMatch: ["Leg Extension"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 12, intermediate: 12, advanced: 10 } },
+        { exercise: "Leg Curl", machineLabelMatch: ["Leg Curl", "Seated Leg Curl", "Prone Leg Curl", "Single Leg Curl"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 12, intermediate: 12, advanced: 10 } },
+      ],
+      shoulders: [
+        { exercise: "Shoulder Press", machineLabelMatch: ["Shoulder Press", "Converging Shoulder Press"], sets: { beginner: 3, intermediate: 3, advanced: 4 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+        { exercise: "Lateral Raise", machineLabelMatch: ["Lateral Raise"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 12, intermediate: 12, advanced: 10 } },
+        { exercise: "Overhead Press", machineLabelMatch: ["Overhead Barbell Press", "Smith Machine"], sets: { beginner: 2, intermediate: 3, advanced: 4 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+        { exercise: "Rear Delt Fly", machineLabelMatch: ["Rear Delt / Pec Fly"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 15, intermediate: 12, advanced: 12 } },
+      ],
+      arms: [
+        { exercise: "Biceps Curl", machineLabelMatch: ["Biceps Curl - Pin Loaded", "Biceps Curl - Plate Loaded"], sets: { beginner: 3, intermediate: 3, advanced: 4 }, reps: { beginner: 12, intermediate: 10, advanced: 8 } },
+        { exercise: "Triceps Press", machineLabelMatch: ["Tricep Press", "Triceps Extension Machine"], sets: { beginner: 3, intermediate: 3, advanced: 4 }, reps: { beginner: 12, intermediate: 10, advanced: 8 } },
+        { exercise: "Assisted Dip / Pull", machineLabelMatch: ["Assisted Pull-Up / Dip"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+        { exercise: "Cable Arm Work", machineLabelMatch: ["Dual Adjustable Pulley"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 12, intermediate: 12, advanced: 10 } },
+      ],
+      fullbody: [
+        { exercise: "Chest Press", machineLabelMatch: ["Chest Press", "Converging Chest Press"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+        { exercise: "Lat Pulldown", machineLabelMatch: ["Lat Pulldown", "Pulldown"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+        { exercise: "Leg Press", machineLabelMatch: ["Leg Press", "Angled Leg Press"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 12, intermediate: 10, advanced: 8 } },
+        { exercise: "Shoulder Press", machineLabelMatch: ["Shoulder Press", "Converging Shoulder Press"], sets: { beginner: 2, intermediate: 3, advanced: 3 }, reps: { beginner: 10, intermediate: 10, advanced: 8 } },
+      ],
+    };
     function gwGetGymMachines(gid) {
       return GYM_MACHINE_CATALOG[gid] || GYM_MACHINE_CATALOG["main"] || [];
     }
@@ -5094,12 +5394,145 @@
       return null;
     }
 
-    function gwGetStepCountForDuration(duration) {
-      const d = Number(duration || 30);
-      if (d <= 20) return 3;
-      return 4;
+    function gwTemplateRotationStorageKey(uid, gid, goal, durBucket, level) {
+      return `${GW_TEMPLATE_ROT_PREFIX}${uid}:${gid}:${goal}:${durBucket}:${level}`;
     }
 
+    function gwPickTemplateVariantFromCatalog(variants, storageKey) {
+      if (!variants || !variants.length) return null;
+      let recent = [];
+      try {
+        recent = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      } catch {
+        recent = [];
+      }
+      if (!Array.isArray(recent)) recent = [];
+      const avoid = new Set(recent.slice(0, 5));
+      let pool = variants.filter((v) => v && v.id && !avoid.has(v.id));
+      if (!pool.length) pool = variants.slice();
+      const pick = pool[Math.floor(Math.random() * pool.length)];
+      const nextRecent = [pick.id, ...recent.filter((x) => x !== pick.id)].slice(0, 6);
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(nextRecent));
+      } catch {}
+      return pick;
+    }
+
+    function gwSubstituteTagsForGoal(workoutGoal, slotDef) {
+      if (slotDef.substituteGoalTags && slotDef.substituteGoalTags.length) return slotDef.substituteGoalTags;
+      if (workoutGoal === "fullbody") return ["fullbody", "chest", "back", "legs", "shoulders", "arms"];
+      return [workoutGoal];
+    }
+
+    function gwResolveMachineForSlot(gid, slotDef, usedCodes, workoutGoal) {
+      const primary = gwFindMachineForTemplateItem(gid, slotDef);
+      if (primary && primary.type === "strength" && !usedCodes.has(primary.machineCode)) {
+        return primary;
+      }
+      const tags = gwSubstituteTagsForGoal(workoutGoal, slotDef);
+      const pool = gwGetGymMachines(gid).filter((m) => {
+        if (m.type !== "strength" || usedCodes.has(m.machineCode)) return false;
+        return m.goalTags && tags.some((t) => m.goalTags.includes(t));
+      });
+      pool.sort((a, b) => String(a.label).localeCompare(String(b.label)));
+      if (pool.length) return pool[0];
+      const anyStrength = gwGetGymMachines(gid)
+        .filter((m) => m.type === "strength" && !usedCodes.has(m.machineCode))
+        .sort((a, b) => String(a.label).localeCompare(String(b.label)));
+      return anyStrength[0] || null;
+    }
+
+    function gwCollectVariantsForGoalDuration(goal, durBucket, level) {
+      const cat = GW_TEMPLATE_CATALOG[goal];
+      if (!cat) return [];
+      const lvl = String(level || "intermediate").toLowerCase();
+      const levelKey = `${durBucket}_${lvl}`;
+      if (cat[levelKey] && cat[levelKey].length) return cat[levelKey];
+      if (cat[durBucket] && cat[durBucket].length) return cat[durBucket];
+      const order = ["30", "45", "60", "20"];
+      const i = Math.max(0, order.indexOf(durBucket));
+      for (let k = 0; k < order.length; k++) {
+        const b = order[(i + k) % order.length];
+        const lk = `${b}_${lvl}`;
+        if (cat[lk] && cat[lk].length) return cat[lk];
+        if (cat[b] && cat[b].length) return cat[b];
+      }
+      return [];
+    }
+
+    function gwBuildStepsFromCatalogVariant(gymId, workoutGoal, level, variant, desiredCount) {
+      const used = new Set();
+      const steps = [];
+      const keys = variant.slotKeys || [];
+      for (const sk of keys) {
+        if (steps.length >= desiredCount) break;
+        const def = GW_SLOT_DEFS[sk];
+        if (!def) continue;
+        const machine = gwResolveMachineForSlot(gymId, def, used, workoutGoal);
+        if (!machine) continue;
+        used.add(machine.machineCode);
+        steps.push({
+          stepId: "step_" + Math.random().toString(36).slice(2),
+          exerciseName: def.exercise,
+          machineCode: machine.machineCode,
+          machineNumber: machine.machineNumber,
+          machineName: machine.label,
+          type: machine.type,
+          markerLeft: machine.markerLeft,
+          markerTop: machine.markerTop,
+          sets: def.sets[level] || 3,
+          reps: def.reps[level] || 10,
+          repUnit: "reps",
+          status: "upcoming",
+        });
+      }
+      return steps;
+    }
+
+    function gwBuildStepsFromLegacyTemplates(gymId, workoutGoal, level, desiredCount) {
+      const templates = GW_LEGACY_FALLBACK_TEMPLATES[workoutGoal] || [];
+      const chosenSteps = [];
+      const usedMachineCodes = new Set();
+      for (const tplItem of templates) {
+        const machine = gwFindMachineForTemplateItem(gymId, tplItem);
+        if (!machine) continue;
+        if (machine.type !== "strength") continue;
+        if (usedMachineCodes.has(machine.machineCode)) continue;
+        usedMachineCodes.add(machine.machineCode);
+        chosenSteps.push({
+          stepId: "step_" + Math.random().toString(36).slice(2),
+          exerciseName: tplItem.exercise,
+          machineCode: machine.machineCode,
+          machineNumber: machine.machineNumber,
+          machineName: machine.label,
+          type: machine.type,
+          markerLeft: machine.markerLeft,
+          markerTop: machine.markerTop,
+          sets: tplItem.sets[level] || 3,
+          reps: tplItem.reps[level] || 10,
+          repUnit: "reps",
+          status: "upcoming",
+        });
+        if (chosenSteps.length >= desiredCount) break;
+      }
+      return chosenSteps;
+    }
+
+    function gwDurationBucket(duration) {
+      const d = Number(duration) || 30;
+      if (d <= 22) return "20";
+      if (d <= 35) return "30";
+      if (d <= 52) return "45";
+      return "60";
+    }
+
+    function gwGetStepCountForDuration(duration) {
+      const b = gwDurationBucket(duration);
+      if (b === "20") return 3;
+      if (b === "30") return 4;
+      if (b === "45") return 5;
+      return 6;
+    }
     function gwGetCurrentStep(plan) {
       return plan?.steps?.[plan.currentStepIndex] || null;
     }
@@ -5122,36 +5555,22 @@
     }
 
     function gwBuildWorkoutPlan({ gymId, goal, duration, level, useHistory, promptText }) {
-      const templates = WORKOUT_TEMPLATES[goal] || [];
+      void useHistory;
+      const levelNorm = String(level || "intermediate").toLowerCase();
+      const durBucket = gwDurationBucket(duration);
       const desiredCount = gwGetStepCountForDuration(duration);
-      const history = useHistory ? gwGetUserHistorySummary() : null;
-      const chosenSteps = [];
-      const usedMachineCodes = new Set();
+      const variants = gwCollectVariantsForGoalDuration(goal, durBucket, levelNorm);
+      const rotKey = gwTemplateRotationStorageKey(userId, gymId, goal, durBucket, levelNorm);
+      const variant = gwPickTemplateVariantFromCatalog(variants, rotKey);
 
-      for (const tplItem of templates) {
-        const machine = gwFindMachineForTemplateItem(gymId, tplItem);
-        if (!machine) continue;
-        if (machine.type !== "strength") continue;
-        if (usedMachineCodes.has(machine.machineCode)) continue;
-
-        usedMachineCodes.add(machine.machineCode);
-
-        chosenSteps.push({
-          stepId: "step_" + Math.random().toString(36).slice(2),
-          exerciseName: tplItem.exercise,
-          machineCode: machine.machineCode,
-          machineNumber: machine.machineNumber,
-          machineName: machine.label,
-          type: machine.type,
-          markerLeft: machine.markerLeft,
-          markerTop: machine.markerTop,
-          sets: tplItem.sets[level] || 3,
-          reps: tplItem.reps[level] || 10,
-          repUnit: "reps",
-          status: "upcoming"
-        });
-
-        if (chosenSteps.length >= desiredCount) break;
+      let chosenSteps = [];
+      let stepsFromCatalog = false;
+      if (variant) {
+        chosenSteps = gwBuildStepsFromCatalogVariant(gymId, goal, levelNorm, variant, desiredCount);
+        stepsFromCatalog = chosenSteps.length > 0;
+      }
+      if (!chosenSteps.length) {
+        chosenSteps = gwBuildStepsFromLegacyTemplates(gymId, goal, levelNorm, desiredCount);
       }
 
       const plan = {
@@ -5160,15 +5579,16 @@
         gymId,
         goal,
         duration: Number(duration),
-        level,
+        level: levelNorm,
         promptText: String(promptText || "").trim(),
         createdAt: Date.now(),
         currentStepIndex: 0,
         status: "active",
-        steps: chosenSteps
+        steps: chosenSteps,
+        templateVariantId: stepsFromCatalog && variant && variant.id ? variant.id : "legacy"
       };
 
-      plan.aiExplanation = gwGenerateAIExplanation(goal, level, duration, promptText, plan);
+      plan.aiExplanation = gwGenerateAIExplanation(goal, levelNorm, duration, promptText, plan);
       return plan;
     }
 
