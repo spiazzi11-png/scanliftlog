@@ -436,6 +436,138 @@
       line-height:1.3;
     }
 
+    .machineRowTop {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-bottom:6px;
+    }
+
+    .machineRowTop .contextLabel {
+      margin:0;
+      flex:1;
+      min-width:0;
+    }
+
+    .machineQrBtn {
+      flex:0 0 auto;
+      width:38px;
+      height:34px;
+      padding:0;
+      margin:0;
+      border:1px solid rgba(220,38,38,.38);
+      border-radius:10px;
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      color:#fca5a5;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    }
+
+    .machineQrBtn:hover {
+      border-color: rgba(248,113,113,.55);
+      color:#fecaca;
+    }
+
+    .machineQrBtn svg {
+      display:block;
+    }
+
+    .qrScanModal {
+      position:fixed;
+      inset:0;
+      z-index:10060;
+    }
+
+    .qrScanModal.hidden {
+      display:none !important;
+    }
+
+    .qrScanBackdrop {
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.78);
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+    }
+
+    .qrScanCard {
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:min(94vw,420px);
+      max-height:min(88vh,640px);
+      background:linear-gradient(180deg, rgba(22,24,30,.98), rgba(12,14,18,.99));
+      border:1px solid rgba(220,38,38,.35);
+      border-radius:20px;
+      box-shadow:0 24px 60px rgba(0,0,0,.5);
+      padding:14px 14px 16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .qrScanHeader {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .qrScanHeaderTitle {
+      font-weight:900;
+      font-size:1rem;
+      color:var(--text);
+    }
+
+    .qrScanCloseBtn {
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-size:18px;
+      font-weight:900;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+
+    #qrScanVideo {
+      width:100%;
+      max-height:min(48vh,320px);
+      border-radius:14px;
+      background:#000;
+      object-fit:cover;
+    }
+
+    .qrScanHint {
+      margin:0;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.4;
+      text-align:center;
+    }
+
+    .qrScanError {
+      margin:0;
+      font-size:12px;
+      color:#f87171;
+      text-align:center;
+      line-height:1.35;
+    }
+
+    .qrScanError.hidden {
+      display:none;
+    }
+
     .machineBackupNoteRow {
       margin-top:6px;
     }
@@ -2557,7 +2689,15 @@
       <div data-ui="gym-machine-pill">
         <div class="contextBar contextBarCompact contextBarMachineOnly">
           <div class="contextItem contextItemMachine">
-            <div class="contextLabel">Machine</div>
+            <div class="machineRowTop">
+              <div class="contextLabel">Machine</div>
+              <button type="button" class="machineQrBtn" id="machineQrScanBtn" aria-label="Scan machine QR code">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+              </button>
+            </div>
             <div class="contextSelectWrap">
               <select id="machineSelect" class="contextSelect">
                 <option value="">Select a machine</option>
@@ -2967,7 +3107,21 @@
     </div>
   </div>
 
+  <div id="qrScanModal" class="qrScanModal hidden" aria-hidden="true">
+    <div class="qrScanBackdrop" id="qrScanBackdrop"></div>
+    <div class="qrScanCard" role="dialog" aria-modal="true" aria-labelledby="qrScanTitle">
+      <div class="qrScanHeader">
+        <span id="qrScanTitle" class="qrScanHeaderTitle">Scan machine QR</span>
+        <button type="button" class="qrScanCloseBtn" id="qrScanCloseBtn" aria-label="Close scanner">✕</button>
+      </div>
+      <video id="qrScanVideo" playsinline muted></video>
+      <p id="qrScanError" class="qrScanError hidden"></p>
+      <p class="qrScanHint">Point your camera at the machine’s QR code. We’ll open the link when it’s read.</p>
+    </div>
+  </div>
+
   <script src="/machine-map.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js" crossorigin="anonymous"></script>
   <script>
     /* ================================
        IMPORTANT DEPLOYMENT NOTE
@@ -3529,6 +3683,144 @@
     }
 
     let deferredA2hsPrompt = null;
+    let qrScanStream = null;
+    let qrScanRafId = 0;
+
+    function isAllowedQrTargetUrl(u) {
+      const h = (u.hostname || "").toLowerCase();
+      if (!h) return false;
+      const here = window.location.hostname.toLowerCase();
+      if (h === here) return true;
+      if (h === "localhost" || h.endsWith(".localhost")) return true;
+      if (h === "127.0.0.1") return true;
+      if (h.endsWith("scanliftlog.com")) return true;
+      return false;
+    }
+
+    function stopQrScanModal() {
+      if (qrScanRafId) {
+        cancelAnimationFrame(qrScanRafId);
+        qrScanRafId = 0;
+      }
+      if (qrScanStream) {
+        qrScanStream.getTracks().forEach((t) => t.stop());
+        qrScanStream = null;
+      }
+      const video = document.getElementById("qrScanVideo");
+      if (video) video.srcObject = null;
+      const modal = document.getElementById("qrScanModal");
+      if (modal) {
+        modal.classList.add("hidden");
+        modal.setAttribute("aria-hidden", "true");
+      }
+    }
+
+    function navigateToScannedQrPayload(raw) {
+      const text = String(raw || "").trim();
+      if (!text) return false;
+      let u;
+      try {
+        u = new URL(text);
+      } catch {
+        try {
+          u = new URL(text, window.location.href);
+        } catch {
+          return false;
+        }
+      }
+      if (!/^https?:$/i.test(u.protocol)) return false;
+      if (!isAllowedQrTargetUrl(u)) {
+        alert("That QR code doesn’t link to a ScanLiftLog page on this site. Use a machine sticker QR from your gym.");
+        stopQrScanModal();
+        return true;
+      }
+      stopQrScanModal();
+      window.location.href = u.toString();
+      return true;
+    }
+
+    function tickQrScanDecode(video, canvas, ctx) {
+      const modal = document.getElementById("qrScanModal");
+      if (!modal || modal.classList.contains("hidden")) return;
+      if (typeof jsQR === "undefined") return;
+
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        const w = video.videoWidth;
+        const h = video.videoHeight;
+        if (w > 0 && h > 0) {
+          canvas.width = w;
+          canvas.height = h;
+          ctx.drawImage(video, 0, 0, w, h);
+          const img = ctx.getImageData(0, 0, w, h);
+          const code = jsQR(img.data, img.width, img.height, { inversionAttempts: "attemptBoth" });
+          if (code && code.data && navigateToScannedQrPayload(code.data)) return;
+        }
+      }
+      qrScanRafId = requestAnimationFrame(() => tickQrScanDecode(video, canvas, ctx));
+    }
+
+    async function openMachineQrScan() {
+      const modal = document.getElementById("qrScanModal");
+      const video = document.getElementById("qrScanVideo");
+      const errEl = document.getElementById("qrScanError");
+      if (!modal || !video || !errEl) return;
+
+      if (typeof jsQR === "undefined") {
+        alert("QR scanning library didn’t load. Check your network and try again.");
+        return;
+      }
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert("Camera access isn’t available in this browser. Use Safari or Chrome over HTTPS, or open the machine link from your camera app.");
+        return;
+      }
+
+      errEl.textContent = "";
+      errEl.classList.add("hidden");
+      modal.classList.remove("hidden");
+      modal.setAttribute("aria-hidden", "false");
+
+      try {
+        qrScanStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: "environment" } },
+          audio: false
+        });
+      } catch (e) {
+        errEl.textContent = "Could not open the camera. Allow permission or check that another app isn’t using it.";
+        errEl.classList.remove("hidden");
+        return;
+      }
+
+      video.srcObject = qrScanStream;
+      try {
+        await video.play();
+      } catch (e2) {
+        errEl.textContent = "Could not start video preview.";
+        errEl.classList.remove("hidden");
+        stopQrScanModal();
+        return;
+      }
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      qrScanRafId = requestAnimationFrame(() => tickQrScanDecode(video, canvas, ctx));
+    }
+
+    function initMachineQrScan() {
+      const btn = document.getElementById("machineQrScanBtn");
+      const closeBtn = document.getElementById("qrScanCloseBtn");
+      const backdrop = document.getElementById("qrScanBackdrop");
+      const modal = document.getElementById("qrScanModal");
+
+      if (btn) btn.addEventListener("click", () => openMachineQrScan());
+      if (closeBtn) closeBtn.addEventListener("click", stopQrScanModal);
+      if (backdrop) backdrop.addEventListener("click", stopQrScanModal);
+      if (modal) {
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) stopQrScanModal();
+        });
+      }
+    }
 
     function removeA2hsInstallDebugFooters() {
       const modal = document.getElementById("a2hsModal");
@@ -5544,6 +5836,7 @@
 
       initA2hsUi();
       initMachineDropdown();
+      initMachineQrScan();
       initMoreOptionsToggle();
 
       const scrollToBadgesBtn = document.getElementById("scrollToBadgesBtn");
