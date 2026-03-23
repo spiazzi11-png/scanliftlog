@@ -5190,6 +5190,85 @@
       return plan;
     }
 
+    function gwParseRepsFromSavedSets(sets) {
+      const nums = [];
+      for (const s of sets || []) {
+        const raw = String(s.reps || "").trim();
+        const m = raw.match(/\d+/);
+        if (!m) continue;
+        const n = parseInt(m[0], 10);
+        if (Number.isFinite(n) && n > 0) nums.push(n);
+      }
+      return nums;
+    }
+
+    function gwBuildGuidedSaveCoachingLine(savedSets, targetReps) {
+      const target = Math.max(1, Number(targetReps) || 10);
+      const repsList = gwParseRepsFromSavedSets(savedSets);
+      if (!repsList.length) {
+        return "Nice work logging this station.";
+      }
+      const maxR = Math.max(...repsList);
+
+      if (maxR >= target) {
+        return "Nice work. You hit your target reps — ready to move up next session when form stays solid.";
+      }
+      if (maxR < Math.max(5, target - 4) || maxR < target * 0.65) {
+        return "That looked tough based on your reps. Keep this weight next time and aim for cleaner sets.";
+      }
+      return "Solid work — you're close to the target. Small nudges to weight or reps over time add up.";
+    }
+
+    /**
+     * After a successful save on the current guided step: advance plan, coach, then either
+     * open completion UI or navigate to the next machine (suppress guided modal reopen).
+     * @returns {boolean} true if this save was handled as an active guided step for this machine
+     */
+    function gwApplyGuidedSaveAdvanceAndFeedback({ savedSets, isCardio }) {
+      const activePlan = gwLoadActivePlan(gymId, userId);
+      if (!activePlan || activePlan.status !== "active") return false;
+
+      const current = gwGetCurrentStep(activePlan);
+      if (!current || String(current.machineCode || "").toUpperCase() !== String(machineId || "").toUpperCase()) {
+        return false;
+      }
+
+      const targetReps = Number(current.reps) || 10;
+      current.status = "completed";
+      gwAdvancePlan(activePlan);
+
+      const completedNow = activePlan.steps.filter((s) => s.status === "completed").length;
+      const total = activePlan.steps.length;
+      const next = gwGetCurrentStep(activePlan);
+
+      const coachingLine = isCardio
+        ? "Nice work logging this station."
+        : gwBuildGuidedSaveCoachingLine(savedSets, targetReps);
+
+      if (activePlan.status === "completed") {
+        gwSaveCompletedPlanHistory(activePlan);
+        gwSaveActivePlan(activePlan);
+        const body = `${coachingLine}\n\nYou finished all ${total} steps in this guided workout.`;
+        alert(body);
+        gwRenderPlanUI(activePlan);
+        return true;
+      }
+
+      const nextName = next ? String(next.machineName || next.exerciseName || "").trim() : "";
+      const progressLine = `You've finished ${completedNow} of ${total} steps.${nextName ? ` Next: ${nextName}.` : ""}`;
+      const body = `${coachingLine}\n\n${progressLine}`;
+      gwSaveActivePlan(activePlan);
+      sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
+      alert(body);
+      const nextCode = next ? String(next.machineCode || "").toUpperCase() : "";
+      if (nextCode) {
+        gwSetParamAndNavigate({ gym: gymId, machine: nextCode });
+      } else {
+        gwRenderPlanUI(activePlan);
+      }
+      return true;
+    }
+
     const AI_DISCLAIMER_SESSION_KEY = "scanliftlog_ai_disclaimer_ack_v1";
 
     function aiHasAcceptedDisclaimerThisSession() {
@@ -5797,22 +5876,8 @@
           renderGuidedStepBanner();
           gwSyncFocusedGuidedUI();
 
-          const activePlan = gwLoadActivePlan(gymId, userId);
-          if (activePlan && activePlan.status === "active") {
-            const current = gwGetCurrentStep(activePlan);
-            if (current && String(current.machineCode || "").toUpperCase() === String(machineId || "").toUpperCase()) {
-              current.status = "completed";
-              gwAdvancePlan(activePlan);
-
-              if (activePlan.status === "completed") {
-                gwSaveCompletedPlanHistory(activePlan);
-                gwSaveActivePlan(activePlan);
-                gwRenderPlanUI(activePlan);
-              } else {
-                gwSaveActivePlan(activePlan);
-                gwRenderPlanUI(activePlan);
-              }
-            }
+          if (gwApplyGuidedSaveAdvanceAndFeedback({ savedSets: null, isCardio: true })) {
+            return;
           }
 
           return;
@@ -5848,22 +5913,8 @@
         renderGuidedStepBanner();
         gwSyncFocusedGuidedUI();
 
-        const activePlan = gwLoadActivePlan(gymId, userId);
-        if (activePlan && activePlan.status === "active") {
-          const current = gwGetCurrentStep(activePlan);
-          if (current && String(current.machineCode || "").toUpperCase() === String(machineId || "").toUpperCase()) {
-            current.status = "completed";
-            gwAdvancePlan(activePlan);
-
-            if (activePlan.status === "completed") {
-              gwSaveCompletedPlanHistory(activePlan);
-              gwSaveActivePlan(activePlan);
-              gwRenderPlanUI(activePlan);
-            } else {
-              gwSaveActivePlan(activePlan);
-              gwRenderPlanUI(activePlan);
-            }
-          }
+        if (gwApplyGuidedSaveAdvanceAndFeedback({ savedSets: sets, isCardio: false })) {
+          return;
         }
       });
 
