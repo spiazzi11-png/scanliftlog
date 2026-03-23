@@ -3495,7 +3495,11 @@
       "RECBK","UPRBK","ICLMB","JACOB","VCLMB","XTRNR","SPRBK","STRDR","ADSKI","SLDM"
     ];
 
-    const machineType = (machineId && CARDIO_MACHINE_IDS.includes(machineId)) ? "cardio" : "strength";
+    const machineType = !machineId
+      ? null
+      : CARDIO_MACHINE_IDS.includes(machineId)
+        ? "cardio"
+        : "strength";
 
     function showMachineSelectionGate() {
       const machineSelectionGate = document.getElementById("machineSelectionGate");
@@ -4547,7 +4551,12 @@
 
     function gwSyncFocusedGuidedUI() {
       const activePlan = gwLoadActivePlan(gymId, userId);
-      const focusModeActive = !!(activePlan && activePlan.status === "active" && machineType === "strength");
+      const focusModeActive = !!(
+        activePlan &&
+        activePlan.status === "active" &&
+        machineId &&
+        machineType === "strength"
+      );
 
       document.body.classList.toggle("guided-focus-active", focusModeActive);
 
