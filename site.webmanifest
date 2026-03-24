@@ -2,7 +2,7 @@
   "name": "Push Fitness Club - ScanLiftLog",
   "short_name": "ScanLiftLog",
   "description": "QR-based gym workout logging",
-  "start_url": "/test.html?gym=pushfitness-melville",
+  "start_url": "/?gym=pushfitness-melville"
   "scope": "/",
   "display": "standalone",
   "background_color": "#0b0c10",
