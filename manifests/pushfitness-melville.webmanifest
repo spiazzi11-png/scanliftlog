@@ -1,23 +1,16 @@
 {
-  "id": "/install/pushfitness-melville",
+  "id": "scanliftlog-pushfitness-melville",
   "name": "Push Fitness Club",
-  "short_name": "Push Fitness",
-  "description": "QR-based gym workout logging for Push Fitness Club",
+  "short_name": "Push Fitness Club",
   "start_url": "/test.html?gym=pushfitness-melville",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#0b0c10",
-  "theme_color": "#0b0c10",
+  "theme_color": "#08090c",
+  "background_color": "#08090c",
   "icons": [
     {
       "src": "/icons/pushfitness-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/pushfitness-512.png",
-      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     }
