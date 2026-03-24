@@ -1474,6 +1474,35 @@
       padding:4px 8px;
     }
 
+    .guidedStepBannerTopRight {
+      display:flex;
+      align-items:center;
+      gap:6px;
+      flex-shrink:0;
+    }
+
+    .guidedStepBannerExitBtn {
+      width:32px;
+      height:32px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.2);
+      color:#fecaca;
+      font-size:16px;
+      font-weight:900;
+      line-height:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      padding:0;
+      flex:0 0 auto;
+    }
+
+    .guidedStepBannerExitBtn:active {
+      transform: scale(0.96);
+    }
+
     .guidedStepBannerTitle {
       font-size:.95rem;
       font-weight:900;
@@ -2737,7 +2766,16 @@
       <div id="guidedStepBanner" class="guidedStepBanner" style="display:none;">
         <div class="guidedStepBannerTop">
           <div class="guidedStepBannerEyebrow">AI Guided Workout Active</div>
-          <div id="guidedStepBannerPill" class="guidedStepBannerPill">Step 1 of 4</div>
+          <div class="guidedStepBannerTopRight">
+            <div id="guidedStepBannerPill" class="guidedStepBannerPill">Step 1 of 4</div>
+            <button
+              type="button"
+              id="guidedStepBannerExitBtn"
+              class="guidedStepBannerExitBtn"
+              aria-label="Exit guided workout"
+              title="Exit guided workout"
+            >✕</button>
+          </div>
         </div>
 
         <div id="guidedStepBannerTitle" class="guidedStepBannerTitle">Chest Press</div>
@@ -3048,6 +3086,9 @@
        ================================
        For deep links like /m/legpr to work on GitHub Pages, you MUST create 404.html in this repo
        and paste this exact same file into 404.html as well.
+
+       If you copy this file to index.html so the app lives at /, keep manifest start_url values as
+       /?gym=... (see manifests/*.webmanifest) so home-screen shortcuts match the root URL.
     */
 
     /* ---------- Private / Incognito Mode Detection ---------- */
@@ -3522,7 +3563,7 @@
     };
 
     const INSTALL_PAGE_MAP = {
-      "pushfitness-melville": "/install/pushfitness-mobile.html"
+      "pushfitness-melville": "/install/pushfitness-melville.html"
     };
 
     function getDedicatedInstallUrl(gid) {
@@ -4554,6 +4595,7 @@
     const guidedStepBannerTitle = document.getElementById("guidedStepBannerTitle");
     const guidedStepBannerMeta = document.getElementById("guidedStepBannerMeta");
     const guidedStepBannerHint = document.getElementById("guidedStepBannerHint");
+    const guidedStepBannerExitBtn = document.getElementById("guidedStepBannerExitBtn");
     const exitGuidedWorkoutBtn = document.getElementById("exitGuidedWorkoutBtn");
     const guidedWorkoutCompletionNote = document.getElementById("guidedWorkoutCompletionNote");
     const aiDisclaimerModal = document.getElementById("aiDisclaimerModal");
@@ -5986,6 +6028,17 @@
       gwSyncFocusedGuidedUI();
     }
 
+    function gwConfirmExitGuidedWorkoutFromBanner() {
+      if (
+        !confirm(
+          "Exit this guided workout? Remaining steps will be cleared — you can start a new plan anytime."
+        )
+      ) {
+        return;
+      }
+      gwExitGuidedWorkout();
+    }
+
     function renderGuidedStepBanner() {
       if (!guidedStepBanner) return;
 
@@ -6150,6 +6203,9 @@
       if (generateWorkoutBtn) generateWorkoutBtn.addEventListener("click", gwGeneratePlanFromForm);
       if (closeGuidedWorkoutBtn) closeGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
       if (exitGuidedWorkoutBtn) exitGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
+      if (guidedStepBannerExitBtn) {
+        guidedStepBannerExitBtn.addEventListener("click", gwConfirmExitGuidedWorkoutFromBanner);
+      }
     }
 
     function setupGuidedWorkoutBackHandler() {
