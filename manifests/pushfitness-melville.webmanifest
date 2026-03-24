@@ -1,8 +1,8 @@
 {
-  "id": "scanliftlog-pushfitness-melville",
+  "id": "/?gym=pushfitness-melville",
   "name": "Push Fitness Club",
   "short_name": "Push Fitness Club",
-  "start_url": "/test.html?gym=pushfitness-melville",
+  "start_url": "/?gym=pushfitness-melville",
   "scope": "/",
   "display": "standalone",
   "theme_color": "#08090c",
