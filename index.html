@@ -498,6 +498,26 @@
       line-height:1.3;
     }
 
+    .hipAbductorExerciseSlot:not([hidden]) {
+      margin-top: 8px;
+    }
+
+    .hipAbductorExerciseSlot #abductorSelectWrap {
+      display: block !important;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .hipAbductorExerciseSlot #abductorSelectWrap label {
+      display: block;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
     .machineSelectRow {
       display:flex;
       align-items:center;
@@ -2681,6 +2701,7 @@
             <div class="contextHint" id="machineSelectHint">
               Choose a machine from this gym.
             </div>
+            <div id="hipAbductorExerciseSlot" class="hipAbductorExerciseSlot" hidden></div>
           </div>
         </div>
       </div>
@@ -2870,7 +2891,7 @@
 
               <div class="col" id="abductorSelectWrap" style="display:none;">
                 <label>Exercise</label>
-                <select id="abductorExerciseSelect">
+                <select id="abductorExerciseSelect" class="contextSelect">
                   <option value="">Select movement</option>
                   <option value="Hip Abductor - Inner">Hip Abductor - Inner</option>
                   <option value="Hip Adductor - Outer">Hip Adductor - Outer</option>
@@ -3600,6 +3621,16 @@
     function isAbductorComboMachine() {
       const name = String(machineName || "").toUpperCase();
       return name.includes("ABDUCTOR") && name.includes("ADDUCTOR");
+    }
+
+    const HIP_ABDUCTOR_MACHINE_ID = "HIPAB";
+
+    function isHipAbductorMachineId() {
+      return String(machineId || "").toUpperCase() === HIP_ABDUCTOR_MACHINE_ID;
+    }
+
+    function machineRequiresAbductorMovementSelect() {
+      return isAbductorComboMachine() || isHipAbductorMachineId();
     }
 
     const CARDIO_MACHINE_IDS = [
@@ -4572,6 +4603,7 @@
     const exerciseInputWrap = document.getElementById("exerciseInputWrap");
     const abductorSelectWrap = document.getElementById("abductorSelectWrap");
     const abductorExerciseSelect = document.getElementById("abductorExerciseSelect");
+    const hipAbductorExerciseSlot = document.getElementById("hipAbductorExerciseSlot");
     const machineSelect = document.getElementById("machineSelect");
     const setsContainer = document.getElementById("setsContainer");
 
@@ -4898,6 +4930,39 @@
       return { ok: true, data };
     }
 
+    function syncHipAbductorExerciseSlot() {
+      if (!hipAbductorExerciseSlot || !abductorSelectWrap || !exerciseRow) return;
+
+      const active =
+        isHipAbductorMachineId() &&
+        !!machineId &&
+        machineType === "strength";
+
+      if (active) {
+        hipAbductorExerciseSlot.hidden = false;
+        if (abductorSelectWrap.parentNode !== hipAbductorExerciseSlot) {
+          hipAbductorExerciseSlot.appendChild(abductorSelectWrap);
+        }
+        exerciseRow.style.display = "none";
+      } else {
+        hipAbductorExerciseSlot.hidden = true;
+        if (abductorSelectWrap.parentNode === hipAbductorExerciseSlot) {
+          if (exerciseInputWrap && exerciseInputWrap.parentNode === exerciseRow) {
+            exerciseRow.insertBefore(abductorSelectWrap, exerciseInputWrap.nextSibling);
+          } else {
+            exerciseRow.appendChild(abductorSelectWrap);
+          }
+        }
+        if (!machineId) {
+          exerciseRow.style.display = "";
+        } else if (machineType === "cardio") {
+          exerciseRow.style.display = "none";
+        } else {
+          exerciseRow.style.display = "";
+        }
+      }
+    }
+
     function setModeUI() {
       if (!machineId) {
         strengthSection.style.display = "";
@@ -4905,6 +4970,7 @@
         if (exerciseRow) exerciseRow.style.display = "";
         if (exerciseInputWrap) exerciseInputWrap.style.display = "";
         if (abductorSelectWrap) abductorSelectWrap.style.display = "none";
+        syncHipAbductorExerciseSlot();
         return;
       }
 
@@ -4917,12 +4983,13 @@
         if (notesInput) notesInput.placeholder = "e.g., steady pace, interval session, heart rate zone 2";
         buildCardioInputs();
         if (useLastCardioBtn) useLastCardioBtn.style.display = "";
+        syncHipAbductorExerciseSlot();
       } else {
         strengthSection.style.display = "";
         cardioSection.style.display = "none";
         if (exerciseRow) exerciseRow.style.display = "";
 
-        if (isAbductorComboMachine()) {
+        if (machineRequiresAbductorMovementSelect()) {
           if (exerciseInputWrap) exerciseInputWrap.style.display = "none";
           if (abductorSelectWrap) abductorSelectWrap.style.display = "";
           if (exerciseInput) exerciseInput.value = "";
@@ -4934,6 +5001,7 @@
 
         if (notesInput) notesInput.placeholder = "e.g., controlled reps, last set to failure";
         if (useLastCardioBtn) useLastCardioBtn.style.display = "none";
+        syncHipAbductorExerciseSlot();
       }
     }
 
@@ -5097,7 +5165,7 @@
         if (notesInput) notesInput.value = "";
       } else {
         clearCurrentSets();
-        if (isAbductorComboMachine() && abductorExerciseSelect) {
+        if (machineRequiresAbductorMovementSelect() && abductorExerciseSelect) {
           abductorExerciseSelect.value = "";
         }
       }
@@ -6481,11 +6549,11 @@
 
         const date = (dateInput.value || todayISO()).trim();
         const notes = (notesInput.value || "").trim();
-        const exercise = isAbductorComboMachine()
+        const exercise = machineRequiresAbductorMovementSelect()
           ? ((abductorExerciseSelect && abductorExerciseSelect.value) || "").trim()
           : ((exerciseInput.value || "").trim());
 
-        if (isAbductorComboMachine() && !exercise) {
+        if (machineRequiresAbductorMovementSelect() && !exercise) {
           alert("Please select a movement Hip Abductor - Inner or Hip Adductor - Outer before saving.");
           return;
         }
