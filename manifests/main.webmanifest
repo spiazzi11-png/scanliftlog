@@ -1,8 +1,8 @@
 {
   "name": "ScanLiftLog",
   "short_name": "ScanLiftLog",
-  "id": "/main-test",
-  "start_url": "/test.html?gym=main",
+  "id": "/?gym=main",
+  "start_url": "/?gym=main",
   "scope": "/",
   "display": "standalone",
   "background_color": "#0b0c10",
