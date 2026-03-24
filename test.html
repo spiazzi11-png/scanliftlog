@@ -9,9 +9,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="ScanLiftLog" />
-
-  <link id="dynamicManifestLink" rel="manifest" href="/manifests/main.webmanifest" />
-  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  <meta name="application-name" content="ScanLiftLog" />
 
   <script>
     (function () {
@@ -54,17 +52,26 @@
         return normalizeGymSlugEarly(gym) || "main";
       }
 
+      var map = window.__SCANLIFTLOG_INSTALL_BRANDING__;
       var gymIdEarly = parseGymIdEarly();
-      var brand = window.__SCANLIFTLOG_INSTALL_BRANDING__[gymIdEarly];
-      if (!brand) return;
+      var brand = map[gymIdEarly] || map.main;
 
       if (brand.pageTitle) document.title = brand.pageTitle;
-      var manifestLink = document.getElementById("dynamicManifestLink");
-      if (manifestLink && brand.manifest) manifestLink.setAttribute("href", brand.manifest);
       var appleTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
       if (appleTitleMeta && brand.appleTitle) appleTitleMeta.setAttribute("content", brand.appleTitle);
-      var appleTouchIconLink = document.querySelector('link[rel="apple-touch-icon"]');
-      if (appleTouchIconLink && brand.appleTouchIcon) appleTouchIconLink.setAttribute("href", brand.appleTouchIcon);
+      var appNameMeta = document.querySelector('meta[name="application-name"]');
+      if (appNameMeta && brand.appleTitle) appNameMeta.setAttribute("content", brand.appleTitle);
+
+      var manifestLink = document.createElement("link");
+      manifestLink.id = "dynamicManifestLink";
+      manifestLink.rel = "manifest";
+      manifestLink.href = brand.manifest;
+      document.head.appendChild(manifestLink);
+
+      var iconLink = document.createElement("link");
+      iconLink.rel = "apple-touch-icon";
+      iconLink.href = brand.appleTouchIcon;
+      document.head.appendChild(iconLink);
     })();
   </script>
 
