@@ -4394,6 +4394,9 @@
         const keyMachineId = parts.slice(3).join(":") || "";
 
         if (keyUserId !== userId) continue;
+        if (String(keyOrgId || "").trim().toLowerCase() !== String(orgId || "").trim().toLowerCase()) {
+          continue;
+        }
 
         const arr = safeJSONParse(localStorage.getItem(k) || "[]", []);
         arr.forEach(w => {
