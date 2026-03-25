@@ -3618,6 +3618,12 @@
       ? ((window.MACHINE_MAP && window.MACHINE_MAP[key]) ? window.MACHINE_MAP[key] : `Machine (${key})`)
       : "Select a machine";
 
+    function logInternalA2hsEvent(eventType, extra = {}) {
+      const mid = machineId || "HOME";
+      const mname = machineId ? String(machineName || "") : "";
+      logEvent(gymId, mid, mname, userId, eventType, extra);
+    }
+
     function isAbductorComboMachine() {
       const name = String(machineName || "").toUpperCase();
       return name.includes("ABDUCTOR") && name.includes("ADDUCTOR");
@@ -3831,6 +3837,7 @@
 
     async function startAddToHomeScreenFlow() {
       if (isInStandaloneMode()) return true;
+      logInternalA2hsEvent("internal_a2hs_click");
       if (!isIosLike() && deferredA2hsPrompt) {
         return await showNativeA2hsPrompt();
       }
@@ -3863,6 +3870,7 @@
     });
 
     window.addEventListener("appinstalled", () => {
+      logInternalA2hsEvent("internal_a2hs_installed");
       deferredA2hsPrompt = null;
       const btn = document.getElementById("addToHomeScreenBtn");
       if (btn) btn.classList.add("hidden");
