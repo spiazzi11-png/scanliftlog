@@ -4394,6 +4394,9 @@
         const keyMachineId = parts.slice(3).join(":") || "";
 
         if (keyUserId !== userId) continue;
+        if (String(keyOrgId || "").trim().toLowerCase() !== String(orgId || "").trim().toLowerCase()) {
+          continue;
+        }
 
         const arr = safeJSONParse(localStorage.getItem(k) || "[]", []);
         arr.forEach(w => {
@@ -4488,6 +4491,23 @@
 
       html += "</div>";
       return html;
+    }
+
+    function downloadWorkoutReportDirect() {
+      const workouts = getAllWorkoutsForReport();
+      const cleanBodyHtml = buildPdfOnlyReportHtml(workouts);
+      const doc =
+        "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Workout Report</title><style>body{background:#fff;color:#000;font-family:system-ui,sans-serif;font-size:12px;margin:0;padding:12px;} table{border-collapse:collapse;width:100%;} th,td{text-align:left;padding:6px 8px;border:1px solid #333;} th{background:#f5f5f5;}</style></head><body>" +
+        cleanBodyHtml +
+        "</body></html>";
+      const blob = new Blob([doc], { type: "text/html;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "scanliftlog_workout_report_" + new Date().toISOString().slice(0, 10) + ".html";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
     }
 
     function openWorkoutReport() {
@@ -6453,7 +6473,7 @@
       }
 
       document.getElementById("downloadBtn").addEventListener("click", downloadData);
-      document.getElementById("reportBtn").addEventListener("click", openWorkoutReport);
+      document.getElementById("reportBtn").addEventListener("click", downloadWorkoutReportDirect);
 
       document.querySelectorAll(".tipIcon").forEach(icon => {
         icon.addEventListener("click", (e) => {
