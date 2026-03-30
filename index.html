@@ -2743,11 +2743,12 @@
       </div>
       <div class="actionTile">
         <a
+          id="classScheduleActionLink"
           class="actionTileBtn"
-          href="https://www.pushfitnessclub.com/classes/?utm_term=push+fitness+of+melville&amp;utm_campaign=Brand&amp;utm_source=adwords&amp;utm_medium=ppc&amp;hsa_acc=1770197758&amp;hsa_cam=21310870749&amp;hsa_grp=163581655878&amp;hsa_ad=700371486676&amp;hsa_src=g&amp;hsa_tgt=kwd-2304550438300&amp;hsa_kw=push+fitness+of+melville&amp;hsa_mt=p&amp;hsa_net=adwords&amp;hsa_ver=3&amp;gad_source=1&amp;gad_campaignid=21310870749&amp;gbraid=0AAAAACuZg8eRwkojnBblHQWophP4OpMjk&amp;gclid=CjwKCAjwyYPOBhBxEiwAgpT8P8GD0PW1-_p2iUDJHAsDcM391amXS-wjqf_ehnG8B6pGDgrC0idqsRoCtkYQAvD_BwE"
+          href="https://scanliftlog.com"
           target="_blank"
           rel="noopener noreferrer"
-        >Class Schedules</a>
+        >Learn More</a>
       </div>
       <div class="actionTile">
         <div class="tipWrap actionTileTipWrap">
@@ -3500,6 +3501,33 @@
       "main": "https://scanliftlog.com",
       "pushfitness-melville": "https://www.pushfitnessclub.com/free-guest-pass-melville?utm_source=adwords&hsa_tgt=kwd-2304550438300&hsa_kw=push+fitness+of+melville&hsa_cam=21310870749&gad_campaignid=21310870749&gclid=Cj0KCQjw37nNBhDkARIsAEBGI8OeUqcsxHg78wyXI7mCnX1nPXaIHF9z5nkPiXgAg-5UWSrezgSQRaoaApmfEALw_wcB&gbraid=0AAAAACuZg8eCmeRgHHplLLp2Mct5vMpG5&hsa_mt=p&utm_campaign=Brand&hsa_src=g&hsa_acc=1770197758&gad_source=1&hsa_net=adwords&hsa_grp=163581655878&hsa_ad=700371486676&utm_medium=ppc&utm_term=push+fitness+of+melville&hsa_ver=3"
     };
+
+    const PUSH_FITNESS_MELVILLE_CLASS_SCHEDULE_URL =
+      "https://www.pushfitnessclub.com/classes/?utm_term=push+fitness+of+melville&utm_campaign=Brand&utm_source=adwords&utm_medium=ppc&hsa_acc=1770197758&hsa_cam=21310870749&hsa_grp=163581655878&hsa_ad=700371486676&hsa_src=g&hsa_tgt=kwd-2304550438300&hsa_kw=push+fitness+of+melville&hsa_mt=p&hsa_net=adwords&hsa_ver=3&gad_source=1&gad_campaignid=21310870749&gbraid=0AAAAACuZg8eRwkojnBblHQWophP4OpMjk&gclid=CjwKCAjwyYPOBhBxEiwAgpT8P8GD0PW1-_p2iUDJHAsDcM391amXS-wjqf_ehnG8B6pGDgrC0idqsRoCtkYQAvD_BwE";
+
+    const DEFAULT_CLASS_SCHEDULE_CONFIG = {
+      label: "Learn More",
+      url: "https://scanliftlog.com"
+    };
+
+    const CLASS_SCHEDULE_CONFIG = {
+      "pushfitness-melville": {
+        label: "Class Schedule",
+        url: PUSH_FITNESS_MELVILLE_CLASS_SCHEDULE_URL
+      }
+    };
+
+    function getClassScheduleConfig(gid) {
+      return CLASS_SCHEDULE_CONFIG[String(gid || "").trim().toLowerCase()] || DEFAULT_CLASS_SCHEDULE_CONFIG;
+    }
+
+    function syncClassScheduleActionLink() {
+      const el = document.getElementById("classScheduleActionLink");
+      if (!el) return;
+      const cfg = getClassScheduleConfig(gymId);
+      el.href = cfg.url;
+      el.textContent = cfg.label;
+    }
 
     const BANNER_FOLDER = "banners";
     const gymName = GYM_MAP[gymId] || gymId.toUpperCase();
@@ -6396,6 +6424,7 @@
 
     (async () => {
       applyInstallBranding();
+      syncClassScheduleActionLink();
 
       const isPrivateLikely = await detectPrivateModeLikely();
       if (isPrivateLikely) showPrivateModeModal();
