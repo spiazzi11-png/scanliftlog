@@ -518,6 +518,14 @@
       margin-bottom: 4px;
     }
 
+    #optionalSubExerciseWrap label {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
     .machineSelectRow {
       display:flex;
       align-items:center;
@@ -2902,6 +2910,13 @@
                   <option value="Hip Adductor - Outer">Hip Adductor - Outer</option>
                 </select>
               </div>
+
+              <div class="col" id="optionalSubExerciseWrap" style="display:none;">
+                <label>Exercise variant</label>
+                <select id="optionalSubExerciseSelect" class="contextSelect">
+                  <option value="">Optional: select exercise</option>
+                </select>
+              </div>
             </div>
 
             <div class="hr"></div>
@@ -3606,16 +3621,173 @@
         { machineCode:"MULTIPP", machineNumber:48, label:"Multi Pull Press", goalTags:["chest","back","shoulders"], type:"strength", markerLeft:66, markerTop:42 }
       ],
       "main": [
-        { machineCode:"PECDK", machineNumber:1, label:"Pec Deck", goalTags:["chest","fullbody"], type:"strength", markerLeft:20, markerTop:20 },
-        { machineCode:"LEGPR", machineNumber:2, label:"Leg Press", goalTags:["legs","fullbody"], type:"strength", markerLeft:32, markerTop:35 },
-        { machineCode:"LATPD", machineNumber:3, label:"Lat Pulldown", goalTags:["back","fullbody"], type:"strength", markerLeft:45, markerTop:20 },
-        { machineCode:"BIKE", machineNumber:4, label:"Bike", goalTags:["cardio"], type:"cardio", markerLeft:58, markerTop:28 },
-        { machineCode:"TRED", machineNumber:5, label:"Treadmill", goalTags:["cardio"], type:"cardio", markerLeft:70, markerTop:28 }
+        { machineCode:"DBRCK", machineNumber:1, label:"Dumbbell Rack", goalTags:["chest","arms","shoulders","legs"], type:"strength", markerLeft:22, markerTop:32 },
+        { machineCode:"SMTH", machineNumber:2, label:"Smith Machine", goalTags:["chest","legs","shoulders"], type:"strength", markerLeft:48, markerTop:32 },
+        { machineCode:"DUALPULL", machineNumber:3, label:"Dual Adjustable Pulley", goalTags:["back","chest","arms","shoulders"], type:"strength", markerLeft:74, markerTop:32 }
       ]
     };
 
     function getGymCatalogMachines(gid) {
       return (GYM_MACHINE_CATALOG[gid] || []).slice();
+    }
+
+    const SUBCATEGORY_EXERCISES_BY_MACHINE = {
+      DBRCK: [
+        "Dumbbell Bench Press",
+        "Dumbbell Incline Press",
+        "Dumbbell Decline Press",
+        "Dumbbell Shoulder Press",
+        "Dumbbell Lateral Raise",
+        "Dumbbell Front Raise",
+        "Dumbbell Bicep Curl",
+        "Hammer Curl",
+        "Dumbbell Tricep Extension",
+        "Dumbbell Tricep Kickback",
+        "One-Arm Dumbbell Row",
+        "Dumbbell Shrug",
+        "Dumbbell Lunge",
+        "Dumbbell Step-Up",
+        "Dumbbell Calf Raise",
+      ],
+      SMTH: [
+        "Smith Machine Bench Press",
+        "Smith Machine Incline Bench Press",
+        "Smith Machine Decline Press",
+        "Smith Machine Shoulder Press",
+        "Smith Machine Squat",
+        "Smith Machine Lunge",
+        "Smith Machine Deadlift",
+        "Smith Machine Hip Thrust",
+        "Smith Machine Calf Raise",
+        "Smith Machine Bent-Over Row",
+        "Smith Machine Upright Row",
+        "Smith Machine Shrug",
+      ],
+      DUALPULL: [
+        "Cable Chest Press",
+        "Cable Fly",
+        "Seated Cable Row",
+        "Lat Pulldown",
+        "Straight-Arm Pulldown",
+        "Cable Shoulder Press",
+        "Cable Lateral Raise",
+        "Cable Front Raise",
+        "Face Pull",
+        "Cable Bicep Curl",
+        "Rope Hammer Curl",
+        "Tricep Pushdown",
+        "Overhead Cable Tricep Extension",
+        "Cable Crunch",
+        "Cable Pull-Through",
+        "Cable Squat",
+        "Cable Lunge",
+      ],
+    };
+
+    const GW_SUBEX_BY_GOAL = {
+      chest: [
+        "Dumbbell Bench Press",
+        "Dumbbell Incline Press",
+        "Dumbbell Decline Press",
+        "Smith Machine Bench Press",
+        "Smith Machine Incline Bench Press",
+        "Smith Machine Decline Press",
+        "Cable Chest Press",
+        "Cable Fly",
+      ],
+      shoulders: [
+        "Dumbbell Shoulder Press",
+        "Dumbbell Lateral Raise",
+        "Dumbbell Front Raise",
+        "Smith Machine Shoulder Press",
+        "Smith Machine Upright Row",
+        "Smith Machine Shrug",
+        "Cable Shoulder Press",
+        "Cable Lateral Raise",
+        "Cable Front Raise",
+        "Face Pull",
+      ],
+      back: [
+        "One-Arm Dumbbell Row",
+        "Dumbbell Shrug",
+        "Smith Machine Bent-Over Row",
+        "Seated Cable Row",
+        "Lat Pulldown",
+        "Straight-Arm Pulldown",
+      ],
+      arms: [
+        "Dumbbell Bicep Curl",
+        "Hammer Curl",
+        "Cable Bicep Curl",
+        "Rope Hammer Curl",
+        "Dumbbell Tricep Extension",
+        "Dumbbell Tricep Kickback",
+        "Tricep Pushdown",
+        "Overhead Cable Tricep Extension",
+      ],
+      legs: [
+        "Dumbbell Lunge",
+        "Dumbbell Step-Up",
+        "Dumbbell Calf Raise",
+        "Smith Machine Squat",
+        "Smith Machine Lunge",
+        "Smith Machine Deadlift",
+        "Smith Machine Calf Raise",
+        "Cable Squat",
+        "Cable Lunge",
+        "Smith Machine Hip Thrust",
+        "Cable Pull-Through",
+      ],
+      core: ["Cable Crunch"],
+      fullbody: null,
+    };
+
+    function gwAllSubcategoryExerciseNames() {
+      const out = new Set();
+      Object.values(SUBCATEGORY_EXERCISES_BY_MACHINE).forEach((arr) => {
+        (arr || []).forEach((x) => out.add(x));
+      });
+      return [...out];
+    }
+
+    function gwSubExerciseNamesForPlannerGoal(workoutGoal) {
+      const g = String(workoutGoal || "").toLowerCase();
+      if (g === "fullbody") return gwAllSubcategoryExerciseNames();
+      const list = GW_SUBEX_BY_GOAL[g];
+      return Array.isArray(list) ? list.slice() : [];
+    }
+
+    function gwPickSubExerciseForStep(machineCode, workoutGoal) {
+      const mid = String(machineCode || "").toUpperCase();
+      const pool = SUBCATEGORY_EXERCISES_BY_MACHINE[mid];
+      if (!pool || !pool.length) return "";
+      const allow = new Set(gwSubExerciseNamesForPlannerGoal(workoutGoal));
+      const candidates = pool.filter((x) => allow.has(x));
+      if (!candidates.length) return "";
+      return candidates[Math.floor(Math.random() * candidates.length)];
+    }
+
+    const SUBCATEGORY_MACHINE_IDS = new Set(Object.keys(SUBCATEGORY_EXERCISES_BY_MACHINE));
+
+    function isOptionalSubcategoryMachineId(mid) {
+      return SUBCATEGORY_MACHINE_IDS.has(String(mid || "").toUpperCase());
+    }
+
+    function formatWorkoutExerciseDetailLines(w) {
+      const parts = [];
+      const ex = w && w.exercise != null ? String(w.exercise).trim() : "";
+      const sub = w && w.subExercise != null ? String(w.subExercise).trim() : "";
+      if (ex) parts.push(ex);
+      if (sub) parts.push(sub);
+      return parts;
+    }
+
+    function formatWorkoutExerciseLabelForDisplay(machineName, w) {
+      const sub = w && w.subExercise != null ? String(w.subExercise).trim() : "";
+      const mn = machineName != null ? String(machineName).trim() : "";
+      if (sub && mn) return `${mn} — ${sub}`;
+      if (sub) return sub;
+      return mn || "—";
     }
 
     const INSTALL_BRANDING = window.__SCANLIFTLOG_INSTALL_BRANDING__ || {
@@ -4571,7 +4743,8 @@
           html += '<div style="margin:16px 0; padding:12px 0; border-top:1px solid #333;">';
           html += `<p style="margin:0 0 8px 0; font-size:14px; font-weight:bold;">${escapeHtml(w.machineName || "—")} &nbsp; <span style="font-weight:normal; font-size:11px;">${escapeHtml(w.type || "—")}</span></p>`;
           html += `<table ${pdfTable}><tr><th ${pdfTh}>Date</th><td ${pdfTd}>${escapeHtml(w.date || "—")}</td><th ${pdfTh}>Gym</th><td ${pdfTd}>${escapeHtml(w.gymName || "—")}</td></tr>`;
-          html += `<tr><th ${pdfTh}>Exercise</th><td ${pdfTd}>${escapeHtml(w.exercise || "—")}</td><th ${pdfTh}>Saved</th><td ${pdfTd}>${escapeHtml(savedAt || "—")}</td></tr></table>`;
+          const exReport = formatWorkoutExerciseDetailLines(w).join(" · ") || "—";
+          html += `<tr><th ${pdfTh}>Exercise</th><td ${pdfTd}>${escapeHtml(exReport)}</td><th ${pdfTh}>Saved</th><td ${pdfTd}>${escapeHtml(savedAt || "—")}</td></tr></table>`;
           html += `<p style="margin:8px 0 4px 0;"><strong>Notes</strong></p><p style="margin:0 0 8px 0;">${escapeHtml(w.notes || "—")}</p>`;
 
           if (w.type === "Cardio" && w.cardio) {
@@ -4629,7 +4802,7 @@
               <div class="infoGrid">
                 <div class="infoBox"><div class="label">Date</div><div class="value">${escapeHtml(w.date || "—")}</div></div>
                 <div class="infoBox"><div class="label">Gym</div><div class="value">${escapeHtml(w.gymName || "—")}</div></div>
-                <div class="infoBox"><div class="label">Exercise</div><div class="value">${escapeHtml(w.exercise || "—")}</div></div>
+                <div class="infoBox"><div class="label">Exercise</div><div class="value">${escapeHtml(formatWorkoutExerciseDetailLines(w).join(" · ") || "—")}</div></div>
                 <div class="infoBox"><div class="label">Saved</div><div class="value">${escapeHtml(savedAt || "—")}</div></div>
               </div>
               <div class="sectionTitle">Notes</div>
@@ -4727,6 +4900,8 @@
     const abductorSelectWrap = document.getElementById("abductorSelectWrap");
     const abductorExerciseSelect = document.getElementById("abductorExerciseSelect");
     const hipAbductorExerciseSlot = document.getElementById("hipAbductorExerciseSlot");
+    const optionalSubExerciseWrap = document.getElementById("optionalSubExerciseWrap");
+    const optionalSubExerciseSelect = document.getElementById("optionalSubExerciseSelect");
     const machineSelect = document.getElementById("machineSelect");
     const setsContainer = document.getElementById("setsContainer");
 
@@ -5121,6 +5296,74 @@
       }
     }
 
+    function populateOptionalSubExerciseSelect(mid) {
+      if (!optionalSubExerciseSelect) return;
+      const u = String(mid || "").toUpperCase();
+      optionalSubExerciseSelect.innerHTML = "";
+      const ph = document.createElement("option");
+      ph.value = "";
+      ph.textContent = "Optional: select exercise";
+      optionalSubExerciseSelect.appendChild(ph);
+      const list = SUBCATEGORY_EXERCISES_BY_MACHINE[u];
+      if (!list || !list.length) return;
+      list
+        .slice()
+        .sort((a, b) => String(a).localeCompare(String(b)))
+        .forEach((label) => {
+          const o = document.createElement("option");
+          o.value = label;
+          o.textContent = label;
+          optionalSubExerciseSelect.appendChild(o);
+        });
+    }
+
+    function syncOptionalSubExerciseUI() {
+      if (!optionalSubExerciseWrap || !optionalSubExerciseSelect) return;
+      if (!machineId || machineType !== "strength") {
+        optionalSubExerciseWrap.style.display = "none";
+        optionalSubExerciseSelect.value = "";
+        return;
+      }
+      if (machineRequiresAbductorMovementSelect()) {
+        optionalSubExerciseWrap.style.display = "none";
+        optionalSubExerciseSelect.value = "";
+        return;
+      }
+      const mid = String(machineId).toUpperCase();
+      if (!isOptionalSubcategoryMachineId(mid)) {
+        optionalSubExerciseWrap.style.display = "none";
+        optionalSubExerciseSelect.value = "";
+        return;
+      }
+      optionalSubExerciseWrap.style.display = "";
+      populateOptionalSubExerciseSelect(mid);
+    }
+
+    function gwApplyGuidedSubExerciseToSelectIfActive() {
+      if (!optionalSubExerciseSelect || !machineId || machineType !== "strength") return;
+      if (!isOptionalSubcategoryMachineId(machineId) || machineRequiresAbductorMovementSelect()) return;
+      const activePlan = gwLoadActivePlan(gymId, userId);
+      if (!activePlan || activePlan.status !== "active") return;
+      const cur = gwGetCurrentStep(activePlan);
+      if (!cur || String(cur.machineCode || "").toUpperCase() !== String(machineId).toUpperCase()) return;
+      const want = cur.subExercise ? String(cur.subExercise) : "";
+      if (!want) return;
+      const ok = [...optionalSubExerciseSelect.options].some((o) => o.value === want);
+      if (ok) optionalSubExerciseSelect.value = want;
+    }
+
+    function gwPlannerStepSecondaryLine(step) {
+      if (!step) return "";
+      const sub = step.subExercise ? String(step.subExercise).trim() : "";
+      const ex = step.exerciseName ? String(step.exerciseName).trim() : "";
+      const sets = step.sets;
+      const reps = step.reps;
+      const repUnit = step.repUnit || "reps";
+      const tail = `${sets} set${Number(sets) > 1 ? "s" : ""} × ${reps} ${repUnit}`;
+      if (sub) return `${sub} • ${tail}`;
+      return `${ex} • ${tail}`;
+    }
+
     function setModeUI() {
       if (!machineId) {
         strengthSection.style.display = "";
@@ -5129,10 +5372,7 @@
         if (exerciseInputWrap) exerciseInputWrap.style.display = "";
         if (abductorSelectWrap) abductorSelectWrap.style.display = "none";
         syncHipAbductorExerciseSlot();
-        return;
-      }
-
-      if (machineType === "cardio") {
+      } else if (machineType === "cardio") {
         strengthSection.style.display = "none";
         cardioSection.style.display = "";
         if (exerciseRow) exerciseRow.style.display = "none";
@@ -5161,6 +5401,8 @@
         if (useLastCardioBtn) useLastCardioBtn.style.display = "none";
         syncHipAbductorExerciseSlot();
       }
+      syncOptionalSubExerciseUI();
+      gwApplyGuidedSubExerciseToSelectIfActive();
     }
 
     function getTopSet(sets) {
@@ -5218,7 +5460,10 @@
         }
 
         let detailsHtml = ``;
-        if (w.exercise) detailsHtml += `<div class="muted" style="margin-top:6px;">Exercise: ${escapeHtml(w.exercise)}</div>`;
+        const exParts = formatWorkoutExerciseDetailLines(w);
+        if (exParts.length) {
+          detailsHtml += `<div class="muted" style="margin-top:6px;">Exercise: ${escapeHtml(exParts.join(" · "))}</div>`;
+        }
         if (w.notes) detailsHtml += `<div class="muted" style="margin-top:6px;">Notes: ${escapeHtml(w.notes)}</div>`;
 
         if (isCardio) {
@@ -5326,6 +5571,7 @@
         if (machineRequiresAbductorMovementSelect() && abductorExerciseSelect) {
           abductorExerciseSelect.value = "";
         }
+        if (optionalSubExerciseSelect) optionalSubExerciseSelect.value = "";
       }
 
       renderGuidedStepBanner();
@@ -5424,6 +5670,7 @@
       GLUTE: gwSlot("Glute Extension", ["Glute Extension"], "side", ["legs"]),
       HTHR: gwSlot("Hip Thrust", ["Hip Thrust Machine"], "side", ["legs"]),
       SMTH: gwSlot("Smith Machine", ["Smith Machine"], "ohp", ["shoulders", "legs", "chest"]),
+      DBRCK: gwSlot("Dumbbell Rack", ["Dumbbell Rack"], "side", ["chest", "arms", "shoulders", "legs"]),
       MULTIPP: gwSlot("Multi Pull Press", ["Multi Pull Press"], "main", ["chest", "back", "shoulders"]),
     };
 
@@ -5433,12 +5680,14 @@
           { id: "chest_20_a", slotKeys: ["CHPR", "INCP", "RDFLY"] },
           { id: "chest_20_b", slotKeys: ["CONVCP", "DECP", "DIPPL"] },
           { id: "chest_20_c", slotKeys: ["INCP", "CHPR", "DIPPIN"] },
+          { id: "chest_20_d", slotKeys: ["DBRCK", "CHPR", "INCP"] },
         ],
         "30": [
           { id: "chest_30_a", slotKeys: ["CHPR", "INCP", "RDFLY", "DIPPL"] },
           { id: "chest_30_b", slotKeys: ["CONVCP", "INCP", "RDFLY", "TRIPR"] },
           { id: "chest_30_c", slotKeys: ["DECP", "CHPR", "RDFLY", "DIPPIN"] },
           { id: "chest_30_d", slotKeys: ["INCP", "DECP", "CONVCP", "RDFLY"] },
+          { id: "chest_30_e", slotKeys: ["DBRCK", "INCP", "RDFLY", "CHPR"] },
         ],
         "30_beginner": [
           { id: "chest_30bg_a", slotKeys: ["RDFLY", "CHPR", "INCP", "DIPPL"] },
@@ -5452,11 +5701,13 @@
           { id: "chest_45_a", slotKeys: ["CHPR", "INCP", "CONVCP", "RDFLY", "DIPPL"] },
           { id: "chest_45_b", slotKeys: ["INCP", "DECP", "CHPR", "RDFLY", "TRIPR"] },
           { id: "chest_45_c", slotKeys: ["CONVCP", "CHPR", "INCP", "RDFLY", "DIPPIN"] },
+          { id: "chest_45_d", slotKeys: ["DBRCK", "CHPR", "INCP", "RDFLY", "CONVCP"] },
         ],
         "60": [
           { id: "chest_60_a", slotKeys: ["CHPR", "INCP", "DECP", "CONVCP", "RDFLY", "DIPPL"] },
           { id: "chest_60_b", slotKeys: ["CONVCP", "INCP", "CHPR", "DECP", "RDFLY", "TRIPR"] },
           { id: "chest_60_c", slotKeys: ["CHPR", "CONVCP", "INCP", "RDFLY", "DIPPIN", "TRIPR"] },
+          { id: "chest_60_d", slotKeys: ["DBRCK", "CHPR", "INCP", "CONVCP", "RDFLY", "DIPPL"] },
         ],
         "60_beginner": [
           { id: "chest_60bg_a", slotKeys: ["RDFLY", "CHPR", "INCP", "CONVCP", "DIPPL", "DIPPIN"] },
@@ -5478,6 +5729,7 @@
           { id: "back_30_b", slotKeys: ["DLAT", "CROW", "SROW", "ASST"] },
           { id: "back_30_c", slotKeys: ["PULL", "LATPD", "LROW", "DUAL"] },
           { id: "back_30_d", slotKeys: ["LATPD", "CROW", "SROW", "TBAR"] },
+          { id: "back_30_e", slotKeys: ["LATPD", "DBRCK", "SROW", "DUAL"] },
         ],
         "30_beginner": [
           { id: "back_30bg_a", slotKeys: ["LATPD", "SROW", "ASST", "LROW"] },
@@ -5517,6 +5769,7 @@
           { id: "sh_30_b", slotKeys: ["CSHPR", "LATR", "RDFLY", "DUAL"] },
           { id: "sh_30_c", slotKeys: ["SHPR", "OHBP", "LATR", "RDFLY"] },
           { id: "sh_30_d", slotKeys: ["LATR", "SHPR", "CSHPR", "RDFLY"] },
+          { id: "sh_30_e", slotKeys: ["SHPR", "DBRCK", "LATR", "DUAL"] },
         ],
         "30_beginner": [
           { id: "sh_30bg_a", slotKeys: ["LATR", "SHPR", "RDFLY", "OHBP"] },
@@ -5556,6 +5809,7 @@
           { id: "arm_30_b", slotKeys: ["BCPL", "BCPN", "TRIPR", "DUAL"] },
           { id: "arm_30_c", slotKeys: ["BCPN", "TRIEX", "ASST", "DUAL"] },
           { id: "arm_30_d", slotKeys: ["BCPL", "TRIEX", "TRIPR", "ASST"] },
+          { id: "arm_30_e", slotKeys: ["DBRCK", "BCPN", "TRIEX", "DUAL"] },
         ],
         "30_beginner": [
           { id: "arm_30bg_a", slotKeys: ["BCPN", "TRIEX", "ASST", "DUAL"] },
@@ -5595,6 +5849,7 @@
           { id: "leg_30_b", slotKeys: ["AGLP", "SQMT", "LEGEX", "SLCUR"] },
           { id: "leg_30_c", slotKeys: ["LEGPR", "LEGEX", "LEGCUR", "GLUTE"] },
           { id: "leg_30_d", slotKeys: ["HACK", "LEGPR", "LEGCUR", "CALF"] },
+          { id: "leg_30_e", slotKeys: ["LEGPR", "DBRCK", "LEGEX", "LEGCUR"] },
         ],
         "30_beginner": [
           { id: "leg_30bg_a", slotKeys: ["LEGPR", "LEGEX", "LEGCUR", "CALF"] },
@@ -5634,6 +5889,7 @@
           { id: "fb_30_b", slotKeys: ["INCP", "SROW", "HACK", "RDFLY"] },
           { id: "fb_30_c", slotKeys: ["SHPR", "LATPD", "LEGEX", "LEGCUR"] },
           { id: "fb_30_d", slotKeys: ["CONVCP", "CROW", "AGLP", "LATR"] },
+          { id: "fb_30_e", slotKeys: ["CHPR", "DBRCK", "LATPD", "LEGPR"] },
         ],
         "30_beginner": [
           { id: "fb_30bg_a", slotKeys: ["CHPR", "LATPD", "LEGPR", "SHPR"] },
@@ -5797,7 +6053,7 @@
         const machine = gwResolveMachineForSlot(gymId, def, used, workoutGoal);
         if (!machine) continue;
         used.add(machine.machineCode);
-        steps.push({
+        const step = {
           stepId: "step_" + Math.random().toString(36).slice(2),
           exerciseName: def.exercise,
           machineCode: machine.machineCode,
@@ -5810,7 +6066,10 @@
           reps: def.reps[level] || 10,
           repUnit: "reps",
           status: "upcoming",
-        });
+        };
+        const subPick = gwPickSubExerciseForStep(machine.machineCode, workoutGoal);
+        if (subPick) step.subExercise = subPick;
+        steps.push(step);
       }
       return steps;
     }
@@ -5825,7 +6084,7 @@
         if (machine.type !== "strength") continue;
         if (usedMachineCodes.has(machine.machineCode)) continue;
         usedMachineCodes.add(machine.machineCode);
-        chosenSteps.push({
+        const legacyStep = {
           stepId: "step_" + Math.random().toString(36).slice(2),
           exerciseName: tplItem.exercise,
           machineCode: machine.machineCode,
@@ -5838,7 +6097,10 @@
           reps: tplItem.reps[level] || 10,
           repUnit: "reps",
           status: "upcoming",
-        });
+        };
+        const subL = gwPickSubExerciseForStep(machine.machineCode, workoutGoal);
+        if (subL) legacyStep.subExercise = subL;
+        chosenSteps.push(legacyStep);
         if (chosenSteps.length >= desiredCount) break;
       }
       return chosenSteps;
@@ -6131,7 +6393,11 @@
         return true;
       }
 
-      const nextName = next ? String(next.machineName || next.exerciseName || "").trim() : "";
+      const nextName = next
+        ? next.subExercise
+          ? `${String(next.machineName || "").trim()} — ${String(next.subExercise).trim()}`
+          : String(next.machineName || next.exerciseName || "").trim()
+        : "";
       const progressLine = `You've finished ${completedNow} of ${total} steps.${nextName ? ` Next: ${nextName}.` : ""}`;
       const body = `${coachingLine}\n\n${progressLine}`;
       gwSaveActivePlan(activePlan);
@@ -6218,13 +6484,16 @@
         if (step.status === "completed") div.classList.add("completed");
         if (step.status === "skipped") div.classList.add("skipped");
 
+        const row1Main = step.subExercise
+          ? `${String(step.machineName || "")} — ${String(step.subExercise)}`
+          : String(step.machineName || "");
         div.innerHTML = `
           <div class="plannerStepRow1">
-            <span>${step.machineName}</span>
+            <span>${escapeHtml(row1Main)}</span>
             <span>${idx + 1}</span>
           </div>
           <div class="plannerStepRow2">
-            ${step.exerciseName} • ${step.sets} set${step.sets > 1 ? "s" : ""} × ${step.reps} ${step.repUnit}
+            ${escapeHtml(gwPlannerStepSecondaryLine(step))}
           </div>
           <div class="plannerStepTapHint">
             Click here to make it your active machine
@@ -6326,9 +6595,19 @@
 
       guidedStepBanner.style.display = "";
       if (guidedStepBannerPill) guidedStepBannerPill.textContent = `Step ${activePlan.currentStepIndex + 1} of ${activePlan.steps.length}`;
-      if (guidedStepBannerTitle) guidedStepBannerTitle.textContent = current.machineName;
-      if (guidedStepBannerMeta) guidedStepBannerMeta.textContent = `${current.exerciseName} • ${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${current.repUnit}`;
+      const subEx = current.subExercise ? String(current.subExercise).trim() : "";
+      if (guidedStepBannerTitle) {
+        guidedStepBannerTitle.textContent = formatWorkoutExerciseLabelForDisplay(current.machineName, current);
+      }
+      const repU = current.repUnit || "reps";
+      const setPart = `${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${repU}`;
+      if (guidedStepBannerMeta) {
+        guidedStepBannerMeta.textContent = subEx ? setPart : `${current.exerciseName} • ${setPart}`;
+      }
       if (guidedStepBannerHint) guidedStepBannerHint.textContent = "Complete your workout, then tap Save Workout to move to the next step.";
+
+      syncOptionalSubExerciseUI();
+      gwApplyGuidedSubExerciseToSelectIfActive();
 
       if (!gwIsEditingGuidedStrengthFields()) {
         gwSyncFocusedGuidedUI();
@@ -6831,15 +7110,24 @@
           return;
         }
 
+        const subExerciseSave =
+          !machineRequiresAbductorMovementSelect() &&
+          isOptionalSubcategoryMachineId(machineId) &&
+          optionalSubExerciseSelect
+            ? String(optionalSubExerciseSelect.value || "").trim()
+            : "";
+
         const workouts = loadWorkouts();
-        workouts.push({
+        const strengthRec = {
           ts: Date.now(),
           date,
           exercise,
           notes,
           sets,
-          savedAt: nowReadable()
-        });
+          savedAt: nowReadable(),
+        };
+        if (subExerciseSave) strengthRec.subExercise = subExerciseSave;
+        workouts.push(strengthRec);
 
         saveWorkouts(workouts);
         incrementLifetimeBadgeSaves();
@@ -6847,6 +7135,7 @@
 
         if (exerciseInput) exerciseInput.value = "";
         if (abductorExerciseSelect) abductorExerciseSelect.value = "";
+        if (optionalSubExerciseSelect) optionalSubExerciseSelect.value = "";
         if (notesInput) notesInput.value = "";
         clearCurrentSets();
         renderHistory();
