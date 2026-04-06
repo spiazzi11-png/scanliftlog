@@ -4049,26 +4049,22 @@
       const historyCard = document.getElementById("historyCard");
       const badgeProgressCard = document.getElementById("badgeProgressCard");
       const badgesCard = document.getElementById("badgesCard");
-      const planBtn = document.getElementById("planWorkoutBtn");
 
       if (machineSelectionGate) machineSelectionGate.style.display = "";
       if (logger) logger.style.display = "none";
       if (historyCard) historyCard.style.display = "none";
       if (badgeProgressCard) badgeProgressCard.style.display = "none";
       if (badgesCard) badgesCard.style.display = "none";
-      if (planBtn) planBtn.style.display = "none";
     }
 
     function hideMachineSelectionGate() {
       const machineSelectionGate = document.getElementById("machineSelectionGate");
       const logger = document.getElementById("logger");
       const historyCard = document.getElementById("historyCard");
-      const planBtn = document.getElementById("planWorkoutBtn");
 
       if (machineSelectionGate) machineSelectionGate.style.display = "none";
       if (logger) logger.style.display = "";
       if (historyCard) historyCard.style.display = "";
-      if (planBtn) planBtn.style.display = "";
     }
 
     function populateMachineDropdown() {
@@ -6766,11 +6762,6 @@
     }
 
     function aiHandlePlanWorkoutEntry() {
-      if (!machineId) {
-        alert("Select a machine first before starting an AI guided workout.");
-        return;
-      }
-
       if (aiHasAcceptedDisclaimerThisSession()) {
         gwOpenSetupModal();
         return;
@@ -6896,7 +6887,7 @@
 
       if (!activePlan || activePlan.status !== "active") {
         guidedStepBanner.style.display = "none";
-        if (planWorkoutBtn) planWorkoutBtn.style.display = machineId ? "" : "none";
+        if (planWorkoutBtn) planWorkoutBtn.style.display = "";
         if (!gwIsEditingGuidedStrengthFields()) {
           gwSyncFocusedGuidedUI();
           gwSyncGuidedStrengthRowCount();
@@ -7176,10 +7167,12 @@
 
       if (!machineId) {
         showMachineSelectionGate();
+        renderGuidedStepBanner();
         return;
       }
 
       hideMachineSelectionGate();
+      renderGuidedStepBanner();
     }
 
     (async () => {
