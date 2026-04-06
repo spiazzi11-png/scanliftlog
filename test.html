@@ -524,12 +524,20 @@
       margin-bottom: 4px;
     }
 
-    #optionalSubExerciseWrap label {
+    .hipAbductorExerciseSlot #optionalSubExerciseWrap {
+      display: block !important;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .hipAbductorExerciseSlot #optionalSubExerciseWrap label {
+      display: block;
       font-size: 10px;
       font-weight: 900;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--muted);
+      margin-bottom: 4px;
     }
 
     .machineSelectRow {
@@ -2740,6 +2748,7 @@
               Choose a machine from this gym.
             </div>
             <div id="hipAbductorExerciseSlot" class="hipAbductorExerciseSlot" hidden></div>
+            <div id="optionalSubcategoryExerciseSlot" class="hipAbductorExerciseSlot" hidden></div>
           </div>
         </div>
       </div>
@@ -2940,7 +2949,7 @@
               </div>
 
               <div class="col" id="optionalSubExerciseWrap" style="display:none;">
-                <label>Exercise variant</label>
+                <label>Exercise</label>
                 <select id="optionalSubExerciseSelect" class="contextSelect">
                   <option value="">Optional: select exercise</option>
                 </select>
@@ -3928,12 +3937,6 @@
       return steps;
     }
 
-    function isOptionalSubcategoryMachineId(mid, gidOpt) {
-      const gid = gidOpt != null ? gidOpt : gymId;
-      if (!gwGetGymFeatureFlags(gid).subcategoryDropdowns) return false;
-      return gwIsVariantCapableMachineCode(mid);
-    }
-
     function formatWorkoutExerciseDetailLines(w) {
       const ex = w && w.exercise != null ? String(w.exercise).trim() : "";
       return ex ? [ex] : [];
@@ -3943,7 +3946,7 @@
       const mid = machineIdForRow != null ? machineIdForRow : machineId;
       const gid = gymIdForRow != null ? gymIdForRow : gymId;
       const sub = w && w.subExercise != null ? String(w.subExercise).trim() : "";
-      if (!sub || !isOptionalSubcategoryMachineId(mid, gid)) return null;
+      if (!sub || !gwIsVariantCapableMachineCode(mid)) return null;
       const md = getMachineDisplayName(mid, gid);
       return { machineLine: md, variantLine: sub, notes: formatWorkoutExerciseDetailLines(w) };
     }
@@ -5065,6 +5068,7 @@
     const abductorSelectWrap = document.getElementById("abductorSelectWrap");
     const abductorExerciseSelect = document.getElementById("abductorExerciseSelect");
     const hipAbductorExerciseSlot = document.getElementById("hipAbductorExerciseSlot");
+    const optionalSubcategoryExerciseSlot = document.getElementById("optionalSubcategoryExerciseSlot");
     const optionalSubExerciseWrap = document.getElementById("optionalSubExerciseWrap");
     const optionalSubExerciseSelect = document.getElementById("optionalSubExerciseSelect");
     const machineSelect = document.getElementById("machineSelect");
@@ -5462,6 +5466,35 @@
       }
     }
 
+    function syncOptionalSubcategoryPrimarySlot() {
+      if (!optionalSubcategoryExerciseSlot || !optionalSubExerciseWrap || !exerciseRow) return;
+
+      const show =
+        !!machineId &&
+        machineType === "strength" &&
+        !machineRequiresAbductorMovementSelect() &&
+        gwIsVariantCapableMachineCode(machineId);
+
+      if (show) {
+        optionalSubcategoryExerciseSlot.hidden = false;
+        if (optionalSubExerciseWrap.parentNode !== optionalSubcategoryExerciseSlot) {
+          optionalSubcategoryExerciseSlot.appendChild(optionalSubExerciseWrap);
+        }
+        optionalSubExerciseWrap.style.display = "";
+      } else {
+        optionalSubcategoryExerciseSlot.hidden = true;
+        if (optionalSubExerciseWrap.parentNode === optionalSubcategoryExerciseSlot) {
+          let ref = null;
+          if (abductorSelectWrap && abductorSelectWrap.parentNode === exerciseRow) {
+            ref = abductorSelectWrap.nextSibling;
+          } else if (exerciseInputWrap && exerciseInputWrap.parentNode === exerciseRow) {
+            ref = exerciseInputWrap.nextSibling;
+          }
+          exerciseRow.insertBefore(optionalSubExerciseWrap, ref);
+        }
+      }
+    }
+
     function populateOptionalSubExerciseSelect(mid) {
       if (!optionalSubExerciseSelect) return;
       const u = String(mid || "").toUpperCase();
@@ -5488,26 +5521,30 @@
       if (!machineId || machineType !== "strength") {
         optionalSubExerciseWrap.style.display = "none";
         optionalSubExerciseSelect.value = "";
+        syncOptionalSubcategoryPrimarySlot();
         return;
       }
       if (machineRequiresAbductorMovementSelect()) {
         optionalSubExerciseWrap.style.display = "none";
         optionalSubExerciseSelect.value = "";
+        syncOptionalSubcategoryPrimarySlot();
         return;
       }
       const mid = String(machineId).toUpperCase();
-      if (!isOptionalSubcategoryMachineId(mid)) {
+      if (!gwIsVariantCapableMachineCode(mid)) {
         optionalSubExerciseWrap.style.display = "none";
         optionalSubExerciseSelect.value = "";
+        syncOptionalSubcategoryPrimarySlot();
         return;
       }
       optionalSubExerciseWrap.style.display = "";
       populateOptionalSubExerciseSelect(mid);
+      syncOptionalSubcategoryPrimarySlot();
     }
 
     function gwApplyGuidedSubExerciseToSelectIfActive() {
       if (!optionalSubExerciseSelect || !machineId || machineType !== "strength") return;
-      if (!isOptionalSubcategoryMachineId(machineId) || machineRequiresAbductorMovementSelect()) return;
+      if (!gwIsVariantCapableMachineCode(machineId) || machineRequiresAbductorMovementSelect()) return;
       const activePlan = gwLoadActivePlan(gymId, userId);
       if (!activePlan || activePlan.status !== "active") return;
       const cur = gwGetCurrentStep(activePlan);
@@ -6782,10 +6819,7 @@
         const repU = step.repUnit || "reps";
         const setLine = `${step.sets} set${Number(step.sets) > 1 ? "s" : ""} × ${step.reps} ${repU}`;
         const sub = step.subExercise ? String(step.subExercise).trim() : "";
-        const useStack =
-          !!sub &&
-          gwIsVariantCapableMachineCode(step.machineCode) &&
-          gwGetGymFeatureFlags(planGym).subcategoryDropdowns;
+        const useStack = !!sub && gwIsVariantCapableMachineCode(step.machineCode);
         const rowVariant = useStack ? `<div class="plannerStepRowVariant">${escapeHtml(sub)}</div>` : "";
         const row2 = useStack
           ? `<div class="plannerStepRow2">${escapeHtml(setLine)}</div>`
@@ -6901,10 +6935,7 @@
       const dm = current.displayMachineName || getMachineDisplayName(current.machineCode, activePlan.gymId || gymId);
       if (guidedStepBannerTitle) guidedStepBannerTitle.textContent = dm;
       const subEx = current.subExercise ? String(current.subExercise).trim() : "";
-      const stackBanner =
-        !!subEx &&
-        gwIsVariantCapableMachineCode(current.machineCode) &&
-        gwGetGymFeatureFlags(activePlan.gymId || gymId).subcategoryDropdowns;
+      const stackBanner = !!subEx && gwIsVariantCapableMachineCode(current.machineCode);
       if (guidedStepBannerVariantLine) {
         if (stackBanner) {
           guidedStepBannerVariantLine.textContent = subEx;
@@ -7427,7 +7458,7 @@
 
         const subExerciseSave =
           !machineRequiresAbductorMovementSelect() &&
-          isOptionalSubcategoryMachineId(machineId) &&
+          gwIsVariantCapableMachineCode(machineId) &&
           optionalSubExerciseSelect
             ? String(optionalSubExerciseSelect.value || "").trim()
             : "";
