@@ -5703,7 +5703,15 @@
       ],
     };
     function gwGetGymMachines(gid) {
-      return GYM_MACHINE_CATALOG[gid] || GYM_MACHINE_CATALOG["main"] || [];
+      return getGymCatalogMachines(gid);
+    }
+
+    function gwFilterStepsToGymCatalog(gid, steps) {
+      if (!steps || !steps.length) return [];
+      const allowed = new Set(
+        getGymCatalogMachines(gid).map((m) => String(m.machineCode || "").toUpperCase())
+      );
+      return steps.filter((s) => s && allowed.has(String(s.machineCode || "").toUpperCase()));
     }
 
     function gwFindMachineForTemplateItem(gid, tplItem) {
@@ -5757,10 +5765,7 @@
       });
       pool.sort((a, b) => String(a.label).localeCompare(String(b.label)));
       if (pool.length) return pool[0];
-      const anyStrength = gwGetGymMachines(gid)
-        .filter((m) => m.type === "strength" && !usedCodes.has(m.machineCode))
-        .sort((a, b) => String(a.label).localeCompare(String(b.label)));
-      return anyStrength[0] || null;
+      return null;
     }
 
     function gwCollectVariantsForGoalDuration(goal, durBucket, level) {
@@ -5889,6 +5894,8 @@
         chosenSteps = gwBuildStepsFromLegacyTemplates(gymId, goal, levelNorm, desiredCount);
       }
 
+      chosenSteps = gwFilterStepsToGymCatalog(gymId, chosenSteps);
+
       const plan = {
         workoutPlanId: "gw_" + Math.random().toString(36).slice(2),
         userId,
@@ -5904,6 +5911,18 @@
       };
 
       plan.aiExplanation = gwGenerateAIExplanation(goal, levelNorm, duration, plan);
+      if (chosenSteps.length > 0 && chosenSteps.length < desiredCount) {
+        const goalPhrase = {
+          chest: "chest",
+          back: "back",
+          legs: "leg",
+          shoulders: "shoulder",
+          arms: "arm",
+          fullbody: "full-body",
+        }[goal] || goal;
+        plan.aiExplanation +=
+          ` This gym does not currently have enough ${goalPhrase} machines in its catalog for a full ${desiredCount}-station guided workout, so this plan only includes the ${chosenSteps.length} valid station(s) that match from this location.`;
+      }
       return plan;
     }
 
@@ -6383,7 +6402,9 @@
       });
 
       if (!plan.steps.length) {
-        alert("No matching machines were found for that workout in this gym catalog yet.");
+        alert(
+          "This gym does not currently have enough matching machines in its catalog for that workout type. Try another goal or duration."
+        );
         return;
       }
 
