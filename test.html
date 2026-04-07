@@ -2866,6 +2866,9 @@
             <h2 class="loggerMainTitle">Workout Tracking</h2>
           </div>
           <div class="muted loggerSetsSubhint">Use + to add sets. Each set stores weight and reps.</div>
+          <div id="strengthPreloadHint" class="muted" style="display:none;margin-top:8px;font-size:12px;">
+            Last matching workout loaded — edit anything you want before saving.
+          </div>
 
           <div class="setsHeader">
             <div class="muted">Set</div>
@@ -2888,6 +2891,9 @@
           <h2 class="loggerMainTitle">Workout Tracking</h2>
         </div>
         <div class="muted loggerCardioHint">Log time and machine stats. Minutes is required.</div>
+        <div id="cardioPreloadHint" class="muted" style="display:none;margin-top:8px;font-size:12px;">
+          Last matching workout loaded — edit anything you want before saving.
+        </div>
 
         <div class="cardioQuickActions">
           <button class="cardioQuickBtn" id="useLastCardioBtn" type="button">Use Last Workout</button>
@@ -5183,6 +5189,46 @@
       }
     }
 
+    const GW_GUIDED_FOCUS_TOP_KEY = "scanliftlog_guided_focus_top";
+
+    function gwScrollActiveWorkoutIntoView(force = false) {
+      const activePlan = gwLoadActivePlan(gymId, userId);
+      if (!activePlan || activePlan.status !== "active") return;
+
+      const cur = gwGetCurrentStep(activePlan);
+      const targetM = cur ? String(cur.machineCode || "").toUpperCase() : "";
+      const currentM = String(machineId || "").toUpperCase();
+      const onGuidedMachine = !!machineId && targetM === currentM;
+
+      if (!force && !onGuidedMachine) return;
+
+      const runScroll = () => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const slot = document.getElementById("guidedTopFocusSlot");
+            let el = null;
+            if (slot && !slot.hidden) {
+              el = slot;
+            } else if (guidedStepBanner && guidedStepBanner.style.display !== "none") {
+              el = guidedStepBanner;
+            }
+            if (!el) {
+              const gsp = document.getElementById("guidedSetsPanel");
+              if (gsp && gsp.offsetParent !== null) el = gsp;
+            }
+            if (!el && strengthSection && strengthSection.style.display !== "none") el = strengthSection;
+            if (!el && cardioSection && cardioSection.style.display !== "none") el = cardioSection;
+            if (!el) el = document.getElementById("logger");
+            if (el) {
+              el.scrollIntoView({ behavior: "instant", block: "start" });
+              window.scrollBy(0, -10);
+            }
+          });
+        });
+      };
+      runScroll();
+    }
+
     function createSetRow(setIndex, weight = "", reps = "") {
       const row = document.createElement("div");
       row.className = "setRow";
@@ -5307,9 +5353,149 @@
       });
     }
 
-    function getLastCardioWorkout() {
+    function normalizeWorkoutSigPart(s) {
+      return String(s || "").trim();
+    }
+
+    function getCurrentWorkoutHistoryMatchKey() {
+      if (!machineId) return "";
+      if (machineType === "cardio") return `cardio:${normalizeWorkoutSigPart(exerciseInput && exerciseInput.value)}`;
+      if (machineType === "strength") return currentStrengthHistorySignature() || "";
+      return "";
+    }
+
+    function currentStrengthHistorySignature() {
+      if (!machineId || machineType !== "strength") return null;
+      const exFree = normalizeWorkoutSigPart(exerciseInput && exerciseInput.value);
+      const sub = normalizeWorkoutSigPart(optionalSubExerciseSelect && optionalSubExerciseSelect.value);
+      if (gwIsVariantCapableMachineCode(machineId)) {
+        return `v1:${sub}\x1f${exFree}`;
+      }
+      if (machineRequiresAbductorMovementSelect()) {
+        return `a1:${normalizeWorkoutSigPart(abductorExerciseSelect && abductorExerciseSelect.value)}`;
+      }
+      return `e1:${exFree}`;
+    }
+
+    function strengthWorkoutSignatureFromRecord(w) {
+      if (!w || w.cardio) return null;
+      const exFree = normalizeWorkoutSigPart(w.exercise);
+      const sub = normalizeWorkoutSigPart(w.subExercise);
+      if (gwIsVariantCapableMachineCode(machineId)) {
+        return `v1:${sub}\x1f${exFree}`;
+      }
+      if (machineRequiresAbductorMovementSelect()) {
+        return `a1:${normalizeWorkoutSigPart(w.exercise)}`;
+      }
+      return `e1:${exFree}`;
+    }
+
+    function currentCardioHistorySignature() {
+      return `c1:${normalizeWorkoutSigPart(exerciseInput && exerciseInput.value)}`;
+    }
+
+    function cardioWorkoutSignatureFromRecord(w) {
+      if (!w || !w.cardio) return null;
+      return `c1:${normalizeWorkoutSigPart(w.exercise)}`;
+    }
+
+    function getLastMatchingStrengthWorkout() {
+      if (!machineId || machineType !== "strength") return null;
+      const want = currentStrengthHistorySignature();
+      if (want == null) return null;
       const workouts = loadWorkouts().slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
-      return workouts.find(w => w && w.cardio) || null;
+      const strengthRows = workouts.filter(
+        (w) => w && !w.cardio && Array.isArray(w.sets) && w.sets.length
+      );
+      const exact = strengthRows.find((w) => strengthWorkoutSignatureFromRecord(w) === want);
+      if (exact) return exact;
+      if (gwIsVariantCapableMachineCode(machineId) && !normalizeWorkoutSigPart(optionalSubExerciseSelect && optionalSubExerciseSelect.value)) {
+        const fb = strengthRows.find((w) => !normalizeWorkoutSigPart(w.subExercise));
+        if (fb) return fb;
+      }
+      return null;
+    }
+
+    function getLastMatchingCardioWorkout() {
+      if (!machineId || machineType !== "cardio") return null;
+      const want = currentCardioHistorySignature();
+      const workouts = loadWorkouts().slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
+      return workouts.find((w) => w && w.cardio && cardioWorkoutSignatureFromRecord(w) === want) || null;
+    }
+
+    function getLastCardioWorkout() {
+      return getLastMatchingCardioWorkout();
+    }
+
+    function gwGetGuidedStrengthTargetRowCount() {
+      const activePlan = gwLoadActivePlan(gymId, userId);
+      if (!activePlan || activePlan.status !== "active") return null;
+      if (!machineId || machineType !== "strength") return null;
+      const current = gwGetCurrentStep(activePlan);
+      if (!current) return null;
+      if (String(machineId).toUpperCase() !== String(current.machineCode || "").toUpperCase()) return null;
+      const n = Number(current.sets);
+      return Number.isFinite(n) && n > 0 ? Math.floor(n) : null;
+    }
+
+    function setStrengthPreloadHintVisible(on) {
+      const el = document.getElementById("strengthPreloadHint");
+      if (el) el.style.display = on ? "" : "none";
+    }
+
+    function setCardioPreloadHintVisible(on) {
+      const el = document.getElementById("cardioPreloadHint");
+      if (el) el.style.display = on ? "" : "none";
+    }
+
+    function prefillStrengthFromLastWorkout() {
+      setStrengthPreloadHintVisible(false);
+      if (!machineId || machineType !== "strength" || !setsContainer) return;
+
+      const last = getLastMatchingStrengthWorkout();
+      const guidedN = gwGetGuidedStrengthTargetRowCount();
+      let targetRows;
+      if (guidedN != null) {
+        targetRows = guidedN;
+      } else if (last && last.sets && last.sets.length) {
+        targetRows = last.sets.length;
+      } else {
+        targetRows = 3;
+      }
+
+      const cap = 20;
+      targetRows = Math.max(1, Math.min(cap, targetRows));
+
+      setsContainer.innerHTML = "";
+      for (let i = 0; i < targetRows; i++) {
+        const pair = last && last.sets && last.sets[i] ? last.sets[i] : { weight: "", reps: "" };
+        const wv = pair.weight != null ? String(pair.weight) : "";
+        const rv = pair.reps != null ? String(pair.reps) : "";
+        addSet(wv, rv);
+      }
+      renumberSets();
+
+      if (last && last.sets && last.sets.length) {
+        setStrengthPreloadHintVisible(true);
+      }
+    }
+
+    function prefillCardioFromLastWorkout() {
+      setCardioPreloadHintVisible(false);
+      if (!machineId || machineType !== "cardio") return;
+      const last = getLastMatchingCardioWorkout();
+      if (!last || !last.cardio) return;
+      fillCardioInputsFromData(last.cardio);
+      setCardioPreloadHintVisible(true);
+    }
+
+    function prefillCurrentMachineFromLastWorkout() {
+      if (!machineId) return;
+      if (machineType === "cardio") {
+        prefillCardioFromLastWorkout();
+      } else if (machineType === "strength") {
+        prefillStrengthFromLastWorkout();
+      }
     }
 
     function buildCardioInputs() {
@@ -6730,6 +6916,7 @@
       alert(body);
       const nextCode = next ? String(next.machineCode || "").toUpperCase() : "";
       if (nextCode) {
+        sessionStorage.setItem(GW_GUIDED_FOCUS_TOP_KEY, "1");
         gwSetParamAndNavigate({ gym: gymId, machine: nextCode });
       } else {
         gwRenderPlanUI(activePlan);
@@ -6839,10 +7026,13 @@
           if (targetMachine === currentMachine) {
             gwRenderPlanUI(plan);
             gwCloseGuidedWorkoutModal();
+            prefillCurrentMachineFromLastWorkout();
+            gwScrollActiveWorkoutIntoView();
             return;
           }
 
           sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
+          sessionStorage.setItem(GW_GUIDED_FOCUS_TOP_KEY, "1");
 
           gwSetParamAndNavigate({
             gym: gymId,
@@ -7503,10 +7693,17 @@
         gwSyncFocusedGuidedUI();
       });
 
-      setModeUI();
+      if (optionalSubExerciseSelect) {
+        optionalSubExerciseSelect.addEventListener("change", () => prefillCurrentMachineFromLastWorkout());
+      }
+      if (abductorExerciseSelect) {
+        abductorExerciseSelect.addEventListener("change", () => prefillCurrentMachineFromLastWorkout());
+      }
+      if (exerciseInput) {
+        exerciseInput.addEventListener("change", () => prefillCurrentMachineFromLastWorkout());
+      }
 
-      if (machineType !== "cardio") clearCurrentSets();
-      else clearCardioInputs();
+      setModeUI();
 
       renderMonthlyConsistency();
       renderGuidedStepBanner();
@@ -7532,6 +7729,13 @@
       }
 
       applyMachineSelectedState();
+
+      prefillCurrentMachineFromLastWorkout();
+
+      if (sessionStorage.getItem(GW_GUIDED_FOCUS_TOP_KEY) === "1") {
+        sessionStorage.removeItem(GW_GUIDED_FOCUS_TOP_KEY);
+        gwScrollActiveWorkoutIntoView(true);
+      }
 
       window.addEventListener("resize", () => {
         if (machineId) renderHistory();
