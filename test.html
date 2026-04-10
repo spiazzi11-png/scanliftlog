@@ -196,8 +196,16 @@
       box-shadow: var(--shadow);
     }
 
+    .actionQuickSection ~ #inactiveGate.card {
+      margin-top: 8px;
+    }
+
+    .actionQuickSection ~ #machineSelectionGate.card {
+      margin-top: 8px;
+    }
+
     .card.loggerCard {
-      margin-top:8px;
+      margin-top:6px;
       padding:10px 14px 16px;
       border:2px solid rgba(220,38,38,.55);
       background:
@@ -332,6 +340,19 @@
       gap:10px;
     }
 
+    .appNavStart {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex:1;
+      min-width:0;
+    }
+
+    .appNavGearSlot {
+      position:relative;
+      flex-shrink:0;
+    }
+
     .brand {
       display:flex;
       align-items:center;
@@ -340,6 +361,7 @@
       letter-spacing:.15px;
       font-size:14px;
       line-height:1.15;
+      min-width:0;
     }
 
     .logo {
@@ -584,7 +606,7 @@
 
     .actionTileGridTight {
       gap:5px;
-      margin:6px 0 8px;
+      margin:4px 0 6px;
     }
 
     .actionTile {
@@ -657,7 +679,7 @@
 
     .actionQuickSection {
       position: relative;
-      margin: 6px 0 8px;
+      margin: 4px 0 6px;
     }
 
     .actionQuickSection .actionTileGridTight {
@@ -670,7 +692,11 @@
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 0;
+    }
+
+    .appOptionsBarNav {
+      justify-content: flex-start;
     }
 
     .appOptionsGearBtn {
@@ -695,13 +721,20 @@
       border-color: rgba(248,113,113,.55);
     }
 
+    .appOptionsGearBtnNav {
+      width: 36px;
+      height: 32px;
+      border-radius: 10px;
+      font-size: 17px;
+    }
+
     .appOptionsMenu {
       position: absolute;
       right: 0;
       top: 100%;
       margin-top: 4px;
       min-width: 210px;
-      z-index: 85;
+      z-index: 120;
       border-radius: 12px;
       border: 1px solid rgba(220,38,38,.38);
       background: rgba(12,12,14,.98);
@@ -1471,7 +1504,7 @@
     }
 
     .consistencyCardCompact {
-      margin:6px 0 6px;
+      margin:6px 0 4px;
       padding:8px 10px;
       border-radius:14px;
       box-shadow: 0 6px 16px rgba(0,0,0,.22);
@@ -2798,9 +2831,31 @@
 <body>
   <div class="appNav">
     <div class="appNavInner">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>ScanLiftLog</div>
+      <div class="appNavStart">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>ScanLiftLog</div>
+        </div>
+        <div class="appNavGearSlot">
+          <div class="appOptionsBar appOptionsBarNav">
+            <button
+              type="button"
+              id="appOptionsToggle"
+              class="appOptionsGearBtn appOptionsGearBtnNav"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="appOptionsMenu"
+              title="More options"
+            >
+              <span aria-hidden="true">&#9881;</span>
+            </button>
+            <div id="appOptionsMenu" class="appOptionsMenu" role="menu" hidden>
+              <button type="button" class="appOptionsMenuBtn" id="downloadBtn" role="menuitem">Back Up Data</button>
+              <div class="appOptionsMenuHint">Export occasionally — browser data can be erased.</div>
+              <button type="button" class="appOptionsMenuBtn" id="uploadBtn" role="menuitem">Restore Data</button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="navLinks">
         <button class="headerActionBtn" id="addToHomeScreenBtn" type="button">Add to Home Screen</button>
@@ -2913,25 +2968,6 @@
     </div>
 
     <div class="actionQuickSection" data-ui="action-quick-section">
-      <div class="appOptionsBar">
-        <button
-          type="button"
-          id="appOptionsToggle"
-          class="appOptionsGearBtn"
-          aria-expanded="false"
-          aria-haspopup="true"
-          aria-controls="appOptionsMenu"
-          title="More options"
-        >
-          <span aria-hidden="true">&#9881;</span>
-        </button>
-        <div id="appOptionsMenu" class="appOptionsMenu" role="menu" hidden>
-          <button type="button" class="appOptionsMenuBtn" id="downloadBtn" role="menuitem">Back Up Data</button>
-          <div class="appOptionsMenuHint">Export occasionally — browser data can be erased.</div>
-          <button type="button" class="appOptionsMenuBtn" id="uploadBtn" role="menuitem">Restore Data</button>
-        </div>
-      </div>
-
       <div class="actionTileGrid actionTileGridTight" data-ui="action-tiles" aria-label="Quick actions">
       <div class="actionTile">
         <button class="actionTileBtn actionTileBtnAi" id="planWorkoutBtn" type="button">Build Workout</button>
