@@ -785,56 +785,23 @@
       color: var(--muted);
     }
 
-    .postSaveShareToast {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: max(14px, env(safe-area-inset-bottom, 0px));
-      z-index: 150;
+    .reportTodayModalCard {
+      width: min(520px, 100%);
+      max-height: min(92vh, 900px);
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px 14px;
-      padding: 12px 16px;
-      max-width: min(440px, calc(100vw - 20px));
-      border-radius: 14px;
-      border: 1px solid rgba(220, 38, 38, 0.4);
-      background: rgba(10, 10, 12, 0.97);
-      box-shadow: 0 14px 44px rgba(0, 0, 0, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-      pointer-events: auto;
+      flex-direction: column;
     }
 
-    .postSaveShareToast[hidden] {
-      display: none !important;
-    }
-
-    .postSaveShareToastMsg {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--text, #f4f4f5);
-      letter-spacing: 0.02em;
-    }
-
-    .postSaveShareToastShare {
-      margin: 0;
-      padding: 10px 18px;
-      min-height: 44px;
-      border-radius: 10px;
-      border: 1px solid rgba(248, 113, 113, 0.55);
-      background: rgba(239, 68, 68, 0.18);
-      color: #fecaca;
-      font-weight: 900;
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .postSaveShareToastShare:hover {
-      background: rgba(239, 68, 68, 0.28);
-      color: #fff;
+    .reportTodayPreview {
+      margin-top: 12px;
+      flex: 1;
+      min-height: 120px;
+      max-height: min(48vh, 440px);
+      overflow: auto;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #fff;
+      padding: 8px;
     }
 
     .headerCardCompact {
@@ -3328,14 +3295,34 @@
       <div class="plannerModalHeader">
         <div>
           <h2 id="reportScopeTitle">Workout Report</h2>
-          <div class="plannerSubText">Choose what to include in the download.</div>
+          <div class="plannerSubText">Choose a report scope.</div>
         </div>
         <button id="closeReportScopeModalBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
       </div>
       <div class="plannerActions" style="flex-direction:column; gap:10px; margin-top:8px;">
-        <button id="reportScopeThisMachineBtn" class="primary" type="button" style="width:100%;">This machine only</button>
-        <button id="reportScopeFullBtn" type="button" style="width:100%;">Full history (all machines)</button>
+        <button id="reportScopeThisMachineBtn" class="primary" type="button" style="width:100%;">This Machine</button>
+        <button id="reportScopeTodayBtn" type="button" style="width:100%;">Today's Workout</button>
+        <button id="reportScopeFullBtn" type="button" style="width:100%;">Full History</button>
         <button id="reportScopeCancelBtn" type="button" style="width:100%;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Today's workout report (preview + download + share) ===== -->
+  <div id="reportTodayModal" class="plannerModal hidden" aria-hidden="true">
+    <div class="plannerModalCard reportTodayModalCard" role="dialog" aria-modal="true" aria-labelledby="reportTodayTitle">
+      <div class="plannerModalHeader">
+        <div>
+          <h2 id="reportTodayTitle">Today's Workout</h2>
+          <div class="plannerSubText" id="reportTodaySubtext"></div>
+        </div>
+        <button id="closeReportTodayModalBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
+      </div>
+      <div id="reportTodayPreview" class="reportTodayPreview" aria-label="Report preview"></div>
+      <div class="plannerActions" style="flex-wrap:wrap; gap:10px; margin-top:14px;">
+        <button id="reportTodayDownloadBtn" class="primary" type="button">Download</button>
+        <button id="reportTodayShareBtn" type="button">Share</button>
+        <button id="reportTodayCloseBtn" type="button" style="margin-left:auto;">Close</button>
       </div>
     </div>
   </div>
@@ -3369,18 +3356,6 @@
         <button id="acceptAiDisclaimerBtn" class="primary" type="button" disabled>I Understand & Continue</button>
       </div>
     </div>
-  </div>
-
-  <div
-    id="postSaveShareToast"
-    class="postSaveShareToast"
-    role="status"
-    aria-live="polite"
-    aria-atomic="true"
-    hidden
-  >
-    <span class="postSaveShareToastMsg" id="postSaveShareToastMsg">Workout saved</span>
-    <button type="button" class="postSaveShareToastShare" id="postSaveShareToastShareBtn">Share</button>
   </div>
 
   <script src="/machine-map.js"></script>
@@ -5035,6 +5010,27 @@
       return all.sort((a, b) => (b.ts || 0) - (a.ts || 0));
     }
 
+    function getWorkoutLocalDateISO(w) {
+      const d = w && w.date != null ? String(w.date).trim() : "";
+      if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+      if (w && w.ts != null && Number.isFinite(Number(w.ts))) {
+        const local = new Date(Number(w.ts));
+        const y = local.getFullYear();
+        const m = String(local.getMonth() + 1).padStart(2, "0");
+        const day = String(local.getDate()).padStart(2, "0");
+        return `${y}-${m}-${day}`;
+      }
+      return "";
+    }
+
+    function getTodaysWorkoutsForReport() {
+      const today = todayISO();
+      const all = getAllWorkoutsForReport();
+      return all
+        .filter((w) => getWorkoutLocalDateISO(w) === today)
+        .sort((a, b) => (a.ts || 0) - (b.ts || 0));
+    }
+
     function reportFilenameMachineTag(mid) {
       const s = String(mid || "")
         .trim()
@@ -5044,19 +5040,42 @@
       return (s || "machine").slice(0, 40);
     }
 
-    function downloadWorkoutReportForWorkouts(workouts, filenameMachineTag) {
-      const cleanBodyHtml = buildPdfOnlyReportHtml(workouts);
-      const doc =
-        "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Workout Report</title><style>body{background:#fff;color:#000;font-family:system-ui,sans-serif;font-size:12px;margin:0;padding:12px;} table{border-collapse:collapse;width:100%;} th,td{text-align:left;padding:6px 8px;border:1px solid #333;} th{background:#f5f5f5;}</style></head><body>" +
+    function reportFilenameScopeTag(id) {
+      const s = String(id || "")
+        .trim()
+        .replace(/[^A-Za-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+      return (s || "gym").slice(0, 40);
+    }
+
+    function buildWorkoutReportDocumentHtml(workouts, reportMeta) {
+      const meta = reportMeta || {};
+      const docTitle = meta.title || "Workout Report";
+      const cleanBodyHtml = buildPdfOnlyReportHtml(workouts, meta);
+      return (
+        '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' +
+        escapeHtml(docTitle) +
+        '</title><style>body{background:#fff;color:#000;font-family:system-ui,sans-serif;font-size:12px;margin:0;padding:12px;} table{border-collapse:collapse;width:100%;} th,td{text-align:left;padding:6px 8px;border:1px solid #333;} th{background:#f5f5f5;}</style></head><body>' +
         cleanBodyHtml +
-        "</body></html>";
+        "</body></html>"
+      );
+    }
+
+    function downloadWorkoutReportForWorkouts(workouts, filenameMachineTag, reportMeta) {
+      const doc = buildWorkoutReportDocumentHtml(workouts, reportMeta);
       const blob = new Blob([doc], { type: "text/html;charset=utf-8" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
       const date = new Date().toISOString().slice(0, 10);
-      a.download = filenameMachineTag
-        ? "scanliftlog_workout_report_" + filenameMachineTag + "_" + date + ".html"
-        : "scanliftlog_workout_report_" + date + ".html";
+      let downloadName;
+      if (reportMeta && reportMeta.downloadFilename) {
+        downloadName = reportMeta.downloadFilename;
+      } else if (filenameMachineTag) {
+        downloadName = "scanliftlog_workout_report_" + filenameMachineTag + "_" + date + ".html";
+      } else {
+        downloadName = "scanliftlog_workout_report_" + date + ".html";
+      }
+      a.download = downloadName;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -5100,14 +5119,21 @@
       return parts.length ? "<p>" + parts.join(" • ") + "</p>" : '<p class="muted">No cardio details.</p>';
     }
 
-    function buildPdfOnlyReportHtml(workouts) {
+    function buildPdfOnlyReportHtml(workouts, meta) {
+      const m = meta || {};
+      const mainTitle = m.title || "Workout Report";
+      const subtitle = m.subtitle || "";
       const pdfStyle = 'style="background:#fff; color:#000; font-family: system-ui, sans-serif; font-size: 12px; margin: 0; padding: 0;"';
       const pdfTable = 'style="width:100%; border-collapse:collapse; font-size:11px; margin-top:6px;"';
       const pdfTh = 'style="text-align:left; padding:6px 8px; border:1px solid #333; background:#f5f5f5;"';
       const pdfTd = 'style="text-align:left; padding:6px 8px; border:1px solid #333;"';
 
       let html = "<div " + pdfStyle + ">";
-      html += '<h1 style="font-size:18px; margin:0 0 12px 0; border-bottom:2px solid #000; padding-bottom:8px;">Workout Report</h1>';
+      html += '<h1 style="font-size:18px; margin:0 0 8px 0; border-bottom:2px solid #000; padding-bottom:8px;">' + escapeHtml(mainTitle) + "</h1>";
+      if (subtitle) {
+        html +=
+          '<p style="margin:0 0 12px 0; font-size:12px; color:#444;">' + escapeHtml(subtitle) + "</p>";
+      }
       html += `<p style="margin:0 0 12px 0;"><strong>User</strong> ${escapeHtml(userId.slice(0, 8))}… &nbsp; <strong>Total Workouts</strong> ${workouts.length} &nbsp; <strong>Generated</strong> ${escapeHtml(nowReadable())}</p>`;
 
       if (!workouts.length) {
@@ -6047,99 +6073,109 @@
       return parts.length ? parts.join(" • ") : "—";
     }
 
-    const POST_SAVE_SHARE_TOAST_MS = 5000;
-    let postSaveShareToastTimer = null;
-    let postSaveSharePayload = null;
+    let reportTodayWorkoutsSnapshot = [];
 
-    function buildPostSaveSharePayloadFromWorkout(workout) {
-      if (!workout) return null;
+    function getTodayWorkoutReportMeta(workoutCount) {
+      const cnt = workoutCount != null ? workoutCount : 0;
+      const slug = reportFilenameScopeTag(orgId);
       return {
-        workout: JSON.parse(JSON.stringify(workout)),
-        meta: {
-          gymName: getGymDisplayName(orgId),
-          machineName: getMachineDisplayName(machineId, orgId),
-          machineId: String(machineId || "").toUpperCase(),
-        },
+        title: "Today's Workout Summary",
+        subtitle: `${getGymDisplayName(orgId)} · ${todayISO()} · ${cnt} session(s)`,
+        downloadFilename: `scanliftlog_today_${slug}_${todayISO()}.html`
       };
     }
 
-    function formatPostSaveShareText(payload) {
-      if (!payload || !payload.workout || !payload.meta) return "";
-      const w = payload.workout;
-      const { gymName, machineName, machineId: mid } = payload.meta;
+    function closeReportTodayModal() {
+      const m = document.getElementById("reportTodayModal");
+      if (!m) return;
+      m.classList.add("hidden");
+      m.setAttribute("aria-hidden", "true");
+      reportTodayWorkoutsSnapshot = [];
+      const preview = document.getElementById("reportTodayPreview");
+      if (preview) preview.innerHTML = "";
+    }
+
+    function openReportTodayModal(workouts) {
+      reportTodayWorkoutsSnapshot = workouts.slice();
+      const m = document.getElementById("reportTodayModal");
+      const sub = document.getElementById("reportTodaySubtext");
+      const preview = document.getElementById("reportTodayPreview");
+      if (!m || !preview) return;
+      const meta = getTodayWorkoutReportMeta(workouts.length);
+      if (sub) sub.textContent = meta.subtitle;
+      preview.innerHTML = buildPdfOnlyReportHtml(workouts, meta);
+      m.classList.remove("hidden");
+      m.setAttribute("aria-hidden", "false");
+    }
+
+    function buildTodaysWorkoutPlainTextForShare(workouts) {
       const lines = [];
-      lines.push("ScanLiftLog");
-      lines.push(`${gymName} · ${machineName} (${mid})`);
-      if (w.date) lines.push(`Date: ${w.date}`);
-      if (w.cardio) {
-        lines.push(`Cardio: ${formatCardioSummary(w.cardio)}`);
-      } else {
-        if (w.exercise) lines.push(`Exercise: ${w.exercise}`);
-        if (w.subExercise) lines.push(`Variant: ${w.subExercise}`);
-        const sets = Array.isArray(w.sets) ? w.sets : [];
-        if (sets.length) {
+      lines.push("ScanLiftLog — Today's Workout Summary");
+      lines.push(`${getGymDisplayName(orgId)} · ${todayISO()}`);
+      lines.push(`Sessions logged: ${workouts.length}`);
+      workouts.forEach((w, idx) => {
+        lines.push("");
+        lines.push(`--- ${idx + 1}. ${w.machineName || "—"} (${w.type || "—"}) ---`);
+        if (w.date) lines.push(`Date: ${w.date}`);
+        if (w.type === "Cardio" && w.cardio) {
+          lines.push(`Cardio: ${formatCardioSummary(w.cardio)}`);
+        } else {
+          const det = formatWorkoutExerciseDetailLines(w);
+          if (det.length) lines.push(det.join(" · "));
+          const sets = Array.isArray(w.sets) ? w.sets : [];
           sets.forEach((s, i) => {
             lines.push(`Set ${i + 1}: ${(s && s.weight) || "—"} × ${(s && s.reps) || "—"}`);
           });
         }
-      }
-      if (w.notes) lines.push(`Notes: ${w.notes}`);
+        if (w.notes) lines.push(`Notes: ${w.notes}`);
+      });
       return lines.join("\n");
     }
 
-    function hidePostSaveShareToast() {
-      if (postSaveShareToastTimer != null) {
-        clearTimeout(postSaveShareToastTimer);
-        postSaveShareToastTimer = null;
-      }
-      postSaveSharePayload = null;
-      const el = document.getElementById("postSaveShareToast");
-      if (el) el.hidden = true;
-    }
-
-    function showPostSaveShareToast(payload) {
-      if (!payload || !payload.workout) return;
-      postSaveSharePayload = payload;
-      const el = document.getElementById("postSaveShareToast");
-      if (!el) return;
-      if (postSaveShareToastTimer != null) {
-        clearTimeout(postSaveShareToastTimer);
-        postSaveShareToastTimer = null;
-      }
-      el.hidden = false;
-      postSaveShareToastTimer = setTimeout(() => {
-        postSaveShareToastTimer = null;
-        hidePostSaveShareToast();
-      }, POST_SAVE_SHARE_TOAST_MS);
-    }
-
-    async function handlePostSaveShareClick() {
-      const payload = postSaveSharePayload;
-      if (!payload) return;
-      const text = formatPostSaveShareText(payload);
-      const title = "ScanLiftLog workout";
+    async function shareTodaysWorkoutReportFromSnapshot() {
+      const workouts = reportTodayWorkoutsSnapshot;
+      if (!workouts || !workouts.length) return;
+      const meta = getTodayWorkoutReportMeta(workouts.length);
+      const docHtml = buildWorkoutReportDocumentHtml(workouts, meta);
+      const fname = meta.downloadFilename || "scanliftlog_today.html";
+      const blob = new Blob([docHtml], { type: "text/html;charset=utf-8" });
+      const file = new File([blob], fname, { type: "text/html" });
+      const plain = buildTodaysWorkoutPlainTextForShare(workouts);
+      const shareTitle = "Today's workout — ScanLiftLog";
 
       if (navigator.share) {
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              title: shareTitle,
+              text: meta.subtitle,
+              files: [file]
+            });
+            return;
+          } catch (e) {
+            if (e && e.name === "AbortError") return;
+          }
+        }
         try {
-          await navigator.share({ title, text });
-          hidePostSaveShareToast();
+          await navigator.share({
+            title: shareTitle,
+            text: plain
+          });
           return;
-        } catch (err) {
-          if (err && err.name === "AbortError") return;
+        } catch (e2) {
+          if (e2 && e2.name === "AbortError") return;
         }
       }
 
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(text);
-          alert("Workout summary copied. Paste it into a message or note to share.");
-          hidePostSaveShareToast();
+          await navigator.clipboard.writeText(plain);
+          alert("Workout summary copied. Paste to share.");
           return;
         }
       } catch (_) {}
 
-      prompt("Copy this workout summary to share:", text);
-      hidePostSaveShareToast();
+      prompt("Copy this summary to share:", plain);
     }
 
     function renderHistory() {
@@ -7791,6 +7827,7 @@
       const reportScopeModal = document.getElementById("reportScopeModal");
       const closeReportScopeModalBtn = document.getElementById("closeReportScopeModalBtn");
       const reportScopeThisMachineBtn = document.getElementById("reportScopeThisMachineBtn");
+      const reportScopeTodayBtn = document.getElementById("reportScopeTodayBtn");
       const reportScopeFullBtn = document.getElementById("reportScopeFullBtn");
       const reportScopeCancelBtn = document.getElementById("reportScopeCancelBtn");
 
@@ -7818,10 +7855,47 @@
           closeReportScopeModal();
         });
       }
+      if (reportScopeTodayBtn) {
+        reportScopeTodayBtn.addEventListener("click", () => {
+          const tw = getTodaysWorkoutsForReport();
+          closeReportScopeModal();
+          if (!tw.length) {
+            alert("No workouts logged today for this gym yet.");
+            return;
+          }
+          openReportTodayModal(tw);
+        });
+      }
       if (reportScopeFullBtn) {
         reportScopeFullBtn.addEventListener("click", () => {
           downloadWorkoutReportForWorkouts(getAllWorkoutsForReport(), null);
           closeReportScopeModal();
+        });
+      }
+
+      const reportTodayModalEl = document.getElementById("reportTodayModal");
+      const closeReportTodayModalBtn = document.getElementById("closeReportTodayModalBtn");
+      const reportTodayCloseBtn = document.getElementById("reportTodayCloseBtn");
+      const reportTodayDownloadBtn = document.getElementById("reportTodayDownloadBtn");
+      const reportTodayShareBtn = document.getElementById("reportTodayShareBtn");
+      if (closeReportTodayModalBtn) closeReportTodayModalBtn.addEventListener("click", closeReportTodayModal);
+      if (reportTodayCloseBtn) reportTodayCloseBtn.addEventListener("click", closeReportTodayModal);
+      if (reportTodayModalEl) {
+        reportTodayModalEl.addEventListener("click", (e) => {
+          if (e.target === reportTodayModalEl) closeReportTodayModal();
+        });
+      }
+      if (reportTodayDownloadBtn) {
+        reportTodayDownloadBtn.addEventListener("click", () => {
+          const w = reportTodayWorkoutsSnapshot;
+          if (!w || !w.length) return;
+          const meta = getTodayWorkoutReportMeta(w.length);
+          downloadWorkoutReportForWorkouts(w, null, meta);
+        });
+      }
+      if (reportTodayShareBtn) {
+        reportTodayShareBtn.addEventListener("click", () => {
+          shareTodaysWorkoutReportFromSnapshot();
         });
       }
 
@@ -7911,14 +7985,6 @@
         restStopBtn.addEventListener("click", () => stopRestTimer());
       }
 
-      const postSaveShareToastShareBtn = document.getElementById("postSaveShareToastShareBtn");
-      if (postSaveShareToastShareBtn) {
-        postSaveShareToastShareBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          handlePostSaveShareClick();
-        });
-      }
-
       document.getElementById("saveWorkoutBtn").addEventListener("click", () => {
         if (!machineId) {
           alert("Select a machine before saving a workout.");
@@ -7968,10 +8034,7 @@
           renderGuidedStepBanner();
           gwSyncFocusedGuidedUI();
 
-          const guidedHandledCardio = gwApplyGuidedSaveAdvanceAndFeedback({ savedSets: null, isCardio: true });
-          if (!guidedHandledCardio) {
-            showPostSaveShareToast(buildPostSaveSharePayloadFromWorkout(cardioRec));
-          }
+          gwApplyGuidedSaveAdvanceAndFeedback({ savedSets: null, isCardio: true });
 
           return;
         }
@@ -8016,10 +8079,7 @@
         renderGuidedStepBanner();
         gwSyncFocusedGuidedUI();
 
-        const guidedHandledStrength = gwApplyGuidedSaveAdvanceAndFeedback({ savedSets: sets, isCardio: false });
-        if (!guidedHandledStrength) {
-          showPostSaveShareToast(buildPostSaveSharePayloadFromWorkout(strengthRec));
-        }
+        gwApplyGuidedSaveAdvanceAndFeedback({ savedSets: sets, isCardio: false });
       });
 
       document.getElementById("clearHistoryBtn").addEventListener("click", () => {
