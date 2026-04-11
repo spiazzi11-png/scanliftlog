@@ -742,6 +742,18 @@
       padding: 6px;
     }
 
+    .appNav .appOptionsMenu {
+      position: fixed;
+      left: 50%;
+      right: auto;
+      top: calc(env(safe-area-inset-top, 0px) + 52px);
+      margin-top: 0;
+      transform: translateX(-50%);
+      max-width: min(320px, calc(100vw - 24px));
+      width: min(320px, calc(100vw - 24px));
+      box-sizing: border-box;
+    }
+
     .appOptionsMenu[hidden] {
       display: none !important;
     }
@@ -2954,7 +2966,7 @@
 
     <div class="consistencyCard consistencyCardCompact" id="consistencyCard" data-ui="monthly-consistency">
       <div class="consistencyTop">
-        <div class="consistencyLabel">Monthly Consistency</div>
+        <div class="consistencyLabel">Monthly Consistency Tracker</div>
         <div class="consistencyValue" id="consistencyValue">0 / 30 days</div>
       </div>
 
@@ -2970,7 +2982,7 @@
     <div class="actionQuickSection" data-ui="action-quick-section">
       <div class="actionTileGrid actionTileGridTight" data-ui="action-tiles" aria-label="Quick actions">
       <div class="actionTile">
-        <button class="actionTileBtn actionTileBtnAi" id="planWorkoutBtn" type="button">Build Workout</button>
+        <button class="actionTileBtn actionTileBtnAi" id="planWorkoutBtn" type="button">Build A Workout</button>
       </div>
       <div class="actionTile">
         <button class="actionTileBtn" id="reportBtn" type="button">Workout Report</button>
@@ -3041,7 +3053,7 @@
       <div id="strengthSection">
         <div id="guidedSetsPanel" class="guidedSetsPanel" data-ui="guided-sets-panel">
           <div class="loggerSetsHeadingRow">
-            <h2 class="loggerMainTitle">Workout Tracking</h2>
+            <h2 class="loggerMainTitle">Log your Workout</h2>
           </div>
           <div class="muted loggerSetsSubhint">Use + to add sets. Each set stores weight and reps.</div>
           <div id="strengthPreloadHint" class="muted" style="display:none;margin-top:8px;font-size:12px;">
@@ -3066,7 +3078,7 @@
 
       <div id="cardioSection" style="display:none;">
         <div class="loggerSetsHeadingRow">
-          <h2 class="loggerMainTitle">Workout Tracking</h2>
+          <h2 class="loggerMainTitle">Log your Workout</h2>
         </div>
         <div class="muted loggerCardioHint">Log time and machine stats. Minutes is required.</div>
         <div id="cardioPreloadHint" class="muted" style="display:none;margin-top:8px;font-size:12px;">
