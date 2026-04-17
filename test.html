@@ -6369,11 +6369,11 @@
       const target = findFirstIncompleteVisibleSetRow(source.index);
       if (target) {
         const inputs = target.row.querySelectorAll("input");
-        if (target.weightEmpty && inputs[0] && source.weight) {
+        if (inputs[0] && source.weight) {
           inputs[0].value = source.weight;
           try { inputs[0].dispatchEvent(new Event("input", { bubbles: true })); } catch (_e) {}
         }
-        if (target.repsEmpty && inputs[1] && source.reps) {
+        if (inputs[1] && source.reps) {
           inputs[1].value = source.reps;
           try { inputs[1].dispatchEvent(new Event("input", { bubbles: true })); } catch (_e) {}
         }
