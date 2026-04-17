@@ -950,6 +950,202 @@
       color:#fff;
     }
 
+    .setFieldCueWrap {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      min-width: 0;
+    }
+
+    .setFieldCueWrap > input {
+      width: 100%;
+      padding-right: 38px;
+    }
+
+    .setFieldCue {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      margin: 0;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 900;
+      color: rgba(255,255,255,.58);
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.14);
+      line-height: 1;
+      cursor: pointer;
+      transition: color .15s ease, border-color .15s ease, background .15s ease, transform .08s ease;
+    }
+
+    .setFieldCue::before {
+      content: "";
+      position: absolute;
+      inset: -8px -4px -8px -6px;
+    }
+
+    .setFieldCue:hover,
+    .setFieldCue:focus-visible {
+      color: rgba(254,202,202,.95);
+      border-color: rgba(239,68,68,.45);
+      background: rgba(239,68,68,.14);
+      outline: none;
+    }
+
+    .setFieldCue:active {
+      transform: translateY(-50%) scale(0.94);
+    }
+
+    .setFieldCueWrap:focus-within .setFieldCue {
+      color: rgba(254,202,202,.85);
+      border-color: rgba(239,68,68,.35);
+      background: rgba(239,68,68,.10);
+    }
+
+    @media (max-width: 380px) {
+      .setFieldCueWrap > input {
+        padding-right: 34px;
+      }
+      .setFieldCue {
+        right: 4px;
+        width: 26px;
+        height: 26px;
+        font-size: 14px;
+      }
+    }
+
+    .setRepeatBtn {
+      border-color: rgba(148,163,184,.32) !important;
+      background: linear-gradient(180deg, rgba(71,85,105,.55), rgba(30,41,59,.9)) !important;
+      color:#f1f5f9 !important;
+      font-size: 20px !important;
+      line-height: 1;
+    }
+
+    .setRepeatBtn[disabled],
+    .setRepeatBtn.is-disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .firstTimeStrengthHint {
+      display: none;
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #fde68a;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(251, 191, 36, 0.10);
+      border: 1px solid rgba(251, 191, 36, 0.28);
+    }
+
+    .setQuickPickModal {
+      position: fixed;
+      inset: 0;
+      z-index: 140;
+      display: block;
+    }
+
+    .setQuickPickModal.hidden {
+      display: none;
+    }
+
+    .setQuickPickBackdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(2px);
+    }
+
+    .setQuickPickSheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 18px 16px;
+      padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+      background: linear-gradient(180deg, rgba(22,22,28,.985), rgba(12,12,16,.985));
+      border-top: 1px solid rgba(255,255,255,.08);
+      border-radius: 22px 22px 0 0;
+      box-shadow: 0 -18px 40px rgba(0,0,0,.55);
+      max-height: 72vh;
+      overflow: auto;
+    }
+
+    .setQuickPickHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .setQuickPickEyebrow {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .setQuickPickTitle {
+      margin: 2px 0 0 0;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .setQuickPickChips {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .setQuickPickChip {
+      padding: 14px 8px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      font-weight: 900;
+      font-size: 15px;
+      cursor: pointer;
+      min-height: 52px;
+      line-height: 1.1;
+      transition: transform .08s ease;
+    }
+
+    .setQuickPickChip:active {
+      transform: scale(0.97);
+    }
+
+    .setQuickPickChip.active {
+      background: rgba(239,68,68,.22);
+      border-color: rgba(239,68,68,.55);
+      color: #fecaca;
+    }
+
+    .setQuickPickHint {
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 380px) {
+      .setQuickPickChips {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
     .loggerActionPanel {
       margin-top:14px;
     }
@@ -1733,6 +1929,56 @@
       font-size:.8rem;
       line-height:1.4;
       color:rgba(243,244,246,.86);
+    }
+
+    .guidedStepBannerProgression {
+      margin-top:6px;
+      padding:6px 10px;
+      border-radius:10px;
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      font-size:.78rem;
+      font-weight:800;
+      color:#fde68a;
+      line-height:1.35;
+    }
+
+    .guidedStepBannerProgression[hidden] {
+      display:none !important;
+    }
+
+    .guidedStepBannerActions {
+      margin-top:8px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .guidedStepBannerSubBtn {
+      padding:8px 12px;
+      min-height:36px;
+      border-radius:10px;
+      border:1px solid rgba(248, 113, 113, 0.5);
+      background: rgba(239, 68, 68, 0.18);
+      color:#fecaca;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+
+    .guidedStepBannerSubBtn:hover {
+      background: rgba(239, 68, 68, 0.28);
+      color:#fff;
+    }
+
+    .plannerStepProgression {
+      margin-top:4px;
+      font-size:11px;
+      font-weight:800;
+      color:#fde68a;
+      line-height:1.3;
     }
 
     .badgeProgressCard,
@@ -3012,8 +3258,19 @@
           3 sets × 10 reps
         </div>
 
+        <div id="guidedStepBannerProgression" class="guidedStepBannerProgression" hidden></div>
+
         <div id="guidedStepBannerHint" class="guidedStepBannerHint">
           Complete your workout, then tap Save Workout to move to the next step.
+        </div>
+
+        <div class="guidedStepBannerActions">
+          <button
+            type="button"
+            id="guidedStepBannerSubstituteBtn"
+            class="guidedStepBannerSubBtn"
+            title="Swap this step for another machine"
+          >Substitute machine</button>
         </div>
       </div>
 
@@ -3025,6 +3282,9 @@
           <div class="muted loggerSetsSubhint">Use + to add sets. Each set stores weight and reps.</div>
           <div id="strengthPreloadHint" class="muted" style="display:none;margin-top:8px;font-size:12px;">
             Last matching workout loaded — edit anything you want before saving.
+          </div>
+          <div id="firstTimeStrengthHint" class="firstTimeStrengthHint">
+            New here? Fill Set 1, then use Repeat Set to copy it to the next row.
           </div>
 
           <div class="setsHeader">
@@ -3039,6 +3299,8 @@
           <div class="btnrow" style="margin-top:12px;">
             <button class="iconBtn primary" id="addSetBtn" type="button">+</button>
             <div class="muted">Add set</div>
+            <button class="iconBtn setRepeatBtn" id="repeatLastSetBtn" type="button" title="Copy weight &amp; reps from last filled set" aria-label="Repeat last set">⟳</button>
+            <div class="muted">Repeat set</div>
           </div>
         </div>
       </div>
@@ -3324,6 +3586,22 @@
         <button id="reportTodayShareBtn" type="button">Share</button>
         <button id="reportTodayCloseBtn" type="button" style="margin-left:auto;">Close</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ===== Strength set quick-pick (weight / reps) ===== -->
+  <div id="setQuickPickModal" class="setQuickPickModal hidden" aria-hidden="true">
+    <div class="setQuickPickBackdrop" id="setQuickPickBackdrop"></div>
+    <div class="setQuickPickSheet" role="dialog" aria-modal="true" aria-labelledby="setQuickPickTitle">
+      <div class="setQuickPickHeader">
+        <div>
+          <div class="setQuickPickEyebrow" id="setQuickPickEyebrow">Set 1</div>
+          <h3 id="setQuickPickTitle" class="setQuickPickTitle">Quick pick weight</h3>
+        </div>
+        <button id="setQuickPickCloseBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
+      </div>
+      <div id="setQuickPickChips" class="setQuickPickChips" role="listbox" aria-label="Quick pick values"></div>
+      <div class="setQuickPickHint" id="setQuickPickHint">Tap a preset to fill. Tap the field directly to type a custom value.</div>
     </div>
   </div>
 
@@ -4111,16 +4389,93 @@
       return !usedFingerprints.has(`${c}\x1f`);
     }
 
+    function gwIsSubExerciseValidForMachine(machineCode, subExercise) {
+      const code = String(machineCode || "").toUpperCase();
+      const s = subExercise == null ? "" : String(subExercise).trim();
+      const pool = SUBCATEGORY_EXERCISES_BY_MACHINE[code];
+      if (!pool) return !s;
+      if (!s) return true;
+      return pool.includes(s);
+    }
+
     function gwSanitizeStepSubExercise(step) {
       if (!step || !step.subExercise) return;
+      if (!gwIsSubExerciseValidForMachine(step.machineCode, step.subExercise)) {
+        delete step.subExercise;
+      }
+    }
+
+    function gwIsExerciseNameValidForMachine(machineCode, machineLabel, exerciseName) {
+      const ex = exerciseName == null ? "" : String(exerciseName).trim();
+      if (!ex) return true;
+      const ml = machineLabel == null ? "" : String(machineLabel).trim();
+      if (ml && ex.toLowerCase() === ml.toLowerCase()) return true;
+      if (typeof GW_SLOT_DEFS === "object" && GW_SLOT_DEFS) {
+        const keys = Object.keys(GW_SLOT_DEFS);
+        for (let i = 0; i < keys.length; i++) {
+          const def = GW_SLOT_DEFS[keys[i]];
+          if (!def || !def.exercise) continue;
+          if (String(def.exercise).toLowerCase() !== ex.toLowerCase()) continue;
+          const matches = (def.machineLabelMatch || []).some(
+            (x) => String(x || "").toLowerCase() === ml.toLowerCase()
+          );
+          if (matches) return true;
+        }
+      }
+      const code = String(machineCode || "").toUpperCase();
+      const subPool = SUBCATEGORY_EXERCISES_BY_MACHINE[code];
+      if (subPool && subPool.includes(ex)) return true;
+      return false;
+    }
+
+    function gwValidateAndRepairStep(step, gid) {
+      if (!step) return;
       const code = String(step.machineCode || "").toUpperCase();
-      const pool = SUBCATEGORY_EXERCISES_BY_MACHINE[code];
-      const s = String(step.subExercise).trim();
-      if (!pool || !pool.includes(s)) delete step.subExercise;
+      if (!code) return;
+
+      let catalogMatch = null;
+      try {
+        const catalog = typeof getGymCatalogMachines === "function"
+          ? getGymCatalogMachines(gid)
+          : [];
+        catalogMatch = catalog.find(
+          (m) => String(m.machineCode || "").toUpperCase() === code
+        ) || null;
+      } catch (_e) {
+        catalogMatch = null;
+      }
+
+      const machineLabel = catalogMatch && catalogMatch.label
+        ? catalogMatch.label
+        : (step.machineName || "");
+
+      if (catalogMatch && step.machineName !== catalogMatch.label) {
+        step.machineName = catalogMatch.label;
+      }
+
+      if (step.subExercise && !gwIsSubExerciseValidForMachine(code, step.subExercise)) {
+        delete step.subExercise;
+      }
+
+      const variantCapable = gwIsVariantCapableMachineCode(code);
+      const hasValidSub = !!step.subExercise;
+
+      if (variantCapable && hasValidSub) {
+        if (!step.exerciseName || typeof step.exerciseName !== "string") {
+          step.exerciseName = machineLabel || step.exerciseName || "";
+        }
+      } else {
+        if (!step.exerciseName) {
+          step.exerciseName = machineLabel || "";
+        } else if (!gwIsExerciseNameValidForMachine(code, machineLabel, step.exerciseName)) {
+          step.exerciseName = machineLabel || step.exerciseName;
+        }
+      }
     }
 
     function gwHydrateGuidedStepPresentation(step, gid) {
       if (!step) return;
+      gwValidateAndRepairStep(step, gid);
       gwSanitizeStepSubExercise(step);
       const code = String(step.machineCode || "").toUpperCase();
       step.displayMachineName = gwNormalizeCableDisplayLabel(code, step.machineName, gid);
@@ -5338,6 +5693,8 @@
     const guidedStepBannerMeta = document.getElementById("guidedStepBannerMeta");
     const guidedStepBannerHint = document.getElementById("guidedStepBannerHint");
     const guidedStepBannerExitBtn = document.getElementById("guidedStepBannerExitBtn");
+    const guidedStepBannerProgression = document.getElementById("guidedStepBannerProgression");
+    const guidedStepBannerSubstituteBtn = document.getElementById("guidedStepBannerSubstituteBtn");
     const exitGuidedWorkoutBtn = document.getElementById("exitGuidedWorkoutBtn");
     const guidedWorkoutCompletionNote = document.getElementById("guidedWorkoutCompletionNote");
     const aiDisclaimerModal = document.getElementById("aiDisclaimerModal");
@@ -5512,11 +5869,18 @@
       w.placeholder = "e.g., 180";
       w.inputMode = "decimal";
       w.value = weight;
+      w.setAttribute("aria-label", `Set ${setIndex + 1} weight`);
 
       const r = document.createElement("input");
       r.placeholder = "e.g., 10";
       r.inputMode = "numeric";
       r.value = reps;
+      r.setAttribute("aria-label", `Set ${setIndex + 1} reps`);
+
+      if (machineType === "strength") {
+        w.dataset.sllQuickPick = "weight";
+        r.dataset.sllQuickPick = "reps";
+      }
 
       function maybeTriggerRestOnReps() {
         if (r.value.trim()) {
@@ -5538,8 +5902,36 @@
       };
 
       row.appendChild(badge);
-      row.appendChild(w);
-      row.appendChild(r);
+
+      if (machineType === "strength") {
+        const makeCueWrap = (inputEl, mode, setNum) => {
+          const wrap = document.createElement("div");
+          wrap.className = "setFieldCueWrap";
+          const cue = document.createElement("button");
+          cue.type = "button";
+          cue.className = "setFieldCue";
+          cue.textContent = "+";
+          cue.setAttribute(
+            "aria-label",
+            `Quick pick ${mode === "weight" ? "weight" : "reps"} for set ${setNum}`
+          );
+          cue.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openSetQuickPick(inputEl, mode);
+          });
+          wrap.appendChild(inputEl);
+          wrap.appendChild(cue);
+          return wrap;
+        };
+
+        row.appendChild(makeCueWrap(w, "weight", setIndex + 1));
+        row.appendChild(makeCueWrap(r, "reps", setIndex + 1));
+      } else {
+        row.appendChild(w);
+        row.appendChild(r);
+      }
+
       row.appendChild(del);
       return row;
     }
@@ -5718,16 +6110,54 @@
       if (el) el.style.display = on ? "" : "none";
     }
 
+    function setFirstTimeStrengthHintVisible(on) {
+      const el = document.getElementById("firstTimeStrengthHint");
+      if (el) el.style.display = on ? "block" : "none";
+    }
+
+    function hasPreviousWorkoutForCurrentMachine() {
+      if (!machineId) return false;
+      if (machineType === "strength") return !!getLastMatchingStrengthWorkout();
+      if (machineType === "cardio") return !!getLastMatchingCardioWorkout();
+      return false;
+    }
+
+    const FIRST_TIME_STRENGTH_DEFAULT_REPS = "10";
+    const FIRST_TIME_STRENGTH_DEFAULT_ROWS = 3;
+
+    function applyFirstTimeStrengthDefaults() {
+      if (!setsContainer || machineType !== "strength") return;
+      setStrengthPreloadHintVisible(false);
+      setsContainer.innerHTML = "";
+      const cap = 20;
+      const guidedN = gwGetGuidedStrengthTargetRowCount();
+      const target = Math.max(
+        1,
+        Math.min(cap, guidedN != null ? guidedN : FIRST_TIME_STRENGTH_DEFAULT_ROWS)
+      );
+      for (let i = 0; i < target; i++) {
+        addSet("", FIRST_TIME_STRENGTH_DEFAULT_REPS);
+      }
+      renumberSets();
+      setFirstTimeStrengthHintVisible(true);
+    }
+
     function prefillStrengthFromLastWorkout() {
       setStrengthPreloadHintVisible(false);
+      setFirstTimeStrengthHintVisible(false);
       if (!machineId || machineType !== "strength" || !setsContainer) return;
 
       const last = getLastMatchingStrengthWorkout();
+      if (!last) {
+        applyFirstTimeStrengthDefaults();
+        return;
+      }
+
       const guidedN = gwGetGuidedStrengthTargetRowCount();
       let targetRows;
       if (guidedN != null) {
         targetRows = guidedN;
-      } else if (last && last.sets && last.sets.length) {
+      } else if (last.sets && last.sets.length) {
         targetRows = last.sets.length;
       } else {
         targetRows = 3;
@@ -5738,14 +6168,14 @@
 
       setsContainer.innerHTML = "";
       for (let i = 0; i < targetRows; i++) {
-        const pair = last && last.sets && last.sets[i] ? last.sets[i] : { weight: "", reps: "" };
+        const pair = last.sets && last.sets[i] ? last.sets[i] : { weight: "", reps: "" };
         const wv = pair.weight != null ? String(pair.weight) : "";
         const rv = pair.reps != null ? String(pair.reps) : "";
         addSet(wv, rv);
       }
       renumberSets();
 
-      if (last && last.sets && last.sets.length) {
+      if (last.sets && last.sets.length) {
         setStrengthPreloadHintVisible(true);
       }
     }
@@ -5766,6 +6196,272 @@
       } else if (machineType === "strength") {
         prefillStrengthFromLastWorkout();
       }
+    }
+
+    const SLL_QUICK_PICK_REPS = [5, 6, 8, 10, 12, 15, 20];
+
+    const WEIGHT_CHIP_PROFILES = {
+      light:    [10, 20, 30, 40, 50, 60, 70],
+      medium:   [20, 40, 60, 80, 100, 120, 140],
+      heavy:    [45, 90, 135, 180, 225, 270, 315],
+      cable:    [10, 20, 30, 40, 50, 60, 70, 80],
+      dumbbell: [10, 15, 20, 25, 30, 35, 40, 50]
+    };
+
+    const MACHINE_CODE_TO_WEIGHT_PROFILE = {
+      RDPEC: "light",
+      TRICEPPRESS: "light",
+      TRIEX: "light",
+      BCPN: "light",
+      BCPL: "light",
+      LATRL: "light",
+      LEGEX: "light",
+      LEGCUR: "light",
+      SLCUR: "light",
+      SLGCUR: "light",
+      PRONECUR: "light",
+      HIPAB: "light",
+      GLUTEXT: "light",
+      CALFRAISE: "light",
+      ABDOM: "light",
+      ABCR: "light",
+      RTTOR: "light",
+      ASSTPD: "light",
+
+      CHPR: "medium",
+      INCHPR: "medium",
+      DECHPR: "medium",
+      CONVCHPR: "medium",
+      SEATDIPPLATE: "medium",
+      SEATDIPPIN: "medium",
+      LATPD: "medium",
+      PULLDN: "medium",
+      DIVLATPD: "medium",
+      SETRW: "medium",
+      LTRW: "medium",
+      DIVLROW: "medium",
+      TBRW: "medium",
+      SHPR: "medium",
+      CONVSHPR: "medium",
+      MULTIPP: "medium",
+      FBEN: "medium",
+      IBEN: "medium",
+      DBEN: "medium",
+
+      LEGPR: "heavy",
+      ANGLP: "heavy",
+      HKSQ: "heavy",
+      SQMT: "heavy",
+      HIPTH: "heavy",
+      DEADLUNGE: "heavy",
+      SMTH: "heavy",
+      SQRK: "heavy",
+      OHBP: "heavy",
+
+      DUALPULL: "cable",
+      CABLEROW: "cable",
+
+      DBRCK: "dumbbell"
+    };
+
+    function getWeightChipValuesForProfile(profile) {
+      const key = String(profile || "").toLowerCase();
+      const preset = WEIGHT_CHIP_PROFILES[key] || WEIGHT_CHIP_PROFILES.medium;
+      return preset.slice();
+    }
+
+    function inferWeightProfileFromLabel(label) {
+      const raw = String(label || "").toLowerCase();
+      if (!raw) return null;
+      if (/\b(dumbbell|db\s*rack|free\s*weights?)\b/.test(raw)) return "dumbbell";
+      if (/\b(cable|pulley|dual\s*adjustable)\b/.test(raw)) return "cable";
+      if (/\b(leg\s*press|hack\s*squat|squat\s*(machine|rack)|smith|hip\s*thrust|deadlift|power\s*rack|bulgarian|lunge)\b/.test(raw)) return "heavy";
+      if (/\b(curl|extension|raise|fly|pec\s*fly|rear\s*delt|abductor|adductor|calf|abdominal|ab\s*crunch|rotary|assisted)\b/.test(raw)) return "light";
+      if (/\b(press|row|pulldown|pull\s*down|dip|multi\s*pull)\b/.test(raw)) return "medium";
+      return null;
+    }
+
+    function getWeightChipProfileForMachine(mid, machineLabel) {
+      const code = String(mid || "").toUpperCase();
+      if (code && MACHINE_CODE_TO_WEIGHT_PROFILE[code]) {
+        return MACHINE_CODE_TO_WEIGHT_PROFILE[code];
+      }
+      const inferred = inferWeightProfileFromLabel(machineLabel);
+      if (inferred) return inferred;
+      return "medium";
+    }
+
+    function getWeightChipProfileForCurrentMachine() {
+      let label = "";
+      try {
+        if (typeof getMachineDisplayName === "function" && machineId) {
+          label = getMachineDisplayName(machineId, gymId);
+        }
+      } catch (_e) {}
+      return getWeightChipProfileForMachine(machineId, label);
+    }
+
+    function getWeightChipValuesForMachine(mid, machineLabel) {
+      return getWeightChipValuesForProfile(getWeightChipProfileForMachine(mid, machineLabel));
+    }
+
+    function getSuggestedWeightChips(mid) {
+      let label = "";
+      try {
+        if (typeof getMachineDisplayName === "function" && mid) {
+          label = getMachineDisplayName(mid, gymId);
+        }
+      } catch (_e) {}
+      return getWeightChipValuesForMachine(mid, label);
+    }
+
+    function getSuggestedRepChips() {
+      return SLL_QUICK_PICK_REPS.slice();
+    }
+
+    const sllQuickPickState = {
+      input: null,
+      mode: null
+    };
+
+    function openSetQuickPick(inputEl, mode) {
+      if (!inputEl || (mode !== "weight" && mode !== "reps")) return;
+      const modal = document.getElementById("setQuickPickModal");
+      const chipsWrap = document.getElementById("setQuickPickChips");
+      const titleEl = document.getElementById("setQuickPickTitle");
+      const eyebrowEl = document.getElementById("setQuickPickEyebrow");
+      if (!modal || !chipsWrap || !titleEl) return;
+
+      sllQuickPickState.input = inputEl;
+      sllQuickPickState.mode = mode;
+
+      const row = inputEl.closest(".setRow");
+      const idx = row && row.dataset && row.dataset.index != null
+        ? Number(row.dataset.index) + 1
+        : 1;
+      if (eyebrowEl) {
+        if (mode === "weight") {
+          const profile = getWeightChipProfileForCurrentMachine();
+          const profLabel = profile ? (profile.charAt(0).toUpperCase() + profile.slice(1)) : "";
+          eyebrowEl.textContent = profLabel ? `Set ${idx} · ${profLabel}` : `Set ${idx}`;
+        } else {
+          eyebrowEl.textContent = `Set ${idx}`;
+        }
+      }
+      titleEl.textContent = mode === "weight" ? "Quick pick weight" : "Quick pick reps";
+
+      const chips = mode === "weight"
+        ? getSuggestedWeightChips(machineId)
+        : getSuggestedRepChips();
+      const currentValue = (inputEl.value || "").trim();
+
+      chipsWrap.innerHTML = "";
+      chips.forEach((v) => {
+        const label = String(v);
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "setQuickPickChip";
+        b.textContent = label;
+        b.setAttribute("role", "option");
+        if (label === currentValue) b.classList.add("active");
+        b.addEventListener("click", () => {
+          inputEl.value = label;
+          try {
+            inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+            inputEl.dispatchEvent(new Event("change", { bubbles: true }));
+          } catch (_e) {}
+          closeSetQuickPick();
+        });
+        chipsWrap.appendChild(b);
+      });
+
+      modal.classList.remove("hidden");
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    function openWeightQuickPick(inputEl) {
+      openSetQuickPick(inputEl, "weight");
+    }
+
+    function openRepQuickPick(inputEl) {
+      openSetQuickPick(inputEl, "reps");
+    }
+
+    function closeSetQuickPick() {
+      const modal = document.getElementById("setQuickPickModal");
+      if (!modal) return;
+      modal.classList.add("hidden");
+      modal.setAttribute("aria-hidden", "true");
+      sllQuickPickState.input = null;
+      sllQuickPickState.mode = null;
+    }
+
+    function getSetRowValues(row) {
+      const inputs = row ? row.querySelectorAll("input") : [];
+      return {
+        weight: (inputs[0] && inputs[0].value || "").trim(),
+        reps: (inputs[1] && inputs[1].value || "").trim(),
+        wInput: inputs[0] || null,
+        rInput: inputs[1] || null
+      };
+    }
+
+    function findLastCompletedSetRow(rows) {
+      for (let i = rows.length - 1; i >= 0; i--) {
+        const v = getSetRowValues(rows[i]);
+        if (v.weight && v.reps) return { row: rows[i], index: i, weight: v.weight, reps: v.reps };
+      }
+      return null;
+    }
+
+    function findLastPartiallyFilledSetRow(rows) {
+      for (let i = rows.length - 1; i >= 0; i--) {
+        const v = getSetRowValues(rows[i]);
+        if (v.weight || v.reps) return { row: rows[i], index: i, weight: v.weight, reps: v.reps };
+      }
+      return null;
+    }
+
+    function findFirstIncompleteVisibleSetRow(startAfterIdx) {
+      if (!setsContainer) return null;
+      const rows = Array.from(setsContainer.querySelectorAll(".setRow"));
+      for (let i = Math.max(0, startAfterIdx + 1); i < rows.length; i++) {
+        const v = getSetRowValues(rows[i]);
+        if (!v.weight || !v.reps) {
+          return { row: rows[i], index: i, weightEmpty: !v.weight, repsEmpty: !v.reps };
+        }
+      }
+      return null;
+    }
+
+    function repeatLastSetIntoExistingOrNewRow() {
+      if (!setsContainer || machineType !== "strength") return;
+      const rows = Array.from(setsContainer.querySelectorAll(".setRow"));
+      if (!rows.length) return;
+
+      const completed = findLastCompletedSetRow(rows);
+      const source = completed || findLastPartiallyFilledSetRow(rows);
+      if (!source || (!source.weight && !source.reps)) return;
+
+      const target = findFirstIncompleteVisibleSetRow(source.index);
+      if (target) {
+        const inputs = target.row.querySelectorAll("input");
+        if (inputs[0] && source.weight) {
+          inputs[0].value = source.weight;
+          try { inputs[0].dispatchEvent(new Event("input", { bubbles: true })); } catch (_e) {}
+        }
+        if (inputs[1] && source.reps) {
+          inputs[1].value = source.reps;
+          try { inputs[1].dispatchEvent(new Event("input", { bubbles: true })); } catch (_e) {}
+        }
+      } else {
+        addSet(source.weight, source.reps);
+      }
+      renumberSets();
+    }
+
+    function repeatLastSetIntoNextRow() {
+      repeatLastSetIntoExistingOrNewRow();
     }
 
     function buildCardioInputs() {
@@ -6366,6 +7062,160 @@
       localStorage.setItem(key, JSON.stringify(arr.slice(0, 30)));
     }
 
+    /* ================================================================
+       Build Workout memory system (local-only, per user + per gym):
+         - Substitution log + avoidance scoring
+         - Preferred replacement patterns (by body part)
+         - Recent plan memory (to reduce plan repetition)
+       ================================================================ */
+    const GW_MEMORY_PREFIX = "scanliftlog_gw_memory_v1:";
+    const GW_RECENT_PLAN_PREFIX = "scanliftlog_gw_recentplans_v1:";
+    const GW_MAX_RECENT_PLANS = 8;
+    const GW_MAX_SUBSTITUTIONS = 40;
+    const GW_SUBSTITUTION_DECAY_MS = 1000 * 60 * 60 * 24 * 60;
+
+    function gwMemoryKey(uid, gid) { return `${GW_MEMORY_PREFIX}${uid}:${gid}`; }
+    function gwRecentPlansKey(uid, gid) { return `${GW_RECENT_PLAN_PREFIX}${uid}:${gid}`; }
+
+    function gwLoadGuidedMemory(gid, uid) {
+      const u = uid || userId;
+      const g = gid || gymId;
+      try {
+        const raw = localStorage.getItem(gwMemoryKey(u, g));
+        const v = raw ? JSON.parse(raw) : null;
+        if (!v || typeof v !== "object") {
+          return { substitutions: [], avoidance: {}, replacements: {}, preferences: {} };
+        }
+        v.substitutions = Array.isArray(v.substitutions) ? v.substitutions : [];
+        v.avoidance = v.avoidance && typeof v.avoidance === "object" ? v.avoidance : {};
+        v.replacements = v.replacements && typeof v.replacements === "object" ? v.replacements : {};
+        v.preferences = v.preferences && typeof v.preferences === "object" ? v.preferences : {};
+        return v;
+      } catch {
+        return { substitutions: [], avoidance: {}, replacements: {}, preferences: {} };
+      }
+    }
+
+    function gwSaveGuidedMemory(memory, gid, uid) {
+      const u = uid || userId;
+      const g = gid || gymId;
+      try { localStorage.setItem(gwMemoryKey(u, g), JSON.stringify(memory)); } catch {}
+    }
+
+    function gwLoadRecentPlanMemory(gid, uid) {
+      const u = uid || userId;
+      const g = gid || gymId;
+      try {
+        const raw = localStorage.getItem(gwRecentPlansKey(u, g));
+        const v = raw ? JSON.parse(raw) : null;
+        return Array.isArray(v) ? v : [];
+      } catch { return []; }
+    }
+
+    function gwSaveRecentPlanMemory(arr, gid, uid) {
+      const u = uid || userId;
+      const g = gid || gymId;
+      try {
+        localStorage.setItem(
+          gwRecentPlansKey(u, g),
+          JSON.stringify((arr || []).slice(0, GW_MAX_RECENT_PLANS))
+        );
+      } catch {}
+    }
+
+    function gwRecordRecentPlan(plan) {
+      if (!plan || !Array.isArray(plan.steps)) return;
+      const arr = gwLoadRecentPlanMemory(plan.gymId, plan.userId);
+      const entry = {
+        workoutPlanId: plan.workoutPlanId,
+        goal: plan.goal,
+        duration: plan.duration,
+        level: plan.level,
+        templateVariantId: plan.templateVariantId,
+        createdAt: plan.createdAt || Date.now(),
+        status: plan.status || "active",
+        machineSequence: plan.steps.map((s) => String(s.machineCode || "").toUpperCase()),
+        exerciseSequence: plan.steps.map((s) => ({
+          code: String(s.machineCode || "").toUpperCase(),
+          sub: s.subExercise ? String(s.subExercise).trim() : "",
+        })),
+      };
+      arr.unshift(entry);
+      gwSaveRecentPlanMemory(arr, plan.gymId, plan.userId);
+    }
+
+    function gwUpdateRecentPlanStatus(workoutPlanId, status, gid, uid) {
+      if (!workoutPlanId) return;
+      const arr = gwLoadRecentPlanMemory(gid, uid);
+      const i = arr.findIndex((p) => p && p.workoutPlanId === workoutPlanId);
+      if (i >= 0) {
+        arr[i].status = status;
+        gwSaveRecentPlanMemory(arr, gid, uid);
+      }
+    }
+
+    function gwStepFingerprintForMemory(step) {
+      const code = String((step && step.machineCode) || "").toUpperCase();
+      const sub = step && step.subExercise ? String(step.subExercise).trim() : "";
+      return sub ? `${code}\x1f${sub}` : `${code}\x1f`;
+    }
+
+    function gwRecordSubstitution(originalStep, replacementStep, context) {
+      if (!originalStep || !replacementStep) return;
+      const gid = (context && context.gymId) || gymId;
+      const uid = (context && context.userId) || userId;
+      const mem = gwLoadGuidedMemory(gid, uid);
+      const now = Date.now();
+
+      mem.substitutions.unshift({
+        ts: now,
+        goal: (context && context.goal) || null,
+        bodyPart: originalStep.bodyPart || (context && context.bodyPart) || null,
+        from: {
+          machineCode: String(originalStep.machineCode || "").toUpperCase(),
+          subExercise: originalStep.subExercise || "",
+          exerciseName: originalStep.exerciseName || "",
+        },
+        to: {
+          machineCode: String(replacementStep.machineCode || "").toUpperCase(),
+          subExercise: replacementStep.subExercise || "",
+          exerciseName: replacementStep.exerciseName || "",
+        },
+      });
+      mem.substitutions = mem.substitutions.slice(0, GW_MAX_SUBSTITUTIONS);
+
+      const fromFp = gwStepFingerprintForMemory(originalStep);
+      const prev = mem.avoidance[fromFp] || { count: 0, lastTs: 0 };
+      mem.avoidance[fromFp] = { count: (prev.count || 0) + 1, lastTs: now };
+
+      const bp = originalStep.bodyPart || (context && context.bodyPart) || "generic";
+      if (!mem.replacements[bp]) mem.replacements[bp] = {};
+      const toCode = String(replacementStep.machineCode || "").toUpperCase();
+      if (toCode) mem.replacements[bp][toCode] = (mem.replacements[bp][toCode] || 0) + 1;
+
+      gwSaveGuidedMemory(mem, gid, uid);
+    }
+
+    function gwGetExerciseAvoidanceScore(fingerprintOrStep, gid, uid) {
+      const fp =
+        typeof fingerprintOrStep === "string"
+          ? fingerprintOrStep
+          : gwStepFingerprintForMemory(fingerprintOrStep);
+      const mem = gwLoadGuidedMemory(gid, uid);
+      const rec = mem.avoidance[fp];
+      if (!rec) return 0;
+      const age = Date.now() - (rec.lastTs || 0);
+      if (age > GW_SUBSTITUTION_DECAY_MS) return Math.max(0, (rec.count || 0) - 1) * 0.5;
+      return rec.count || 0;
+    }
+
+    function gwGetPreferredReplacementScore(bodyPart, machineCode, gid, uid) {
+      const mem = gwLoadGuidedMemory(gid, uid);
+      const bp = mem.replacements[bodyPart || "generic"];
+      if (!bp) return 0;
+      return bp[String(machineCode || "").toUpperCase()] || 0;
+    }
+
     const GW_TEMPLATE_ROT_PREFIX = "scanliftlog_gw_tpl_rot_v1:";
 
     const GW_V = {
@@ -6769,7 +7619,7 @@
     function gwResolveMachineForSlotLegacy(gid, slotDef, usedCodes, workoutGoal) {
       const primary = gwFindMachineForTemplateItem(gid, slotDef);
       if (primary && primary.type === "strength" && !usedCodes.has(primary.machineCode)) {
-        return primary;
+        return { machine: primary, isPrimary: true };
       }
       const tags = gwSubstituteTagsForGoal(workoutGoal, slotDef);
       const pool = gwGetGymMachines(gid).filter((m) => {
@@ -6777,7 +7627,7 @@
         return m.goalTags && tags.some((t) => m.goalTags.includes(t));
       });
       pool.sort((a, b) => String(a.label).localeCompare(String(b.label)));
-      if (pool.length) return pool[0];
+      if (pool.length) return { machine: pool[0], isPrimary: false };
       return null;
     }
 
@@ -6786,8 +7636,12 @@
       if (primary && primary.type === "strength") {
         const pc = String(primary.machineCode || "").toUpperCase();
         if (!gwIsVariantCapableMachineCode(pc)) {
-          if (gwNonVariantMachineUnused(pc, usedFingerprints)) return primary;
-        } else if (gwVariantMachineHasUnusedSub(pc, workoutGoal, usedFingerprints)) return primary;
+          if (gwNonVariantMachineUnused(pc, usedFingerprints)) {
+            return { machine: primary, isPrimary: true };
+          }
+        } else if (gwVariantMachineHasUnusedSub(pc, workoutGoal, usedFingerprints)) {
+          return { machine: primary, isPrimary: true };
+        }
       }
       const tags = gwSubstituteTagsForGoal(workoutGoal, slotDef);
       const pool = gwGetGymMachines(gid).filter((m) => {
@@ -6802,7 +7656,7 @@
         const lb = String(b.label || "");
         return la.localeCompare(lb);
       });
-      if (pool.length) return pool[0];
+      if (pool.length) return { machine: pool[0], isPrimary: false };
       return null;
     }
 
@@ -6840,11 +7694,22 @@
         if (steps.length >= desiredCount) break;
         const def = GW_SLOT_DEFS[sk];
         if (!def) continue;
-        const machine = gwResolveMachineForSlot(gymId, def, usedState, workoutGoal, variantExpansion);
-        if (!machine) continue;
+        const resolved = gwResolveMachineForSlot(gymId, def, usedState, workoutGoal, variantExpansion);
+        if (!resolved || !resolved.machine) continue;
+        const machine = resolved.machine;
+        const mcode = String(machine.machineCode || "").toUpperCase();
+        const mVariantCapable = gwIsVariantCapableMachineCode(mcode);
+        let baseExerciseName;
+        if (mVariantCapable) {
+          baseExerciseName = machine.label;
+        } else if (resolved.isPrimary) {
+          baseExerciseName = def.exercise;
+        } else {
+          baseExerciseName = machine.label;
+        }
         const step = {
           stepId: "step_" + Math.random().toString(36).slice(2),
-          exerciseName: def.exercise,
+          exerciseName: baseExerciseName,
           machineCode: machine.machineCode,
           machineNumber: machine.machineNumber,
           machineName: machine.label,
@@ -6859,7 +7724,7 @@
           _plannerGoal: workoutGoal,
         };
         let subPick = "";
-        if (variantExpansion && gwIsVariantCapableMachineCode(machine.machineCode)) {
+        if (variantExpansion && mVariantCapable) {
           subPick = gwPickSubExerciseForStepAvoidingUsed(machine.machineCode, workoutGoal, usedFingerprints);
           if (!subPick) continue;
           step.subExercise = subPick;
@@ -6869,7 +7734,9 @@
         } else {
           usedCodes.add(machine.machineCode);
           subPick = gwPickSubExerciseForStep(machine.machineCode, workoutGoal);
-          if (subPick) step.subExercise = subPick;
+          if (subPick && gwIsSubExerciseValidForMachine(machine.machineCode, subPick)) {
+            step.subExercise = subPick;
+          }
         }
         gwSanitizeStepSubExercise(step);
         gwHydrateGuidedStepPresentation(step, gymId);
@@ -6889,9 +7756,11 @@
         const machine = gwFindMachineForTemplateItem(gymId, tplItem);
         if (!machine) continue;
         if (machine.type !== "strength") continue;
+        const mcodeLegacy = String(machine.machineCode || "").toUpperCase();
+        const legacyVariantCapable = gwIsVariantCapableMachineCode(mcodeLegacy);
         const legacyStep = {
           stepId: "step_" + Math.random().toString(36).slice(2),
-          exerciseName: tplItem.exercise,
+          exerciseName: legacyVariantCapable ? machine.label : tplItem.exercise,
           machineCode: machine.machineCode,
           machineNumber: machine.machineNumber,
           machineName: machine.label,
@@ -6906,7 +7775,7 @@
           _plannerGoal: workoutGoal,
         };
         if (variantExpansion) {
-          if (gwIsVariantCapableMachineCode(machine.machineCode)) {
+          if (legacyVariantCapable) {
             const subPick = gwPickSubExerciseForStepAvoidingUsed(machine.machineCode, workoutGoal, usedFingerprints);
             if (!subPick) continue;
             legacyStep.subExercise = subPick;
@@ -6918,7 +7787,9 @@
           if (usedMachineCodes.has(machine.machineCode)) continue;
           usedMachineCodes.add(machine.machineCode);
           const subL = gwPickSubExerciseForStep(machine.machineCode, workoutGoal);
-          if (subL) legacyStep.subExercise = subL;
+          if (subL && gwIsSubExerciseValidForMachine(machine.machineCode, subL)) {
+            legacyStep.subExercise = subL;
+          }
         }
         gwSanitizeStepSubExercise(legacyStep);
         gwHydrateGuidedStepPresentation(legacyStep, gymId);
@@ -6946,8 +7817,247 @@
       return plan?.steps?.[plan.currentStepIndex] || null;
     }
 
-    function gwGetUserHistorySummary() {
-      return { hasHistory: false, recentMachineCodes: [], recentMuscleGroups: [] };
+    function gwParseWeightNumber(raw) {
+      if (raw == null) return null;
+      const m = String(raw).match(/-?\d+(\.\d+)?/);
+      if (!m) return null;
+      const n = parseFloat(m[0]);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function gwParseRepsNumber(raw) {
+      if (raw == null) return null;
+      const m = String(raw).match(/\d+/);
+      if (!m) return null;
+      const n = parseInt(m[0], 10);
+      return Number.isFinite(n) && n > 0 ? n : null;
+    }
+
+    function gwCollectAllUserWorkoutsForGym(gid, uid) {
+      const list = [];
+      const keyUid = String(uid || userId);
+      const keyGid = String(gid || gymId).toLowerCase();
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k || !k.startsWith("scanliftlog_workouts_v1:")) continue;
+        const parts = k.split(":");
+        if (parts.length < 4) continue;
+        if (parts[1] !== keyUid) continue;
+        if (String(parts[2] || "").toLowerCase() !== keyGid) continue;
+        const mid = parts.slice(3).join(":").toUpperCase();
+        let arr = [];
+        try { arr = JSON.parse(localStorage.getItem(k) || "[]"); } catch {}
+        if (!Array.isArray(arr)) continue;
+        arr.forEach((w) => {
+          if (!w) return;
+          list.push({ ...w, machineCode: mid });
+        });
+      }
+      return list;
+    }
+
+    function gwMuscleTagsForMachineCode(gid, code) {
+      const c = String(code || "").toUpperCase();
+      const m = getGymCatalogMachines(gid).find(
+        (mm) => String(mm.machineCode || "").toUpperCase() === c
+      );
+      return m && Array.isArray(m.goalTags) ? m.goalTags.slice() : [];
+    }
+
+    function gwBuildMachineHistorySnapshotMap(list) {
+      const grouped = {};
+      list.forEach((w) => {
+        const code = String(w.machineCode || "").toUpperCase();
+        if (!code) return;
+        const sub = w.subExercise ? String(w.subExercise).trim() : "";
+        const fp = sub && gwIsVariantCapableMachineCode(code) ? `${code}\x1f${sub}` : `${code}\x1f`;
+        if (!grouped[fp]) grouped[fp] = [];
+        grouped[fp].push(w);
+      });
+
+      const out = {};
+      Object.keys(grouped).forEach((fp) => {
+        const sorted = grouped[fp].slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
+        const recent = sorted.slice(0, 4);
+        const sessions = [];
+        let lastWeight = null;
+        let lastReps = null;
+        let lastSets = null;
+        recent.forEach((w, idx) => {
+          const sets = Array.isArray(w.sets) ? w.sets : [];
+          const parsedW = [];
+          const parsedR = [];
+          sets.forEach((s) => {
+            const wv = gwParseWeightNumber(s && s.weight);
+            const rv = gwParseRepsNumber(s && s.reps);
+            if (wv != null) parsedW.push(wv);
+            if (rv != null) parsedR.push(rv);
+          });
+          if (idx === 0) {
+            if (parsedW.length) lastWeight = Math.max.apply(null, parsedW);
+            if (parsedR.length) lastReps = Math.max.apply(null, parsedR);
+            lastSets = sets.length || null;
+          }
+          sessions.push({ ts: w.ts || 0, weights: parsedW, reps: parsedR, setCount: sets.length });
+        });
+        const parts = fp.split("\x1f");
+        out[fp] = {
+          machineCode: parts[0] || "",
+          subExercise: parts[1] || "",
+          sessions,
+          lastWeight,
+          lastReps,
+          lastSets,
+          count: grouped[fp].length,
+        };
+      });
+      return out;
+    }
+
+    function gwGetUserHistorySummary(gid, uid) {
+      const g = gid || gymId;
+      const u = uid || userId;
+      const list = gwCollectAllUserWorkoutsForGym(g, u);
+      if (!list.length) {
+        return {
+          hasHistory: false,
+          total: 0,
+          recentMachineCodes: [],
+          recentMuscleGroups: [],
+          machineCounts: {},
+          machineSnapshot: {},
+          frequentMachineCodes: [],
+          frequentSubExercises: {},
+          recentSubExercises: [],
+        };
+      }
+      list.sort((a, b) => (b.ts || 0) - (a.ts || 0));
+
+      const recent20 = list.slice(0, 20);
+      const recentMachineCodes = [];
+      const seenCodes = new Set();
+      recent20.forEach((w) => {
+        const c = String(w.machineCode || "").toUpperCase();
+        if (c && !seenCodes.has(c)) {
+          seenCodes.add(c);
+          recentMachineCodes.push(c);
+        }
+      });
+
+      const recentSubExercises = [];
+      const seenSubs = new Set();
+      recent20.forEach((w) => {
+        const s = w.subExercise ? String(w.subExercise).trim() : "";
+        if (s && !seenSubs.has(s)) {
+          seenSubs.add(s);
+          recentSubExercises.push(s);
+        }
+      });
+
+      const machineCounts = {};
+      list.forEach((w) => {
+        const c = String(w.machineCode || "").toUpperCase();
+        if (!c) return;
+        machineCounts[c] = (machineCounts[c] || 0) + 1;
+      });
+      const frequentMachineCodes = Object.keys(machineCounts)
+        .sort((a, b) => machineCounts[b] - machineCounts[a])
+        .slice(0, 10);
+
+      const frequentSubExercises = {};
+      list.forEach((w) => {
+        const s = w.subExercise ? String(w.subExercise).trim() : "";
+        if (!s) return;
+        frequentSubExercises[s] = (frequentSubExercises[s] || 0) + 1;
+      });
+
+      const machineSnapshot = gwBuildMachineHistorySnapshotMap(list);
+
+      const recentMuscleGroups = [];
+      const seenMg = new Set();
+      recent20.forEach((w) => {
+        const tags = gwMuscleTagsForMachineCode(g, w.machineCode);
+        tags.forEach((t) => {
+          if (!seenMg.has(t)) {
+            seenMg.add(t);
+            recentMuscleGroups.push(t);
+          }
+        });
+      });
+
+      return {
+        hasHistory: true,
+        total: list.length,
+        recentMachineCodes,
+        recentMuscleGroups,
+        machineCounts,
+        machineSnapshot,
+        frequentMachineCodes,
+        frequentSubExercises,
+        recentSubExercises,
+      };
+    }
+
+    function gwGetMachineHistorySnapshot(machineCode, subExercise, historySummary) {
+      const s = historySummary || gwGetUserHistorySummary(gymId, userId);
+      const code = String(machineCode || "").toUpperCase();
+      const sub = subExercise ? String(subExercise).trim() : "";
+      const fp = sub && gwIsVariantCapableMachineCode(code) ? `${code}\x1f${sub}` : `${code}\x1f`;
+      return (s && s.machineSnapshot && s.machineSnapshot[fp]) || null;
+    }
+
+    function gwAttachProgressionHintsToStep(step, historySummary) {
+      if (!step) return;
+      const snap = gwGetMachineHistorySnapshot(step.machineCode, step.subExercise, historySummary);
+      if (!snap) {
+        step.progressionNote = "";
+        step.lastWeight = null;
+        step.lastReps = null;
+        step.lastSets = null;
+        return;
+      }
+      step.lastWeight = snap.lastWeight != null ? snap.lastWeight : null;
+      step.lastReps = snap.lastReps != null ? snap.lastReps : null;
+      step.lastSets = snap.lastSets != null ? snap.lastSets : null;
+
+      const targetReps = Number(step.reps) || 10;
+      const targetSets = Number(step.sets) || 3;
+      const recent = snap.sessions || [];
+      let note = "";
+      let suggestedWeight = snap.lastWeight;
+      let suggestedRepTarget = targetReps;
+
+      if (snap.lastWeight != null && recent.length) {
+        const last2 = recent.slice(0, 2);
+        const allMeetTarget =
+          last2.length >= 1 &&
+          last2.every(
+            (s) =>
+              s.reps &&
+              s.reps.length &&
+              s.setCount >= targetSets &&
+              s.reps.every((r) => r >= targetReps)
+          );
+        const allBelow =
+          last2.length >= 1 &&
+          last2.every((s) => s.reps && s.reps.length && s.reps.every((r) => r < targetReps));
+
+        if (allMeetTarget) {
+          const bump = snap.lastWeight >= 60 ? 5 : snap.lastWeight >= 30 ? 2.5 : 2;
+          suggestedWeight = Math.round((snap.lastWeight + bump) * 2) / 2;
+          note = `Last: ${snap.lastWeight} × ${snap.lastReps} reps — try +${bump} lb this session`;
+        } else if (allBelow) {
+          note = `Last: ${snap.lastWeight} × ${snap.lastReps} reps — hold weight, chase reps`;
+        } else {
+          note = `Last: ${snap.lastWeight} × ${snap.lastReps} reps — hold and clean up form`;
+        }
+      } else if (snap.lastReps != null) {
+        note = `Last: ${snap.lastReps} reps`;
+      }
+
+      step.suggestedWeight = suggestedWeight;
+      step.suggestedRepTarget = suggestedRepTarget;
+      step.progressionNote = note;
     }
 
     function gwGenerateAIExplanation(goal, level, duration, plan) {
@@ -7016,14 +8126,119 @@
       return out;
     }
 
+    function gwScoreCandidateMachine(machineCode, ctx) {
+      const code = String(machineCode || "").toUpperCase();
+      let score = 0;
+      const avoid = gwGetExerciseAvoidanceScore(`${code}\x1f`, ctx.gymId, ctx.userId);
+      if (avoid) score -= Math.min(4, avoid);
+      const pref = gwGetPreferredReplacementScore(ctx.bodyPart, code, ctx.gymId, ctx.userId);
+      if (pref) score += Math.min(3, pref) * 0.6;
+      const freq = ctx.historySummary && ctx.historySummary.machineCounts
+        ? ctx.historySummary.machineCounts[code] || 0
+        : 0;
+      if (freq > 6) score -= 0.5;
+      else if (freq >= 2 && freq <= 5) score += 0.3;
+      return score;
+    }
+
+    function gwApplyRecentPlanPenalties(variant, recentPlans, slotCodeResolver) {
+      if (!variant || !variant.slotKeys || !recentPlans || !recentPlans.length) return 0;
+      const variantCodes = variant.slotKeys.map(slotCodeResolver).filter(Boolean);
+      let penalty = 0;
+      recentPlans.slice(0, 4).forEach((p, idx) => {
+        const weight = 1 / (idx + 1);
+        if (!p || !Array.isArray(p.machineSequence)) return;
+        if (p.templateVariantId && p.templateVariantId === variant.id) {
+          penalty += 4 * weight;
+        }
+        const a = variantCodes.slice(0, 3).join("|");
+        const b = (p.machineSequence || []).slice(0, 3).join("|");
+        if (a && a === b) penalty += 3 * weight;
+        const setA = new Set(variantCodes);
+        const setB = new Set(p.machineSequence);
+        let overlap = 0;
+        setA.forEach((c) => { if (setB.has(c)) overlap += 1; });
+        penalty += overlap * 0.4 * weight;
+      });
+      return penalty;
+    }
+
+    function gwApplySubstitutionMemoryPenalties(variant, ctx, slotCodeResolver) {
+      if (!variant || !variant.slotKeys) return 0;
+      let penalty = 0;
+      variant.slotKeys.forEach((sk) => {
+        const code = slotCodeResolver(sk);
+        if (!code) return;
+        const avoid = gwGetExerciseAvoidanceScore(`${code}\x1f`, ctx.gymId, ctx.userId);
+        if (avoid) penalty += Math.min(3, avoid) * 0.8;
+      });
+      return penalty;
+    }
+
+    function gwScorePlanVariety(variant, ctx, slotCodeResolver) {
+      if (!variant || !variant.slotKeys) return 0;
+      const codes = variant.slotKeys.map(slotCodeResolver).filter(Boolean);
+      const unique = new Set(codes);
+      let score = unique.size * 0.2;
+      codes.forEach((c) => {
+        score += gwScoreCandidateMachine(c, ctx);
+      });
+      return score;
+    }
+
+    function gwPickSmartTemplateVariant(variants, rotKey, ctx) {
+      if (!variants || !variants.length) return null;
+      const slotCodeResolver = (sk) => {
+        const def = GW_SLOT_DEFS[sk];
+        if (!def) return null;
+        const m = gwFindMachineForTemplateItem(ctx.gymId, def);
+        return m ? String(m.machineCode || "").toUpperCase() : null;
+      };
+      const recentPlans = gwLoadRecentPlanMemory(ctx.gymId, ctx.userId);
+
+      let recentIds = [];
+      try { recentIds = JSON.parse(localStorage.getItem(rotKey) || "[]"); } catch {}
+      if (!Array.isArray(recentIds)) recentIds = [];
+
+      const scored = variants.map((v) => {
+        const variety = gwScorePlanVariety(v, ctx, slotCodeResolver);
+        const recentPenalty = gwApplyRecentPlanPenalties(v, recentPlans, slotCodeResolver);
+        const subPenalty = gwApplySubstitutionMemoryPenalties(v, ctx, slotCodeResolver);
+        const rotIdx = recentIds.indexOf(v.id);
+        const rotPenalty = rotIdx >= 0 ? (4 - Math.min(4, rotIdx)) * 0.8 : 0;
+        const jitter = Math.random() * 0.5;
+        return {
+          v,
+          score: variety - recentPenalty - subPenalty - rotPenalty + jitter,
+        };
+      });
+      scored.sort((a, b) => b.score - a.score);
+      const pick = scored[0] ? scored[0].v : variants[0];
+
+      const nextRecent = [pick.id, ...recentIds.filter((x) => x !== pick.id)].slice(0, 6);
+      try { localStorage.setItem(rotKey, JSON.stringify(nextRecent)); } catch {}
+
+      return pick;
+    }
+
     function gwBuildWorkoutPlan({ gymId, goal, duration, level, useHistory }) {
-      void useHistory;
       const levelNorm = String(level || "intermediate").toLowerCase();
       const durBucket = gwDurationBucket(duration);
       const desiredCount = gwGetStepCountForDuration(duration);
       const variants = gwCollectVariantsForGoalDuration(goal, durBucket, levelNorm);
       const rotKey = gwTemplateRotationStorageKey(userId, gymId, goal, durBucket, levelNorm);
-      const variant = gwPickTemplateVariantFromCatalog(variants, rotKey);
+
+      const historySummary = gwGetUserHistorySummary(gymId, userId);
+      const smartCtx = {
+        gymId,
+        userId,
+        goal,
+        level: levelNorm,
+        bodyPart: goal,
+        historySummary,
+        useHistory: useHistory !== false,
+      };
+      const variant = gwPickSmartTemplateVariant(variants, rotKey, smartCtx);
 
       let chosenSteps = [];
       let stepsFromCatalog = false;
@@ -7039,6 +8254,10 @@
       chosenSteps = gwHydrateAllPlanSteps(chosenSteps, gymId);
       chosenSteps = gwTopUpGuidedPlanWithVariants(gymId, goal, levelNorm, chosenSteps, desiredCount);
 
+      if (smartCtx.useHistory !== false) {
+        chosenSteps.forEach((s) => gwAttachProgressionHintsToStep(s, historySummary));
+      }
+
       const plan = {
         workoutPlanId: "gw_" + Math.random().toString(36).slice(2),
         userId,
@@ -7050,10 +8269,15 @@
         currentStepIndex: 0,
         status: "active",
         steps: chosenSteps,
-        templateVariantId: stepsFromCatalog && variant && variant.id ? variant.id : "legacy"
+        templateVariantId: stepsFromCatalog && variant && variant.id ? variant.id : "legacy",
+        historyAware: smartCtx.useHistory !== false && historySummary.hasHistory,
       };
 
       plan.aiExplanation = gwGenerateAIExplanation(goal, levelNorm, duration, plan);
+      if (plan.historyAware) {
+        plan.aiExplanation +=
+          " This plan adjusts for your recent workouts and past substitutions so the same machines and patterns don't keep showing up.";
+      }
       if (chosenSteps.length > 0 && chosenSteps.length < desiredCount) {
         const goalPhrase = {
           chest: "chest",
@@ -7066,7 +8290,134 @@
         plan.aiExplanation +=
           ` This gym does not currently have enough ${goalPhrase} machines in its catalog for a full ${desiredCount}-station guided workout, so this plan only includes the ${chosenSteps.length} valid station(s) that match from this location.`;
       }
+
+      gwRecordRecentPlan(plan);
       return plan;
+    }
+
+    function gwFindReplacementForStep(gid, step, plan) {
+      if (!gid || !step) return null;
+      const currentCode = String(step.machineCode || "").toUpperCase();
+      const currentFp = gwGuidedStepFingerprint(step);
+      const planSteps = plan && Array.isArray(plan.steps) ? plan.steps : [];
+      const usedCodes = new Set(
+        planSteps.map((s) => String(s.machineCode || "").toUpperCase()).filter(Boolean)
+      );
+      const usedFingerprints = new Set(planSteps.map((s) => gwGuidedStepFingerprint(s)));
+
+      const workoutGoal = (plan && plan.goal) || step._plannerGoal || step.bodyPart || "fullbody";
+      const bp = step.bodyPart || step._plannerGoal || workoutGoal;
+
+      const tagList =
+        workoutGoal === "fullbody"
+          ? ["fullbody", "chest", "back", "legs", "shoulders", "arms"]
+          : [bp || workoutGoal];
+
+      const mem = gwLoadGuidedMemory(gid, userId);
+      const historySummary = gwGetUserHistorySummary(gid, userId);
+
+      const candidates = gwGetGymMachines(gid).filter((m) => {
+        if (m.type !== "strength") return false;
+        const c = String(m.machineCode || "").toUpperCase();
+        if (c === currentCode) return false;
+        if (!m.goalTags || !tagList.some((t) => m.goalTags.includes(t))) return false;
+        return true;
+      });
+      if (!candidates.length) return null;
+
+      const scored = candidates.map((m) => {
+        const c = String(m.machineCode || "").toUpperCase();
+        let score = 0;
+
+        if (usedCodes.has(c)) score -= 5;
+
+        const fp = `${c}\x1f`;
+        const avoid = mem.avoidance[fp];
+        if (avoid) score -= Math.min(4, avoid.count || 0);
+
+        const bpKey = bp || "generic";
+        if (mem.replacements[bpKey] && mem.replacements[bpKey][c]) {
+          score += Math.min(4, mem.replacements[bpKey][c]) * 1.0;
+        }
+
+        const freq = historySummary.machineCounts ? historySummary.machineCounts[c] || 0 : 0;
+        if (freq >= 2 && freq <= 5) score += 0.5;
+        if (freq > 8) score -= 0.4;
+
+        score += Math.random() * 0.4;
+        return { m, score };
+      });
+      scored.sort((a, b) => b.score - a.score);
+
+      const best = scored[0];
+      if (!best || best.score <= -5) return null;
+
+      const machine = best.m;
+      const newStep = {
+        stepId: "step_" + Math.random().toString(36).slice(2),
+        exerciseName: machine.label,
+        machineCode: machine.machineCode,
+        machineNumber: machine.machineNumber,
+        machineName: machine.label,
+        type: machine.type,
+        markerLeft: machine.markerLeft,
+        markerTop: machine.markerTop,
+        sets: step.sets || 3,
+        reps: step.reps || 10,
+        repUnit: step.repUnit || "reps",
+        status: "upcoming",
+        bodyPart: bp || workoutGoal,
+        _plannerGoal: workoutGoal,
+      };
+
+      if (gwIsVariantCapableMachineCode(machine.machineCode)) {
+        const subFps = new Set(usedFingerprints);
+        subFps.delete(currentFp);
+        const sub = gwPickSubExerciseForStepAvoidingUsed(machine.machineCode, workoutGoal, subFps);
+        if (sub) newStep.subExercise = sub;
+      }
+
+      gwSanitizeStepSubExercise(newStep);
+      gwHydrateGuidedStepPresentation(newStep, gid);
+      gwAttachProgressionHintsToStep(newStep, historySummary);
+      return newStep;
+    }
+
+    function gwSubstituteCurrentStep() {
+      const plan = gwLoadActivePlan(gymId, userId);
+      if (!plan || plan.status !== "active") {
+        alert("No active guided workout to substitute in.");
+        return;
+      }
+      const idx = plan.currentStepIndex;
+      const current = plan.steps[idx];
+      if (!current) return;
+      const planGym = plan.gymId || gymId;
+      const replacement = gwFindReplacementForStep(planGym, current, plan);
+      if (!replacement) {
+        alert("No alternative machine in this gym fits this step. Keeping the current step.");
+        return;
+      }
+      const original = JSON.parse(JSON.stringify(current));
+      plan.steps[idx] = replacement;
+      gwSaveActivePlan(plan);
+      gwRecordSubstitution(original, replacement, {
+        goal: plan.goal,
+        gymId: planGym,
+        userId: plan.userId || userId,
+        bodyPart: original.bodyPart || plan.goal,
+      });
+
+      const targetCode = String(replacement.machineCode || "").toUpperCase();
+      const currentMachineCode = String(machineId || "").toUpperCase();
+
+      renderGuidedStepBanner();
+      gwRenderPlanUI(plan);
+      if (targetCode && targetCode !== currentMachineCode) {
+        sessionStorage.setItem("scanliftlog_guided_suppress_reopen", "1");
+        sessionStorage.setItem(GW_GUIDED_FOCUS_TOP_KEY, "1");
+        gwSetParamAndNavigate({ gym: gymId, machine: targetCode });
+      }
     }
 
     function gwAdvancePlan(plan) {
@@ -7268,6 +8619,7 @@
       if (planJustCompleted) {
         gwSaveCompletedPlanHistory(activePlan);
         gwSaveActivePlan(activePlan);
+        gwUpdateRecentPlanStatus(activePlan.workoutPlanId, "completed", activePlan.gymId, activePlan.userId);
         const body = `${coachingLine}\n\nYou finished all ${total} steps in this guided workout.`;
         alert(body);
         gwRenderPlanUI(activePlan);
@@ -7377,6 +8729,10 @@
         const row2 = useStack
           ? `<div class="plannerStepRow2">${escapeHtml(setLine)}</div>`
           : `<div class="plannerStepRow2">${escapeHtml(`${step.exerciseName} • ${setLine}`)}</div>`;
+        const progNote = step.progressionNote ? String(step.progressionNote).trim() : "";
+        const progRow = progNote
+          ? `<div class="plannerStepProgression">${escapeHtml(progNote)}</div>`
+          : "";
         div.innerHTML = `
           <div class="plannerStepRow1">
             <span>${escapeHtml(dm)}</span>
@@ -7384,6 +8740,7 @@
           </div>
           ${rowVariant}
           ${row2}
+          ${progRow}
           <div class="plannerStepTapHint">
             Click here to make it your active machine
           </div>
@@ -7420,6 +8777,15 @@
     }
 
     function gwExitGuidedWorkout() {
+      const exitingPlan = gwLoadActivePlan(gymId, userId);
+      if (exitingPlan && exitingPlan.status === "active" && exitingPlan.workoutPlanId) {
+        gwUpdateRecentPlanStatus(
+          exitingPlan.workoutPlanId,
+          "abandoned",
+          exitingPlan.gymId || gymId,
+          exitingPlan.userId || userId
+        );
+      }
       gwClearActivePlan(gymId, userId);
       gwCloseGuidedWorkoutModal();
 
@@ -7505,6 +8871,16 @@
       const setPart = `${current.sets} set${current.sets > 1 ? "s" : ""} × ${current.reps} ${repU}`;
       if (guidedStepBannerMeta) {
         guidedStepBannerMeta.textContent = stackBanner ? setPart : `${current.exerciseName} • ${setPart}`;
+      }
+      if (guidedStepBannerProgression) {
+        const note = current.progressionNote ? String(current.progressionNote).trim() : "";
+        if (note) {
+          guidedStepBannerProgression.textContent = note;
+          guidedStepBannerProgression.removeAttribute("hidden");
+        } else {
+          guidedStepBannerProgression.textContent = "";
+          guidedStepBannerProgression.setAttribute("hidden", "");
+        }
       }
       if (guidedStepBannerHint) guidedStepBannerHint.textContent = "Complete your workout, then tap Save Workout to move to the next step.";
 
@@ -7645,6 +9021,13 @@
       if (exitGuidedWorkoutBtn) exitGuidedWorkoutBtn.addEventListener("click", gwExitGuidedWorkout);
       if (guidedStepBannerExitBtn) {
         guidedStepBannerExitBtn.addEventListener("click", gwConfirmExitGuidedWorkoutFromBanner);
+      }
+      if (guidedStepBannerSubstituteBtn) {
+        guidedStepBannerSubstituteBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          gwSubstituteCurrentStep();
+        });
       }
     }
 
@@ -7938,6 +9321,31 @@
       }
 
       document.getElementById("addSetBtn").addEventListener("click", () => addSet("", ""));
+      const repeatLastSetBtnEl = document.getElementById("repeatLastSetBtn");
+      if (repeatLastSetBtnEl) {
+        repeatLastSetBtnEl.addEventListener("click", repeatLastSetIntoNextRow);
+      }
+
+      const setQuickPickModalEl = document.getElementById("setQuickPickModal");
+      const setQuickPickBackdropEl = document.getElementById("setQuickPickBackdrop");
+      const setQuickPickCloseBtnEl = document.getElementById("setQuickPickCloseBtn");
+      if (setQuickPickCloseBtnEl) {
+        setQuickPickCloseBtnEl.addEventListener("click", closeSetQuickPick);
+      }
+      if (setQuickPickBackdropEl) {
+        setQuickPickBackdropEl.addEventListener("click", closeSetQuickPick);
+      }
+      if (setQuickPickModalEl) {
+        setQuickPickModalEl.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeSetQuickPick();
+        });
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        const m = document.getElementById("setQuickPickModal");
+        if (m && !m.classList.contains("hidden")) closeSetQuickPick();
+      });
+
       document.getElementById("clearCurrentBtn").addEventListener("click", () => {
         clearCurrent();
         renderGuidedStepBanner();
