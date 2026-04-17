@@ -950,6 +950,151 @@
       color:#fff;
     }
 
+    #setsContainer .setRow input[readonly] {
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      cursor: pointer;
+      caret-color: transparent;
+    }
+
+    #setsContainer .setRow input[readonly]:focus {
+      outline: none;
+      border-color: rgba(239,68,68,.45);
+      box-shadow: 0 0 0 3px rgba(239,68,68,.16);
+    }
+
+    .setRepeatBtn {
+      border-color: rgba(148,163,184,.32) !important;
+      background: linear-gradient(180deg, rgba(71,85,105,.55), rgba(30,41,59,.9)) !important;
+      color:#f1f5f9 !important;
+      font-size: 20px !important;
+      line-height: 1;
+    }
+
+    .setRepeatBtn[disabled],
+    .setRepeatBtn.is-disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .firstTimeStrengthHint {
+      display: none;
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #fde68a;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(251, 191, 36, 0.10);
+      border: 1px solid rgba(251, 191, 36, 0.28);
+    }
+
+    .setQuickPickModal {
+      position: fixed;
+      inset: 0;
+      z-index: 140;
+      display: block;
+    }
+
+    .setQuickPickModal.hidden {
+      display: none;
+    }
+
+    .setQuickPickBackdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(2px);
+    }
+
+    .setQuickPickSheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 18px 16px;
+      padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+      background: linear-gradient(180deg, rgba(22,22,28,.985), rgba(12,12,16,.985));
+      border-top: 1px solid rgba(255,255,255,.08);
+      border-radius: 22px 22px 0 0;
+      box-shadow: 0 -18px 40px rgba(0,0,0,.55);
+      max-height: 72vh;
+      overflow: auto;
+    }
+
+    .setQuickPickHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .setQuickPickEyebrow {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .setQuickPickTitle {
+      margin: 2px 0 0 0;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .setQuickPickChips {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .setQuickPickChip {
+      padding: 14px 8px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      font-weight: 900;
+      font-size: 15px;
+      cursor: pointer;
+      min-height: 52px;
+      line-height: 1.1;
+      transition: transform .08s ease;
+    }
+
+    .setQuickPickChip:active {
+      transform: scale(0.97);
+    }
+
+    .setQuickPickChip.active {
+      background: rgba(239,68,68,.22);
+      border-color: rgba(239,68,68,.55);
+      color: #fecaca;
+    }
+
+    .setQuickPickChip.setQuickPickChipCustom {
+      grid-column: span 2;
+      background: linear-gradient(180deg, rgba(71,85,105,.55), rgba(30,41,59,.85));
+      border-color: rgba(148,163,184,.35);
+      color: #f1f5f9;
+    }
+
+    .setQuickPickHint {
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 380px) {
+      .setQuickPickChips {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
     .loggerActionPanel {
       margin-top:14px;
     }
@@ -3087,6 +3232,9 @@
           <div id="strengthPreloadHint" class="muted" style="display:none;margin-top:8px;font-size:12px;">
             Last matching workout loaded — edit anything you want before saving.
           </div>
+          <div id="firstTimeStrengthHint" class="firstTimeStrengthHint">
+            New here? Tap weight and reps to log quickly. Use Repeat Set to copy your last set.
+          </div>
 
           <div class="setsHeader">
             <div class="muted">Set</div>
@@ -3100,6 +3248,8 @@
           <div class="btnrow" style="margin-top:12px;">
             <button class="iconBtn primary" id="addSetBtn" type="button">+</button>
             <div class="muted">Add set</div>
+            <button class="iconBtn setRepeatBtn" id="repeatLastSetBtn" type="button" title="Copy weight &amp; reps from last filled set" aria-label="Repeat last set">⟳</button>
+            <div class="muted">Repeat set</div>
           </div>
         </div>
       </div>
@@ -3385,6 +3535,22 @@
         <button id="reportTodayShareBtn" type="button">Share</button>
         <button id="reportTodayCloseBtn" type="button" style="margin-left:auto;">Close</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ===== Strength set quick-pick (weight / reps) ===== -->
+  <div id="setQuickPickModal" class="setQuickPickModal hidden" aria-hidden="true">
+    <div class="setQuickPickBackdrop" id="setQuickPickBackdrop"></div>
+    <div class="setQuickPickSheet" role="dialog" aria-modal="true" aria-labelledby="setQuickPickTitle">
+      <div class="setQuickPickHeader">
+        <div>
+          <div class="setQuickPickEyebrow" id="setQuickPickEyebrow">Set 1</div>
+          <h3 id="setQuickPickTitle" class="setQuickPickTitle">Quick pick weight</h3>
+        </div>
+        <button id="setQuickPickCloseBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
+      </div>
+      <div id="setQuickPickChips" class="setQuickPickChips" role="listbox" aria-label="Quick pick values"></div>
+      <div class="setQuickPickHint" id="setQuickPickHint">Tap a chip to fill. Use Custom to type a different value.</div>
     </div>
   </div>
 
@@ -5575,11 +5741,32 @@
       w.placeholder = "e.g., 180";
       w.inputMode = "decimal";
       w.value = weight;
+      w.setAttribute("aria-label", `Set ${setIndex + 1} weight`);
 
       const r = document.createElement("input");
       r.placeholder = "e.g., 10";
       r.inputMode = "numeric";
       r.value = reps;
+      r.setAttribute("aria-label", `Set ${setIndex + 1} reps`);
+
+      if (machineType === "strength") {
+        w.readOnly = true;
+        r.readOnly = true;
+        w.dataset.sllQuickPick = "weight";
+        r.dataset.sllQuickPick = "reps";
+
+        const openPickerFromInput = (inputEl, mode) => (e) => {
+          if (!inputEl.readOnly) return;
+          if (e && typeof e.preventDefault === "function") e.preventDefault();
+          inputEl.blur();
+          openSetQuickPick(inputEl, mode);
+        };
+        w.addEventListener("click", openPickerFromInput(w, "weight"));
+        r.addEventListener("click", openPickerFromInput(r, "reps"));
+
+        w.addEventListener("blur", () => { w.readOnly = true; });
+        r.addEventListener("blur", () => { r.readOnly = true; });
+      }
 
       function maybeTriggerRestOnReps() {
         if (r.value.trim()) {
@@ -5781,16 +5968,54 @@
       if (el) el.style.display = on ? "" : "none";
     }
 
+    function setFirstTimeStrengthHintVisible(on) {
+      const el = document.getElementById("firstTimeStrengthHint");
+      if (el) el.style.display = on ? "block" : "none";
+    }
+
+    function hasPreviousWorkoutForCurrentMachine() {
+      if (!machineId) return false;
+      if (machineType === "strength") return !!getLastMatchingStrengthWorkout();
+      if (machineType === "cardio") return !!getLastMatchingCardioWorkout();
+      return false;
+    }
+
+    const FIRST_TIME_STRENGTH_DEFAULT_REPS = "10";
+    const FIRST_TIME_STRENGTH_DEFAULT_ROWS = 3;
+
+    function applyFirstTimeStrengthDefaults() {
+      if (!setsContainer || machineType !== "strength") return;
+      setStrengthPreloadHintVisible(false);
+      setsContainer.innerHTML = "";
+      const cap = 20;
+      const guidedN = gwGetGuidedStrengthTargetRowCount();
+      const target = Math.max(
+        1,
+        Math.min(cap, guidedN != null ? guidedN : FIRST_TIME_STRENGTH_DEFAULT_ROWS)
+      );
+      for (let i = 0; i < target; i++) {
+        addSet("", FIRST_TIME_STRENGTH_DEFAULT_REPS);
+      }
+      renumberSets();
+      setFirstTimeStrengthHintVisible(true);
+    }
+
     function prefillStrengthFromLastWorkout() {
       setStrengthPreloadHintVisible(false);
+      setFirstTimeStrengthHintVisible(false);
       if (!machineId || machineType !== "strength" || !setsContainer) return;
 
       const last = getLastMatchingStrengthWorkout();
+      if (!last) {
+        applyFirstTimeStrengthDefaults();
+        return;
+      }
+
       const guidedN = gwGetGuidedStrengthTargetRowCount();
       let targetRows;
       if (guidedN != null) {
         targetRows = guidedN;
-      } else if (last && last.sets && last.sets.length) {
+      } else if (last.sets && last.sets.length) {
         targetRows = last.sets.length;
       } else {
         targetRows = 3;
@@ -5801,14 +6026,14 @@
 
       setsContainer.innerHTML = "";
       for (let i = 0; i < targetRows; i++) {
-        const pair = last && last.sets && last.sets[i] ? last.sets[i] : { weight: "", reps: "" };
+        const pair = last.sets && last.sets[i] ? last.sets[i] : { weight: "", reps: "" };
         const wv = pair.weight != null ? String(pair.weight) : "";
         const rv = pair.reps != null ? String(pair.reps) : "";
         addSet(wv, rv);
       }
       renumberSets();
 
-      if (last && last.sets && last.sets.length) {
+      if (last.sets && last.sets.length) {
         setStrengthPreloadHintVisible(true);
       }
     }
@@ -5829,6 +6054,164 @@
       } else if (machineType === "strength") {
         prefillStrengthFromLastWorkout();
       }
+    }
+
+    const SLL_QUICK_PICK_WEIGHT_DEFAULT = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, "Custom"];
+    const SLL_QUICK_PICK_WEIGHT_ISO = [5, 10, 15, 20, 25, 30, 40, 50, 60, 75, "Custom"];
+    const SLL_QUICK_PICK_WEIGHT_HEAVY = [45, 90, 135, 180, 225, 270, 315, 365, "Custom"];
+    const SLL_QUICK_PICK_WEIGHT_CABLE = [20, 30, 40, 50, 60, 70, 80, 90, 110, 130, "Custom"];
+    const SLL_QUICK_PICK_REPS = [5, 6, 8, 10, 12, 15, 20, "Custom"];
+
+    const SLL_QUICK_PICK_WEIGHT_CATEGORY = {
+      iso: new Set([
+        "BCPN", "BCPL", "BICEPCURL", "TRIEX", "TRICEPPRESS", "TRICEXT",
+        "LATR", "LATRAISE", "RDPEC", "REARDELT", "RDFLY", "PECFLY",
+        "CALF", "CALFRAISE", "CONCU", "PREA", "GLUTEKICK"
+      ]),
+      heavy: new Set([
+        "LEGPR", "LEGPRESS", "AGLP", "HACK", "HACKSQ", "SQMT",
+        "SMTH", "SMITH", "DLAC", "PWRSQ"
+      ]),
+      cable: new Set([
+        "DUALPULL", "PULLDN", "LATPD", "DIVLATPD", "CABLEROW",
+        "SETRW", "LTRW", "DIVLROW", "TBRW", "ASSTPD", "MULTIPP",
+        "CABLE", "CBLY", "FUNCTR"
+      ])
+    };
+
+    function getSuggestedWeightChips(mid) {
+      const code = String(mid || "").toUpperCase();
+      if (SLL_QUICK_PICK_WEIGHT_CATEGORY.iso.has(code)) return SLL_QUICK_PICK_WEIGHT_ISO.slice();
+      if (SLL_QUICK_PICK_WEIGHT_CATEGORY.heavy.has(code)) return SLL_QUICK_PICK_WEIGHT_HEAVY.slice();
+      if (SLL_QUICK_PICK_WEIGHT_CATEGORY.cable.has(code)) return SLL_QUICK_PICK_WEIGHT_CABLE.slice();
+      return SLL_QUICK_PICK_WEIGHT_DEFAULT.slice();
+    }
+
+    function getSuggestedRepChips() {
+      return SLL_QUICK_PICK_REPS.slice();
+    }
+
+    const sllQuickPickState = {
+      input: null,
+      mode: null
+    };
+
+    function openSetQuickPick(inputEl, mode) {
+      if (!inputEl || (mode !== "weight" && mode !== "reps")) return;
+      const modal = document.getElementById("setQuickPickModal");
+      const chipsWrap = document.getElementById("setQuickPickChips");
+      const titleEl = document.getElementById("setQuickPickTitle");
+      const eyebrowEl = document.getElementById("setQuickPickEyebrow");
+      if (!modal || !chipsWrap || !titleEl) return;
+
+      sllQuickPickState.input = inputEl;
+      sllQuickPickState.mode = mode;
+
+      const row = inputEl.closest(".setRow");
+      const idx = row && row.dataset && row.dataset.index != null
+        ? Number(row.dataset.index) + 1
+        : 1;
+      if (eyebrowEl) eyebrowEl.textContent = `Set ${idx}`;
+      titleEl.textContent = mode === "weight" ? "Quick pick weight" : "Quick pick reps";
+
+      const chips = mode === "weight"
+        ? getSuggestedWeightChips(machineId)
+        : getSuggestedRepChips();
+      const currentValue = (inputEl.value || "").trim();
+
+      chipsWrap.innerHTML = "";
+      chips.forEach((v) => {
+        const label = String(v);
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "setQuickPickChip";
+        b.textContent = label;
+        b.setAttribute("role", "option");
+        if (label === "Custom") {
+          b.classList.add("setQuickPickChipCustom");
+          b.addEventListener("click", () => {
+            const target = sllQuickPickState.input;
+            closeSetQuickPick();
+            if (!target) return;
+            setTimeout(() => {
+              try {
+                target.readOnly = false;
+                target.focus();
+                if (typeof target.select === "function") target.select();
+              } catch (_e) {}
+            }, 20);
+          });
+        } else {
+          if (label === currentValue) b.classList.add("active");
+          b.addEventListener("click", () => {
+            inputEl.value = label;
+            try {
+              inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+              inputEl.dispatchEvent(new Event("change", { bubbles: true }));
+            } catch (_e) {}
+            closeSetQuickPick();
+          });
+        }
+        chipsWrap.appendChild(b);
+      });
+
+      modal.classList.remove("hidden");
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    function openWeightQuickPick(inputEl) {
+      openSetQuickPick(inputEl, "weight");
+    }
+
+    function openRepQuickPick(inputEl) {
+      openSetQuickPick(inputEl, "reps");
+    }
+
+    function closeSetQuickPick() {
+      const modal = document.getElementById("setQuickPickModal");
+      if (!modal) return;
+      modal.classList.add("hidden");
+      modal.setAttribute("aria-hidden", "true");
+      sllQuickPickState.input = null;
+      sllQuickPickState.mode = null;
+    }
+
+    function repeatLastSetIntoNextRow() {
+      if (!setsContainer || machineType !== "strength") return;
+      const rows = Array.from(setsContainer.querySelectorAll(".setRow"));
+      if (!rows.length) return;
+
+      let srcIdx = -1;
+      let srcWeight = "";
+      let srcReps = "";
+      for (let i = rows.length - 1; i >= 0; i--) {
+        const inputs = rows[i].querySelectorAll("input");
+        const wv = (inputs[0] && inputs[0].value || "").trim();
+        const rv = (inputs[1] && inputs[1].value || "").trim();
+        if (wv || rv) {
+          srcIdx = i;
+          srcWeight = wv;
+          srcReps = rv;
+          break;
+        }
+      }
+      if (srcIdx === -1) return;
+
+      let targetRow = null;
+      for (let i = srcIdx + 1; i < rows.length; i++) {
+        const inputs = rows[i].querySelectorAll("input");
+        const wv = (inputs[0] && inputs[0].value || "").trim();
+        const rv = (inputs[1] && inputs[1].value || "").trim();
+        if (!wv && !rv) { targetRow = rows[i]; break; }
+      }
+      if (targetRow) {
+        const inputs = targetRow.querySelectorAll("input");
+        if (inputs[0]) inputs[0].value = srcWeight;
+        if (inputs[1]) inputs[1].value = srcReps;
+      } else {
+        addSet(srcWeight, srcReps);
+      }
+      renumberSets();
     }
 
     function buildCardioInputs() {
@@ -8667,6 +9050,31 @@
       }
 
       document.getElementById("addSetBtn").addEventListener("click", () => addSet("", ""));
+      const repeatLastSetBtnEl = document.getElementById("repeatLastSetBtn");
+      if (repeatLastSetBtnEl) {
+        repeatLastSetBtnEl.addEventListener("click", repeatLastSetIntoNextRow);
+      }
+
+      const setQuickPickModalEl = document.getElementById("setQuickPickModal");
+      const setQuickPickBackdropEl = document.getElementById("setQuickPickBackdrop");
+      const setQuickPickCloseBtnEl = document.getElementById("setQuickPickCloseBtn");
+      if (setQuickPickCloseBtnEl) {
+        setQuickPickCloseBtnEl.addEventListener("click", closeSetQuickPick);
+      }
+      if (setQuickPickBackdropEl) {
+        setQuickPickBackdropEl.addEventListener("click", closeSetQuickPick);
+      }
+      if (setQuickPickModalEl) {
+        setQuickPickModalEl.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeSetQuickPick();
+        });
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        const m = document.getElementById("setQuickPickModal");
+        if (m && !m.classList.contains("hidden")) closeSetQuickPick();
+      });
+
       document.getElementById("clearCurrentBtn").addEventListener("click", () => {
         clearCurrent();
         renderGuidedStepBanner();
