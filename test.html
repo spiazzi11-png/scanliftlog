@@ -963,6 +963,58 @@
       box-shadow: 0 0 0 3px rgba(239,68,68,.16);
     }
 
+    .setFieldCueWrap {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      min-width: 0;
+    }
+
+    .setFieldCueWrap > input {
+      width: 100%;
+      padding-right: 34px;
+    }
+
+    .setFieldCue {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 900;
+      color: rgba(255,255,255,.48);
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.14);
+      line-height: 1;
+      transition: color .15s ease, border-color .15s ease, background .15s ease;
+    }
+
+    .setFieldCueWrap:focus-within .setFieldCue,
+    .setFieldCueWrap:hover .setFieldCue {
+      color: rgba(254,202,202,.95);
+      border-color: rgba(239,68,68,.45);
+      background: rgba(239,68,68,.14);
+    }
+
+    @media (max-width: 380px) {
+      .setFieldCueWrap > input {
+        padding-right: 30px;
+      }
+      .setFieldCue {
+        right: 8px;
+        width: 18px;
+        height: 18px;
+        font-size: 12px;
+      }
+    }
+
     .setRepeatBtn {
       border-color: rgba(148,163,184,.32) !important;
       background: linear-gradient(180deg, rgba(71,85,105,.55), rgba(30,41,59,.9)) !important;
@@ -3233,7 +3285,7 @@
             Last matching workout loaded — edit anything you want before saving.
           </div>
           <div id="firstTimeStrengthHint" class="firstTimeStrengthHint">
-            New here? Tap weight and reps to log quickly. Use Repeat Set to copy your last set.
+            New here? Fill Set 1, then use Repeat Set to copy it to the next row.
           </div>
 
           <div class="setsHeader">
@@ -5788,8 +5840,33 @@
       };
 
       row.appendChild(badge);
-      row.appendChild(w);
-      row.appendChild(r);
+
+      if (machineType === "strength") {
+        const wWrap = document.createElement("div");
+        wWrap.className = "setFieldCueWrap";
+        const wCue = document.createElement("span");
+        wCue.className = "setFieldCue";
+        wCue.setAttribute("aria-hidden", "true");
+        wCue.textContent = "+";
+        wWrap.appendChild(w);
+        wWrap.appendChild(wCue);
+
+        const rWrap = document.createElement("div");
+        rWrap.className = "setFieldCueWrap";
+        const rCue = document.createElement("span");
+        rCue.className = "setFieldCue";
+        rCue.setAttribute("aria-hidden", "true");
+        rCue.textContent = "+";
+        rWrap.appendChild(r);
+        rWrap.appendChild(rCue);
+
+        row.appendChild(wWrap);
+        row.appendChild(rWrap);
+      } else {
+        row.appendChild(w);
+        row.appendChild(r);
+      }
+
       row.appendChild(del);
       return row;
     }
@@ -6056,35 +6133,121 @@
       }
     }
 
-    const SLL_QUICK_PICK_WEIGHT_DEFAULT = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, "Custom"];
-    const SLL_QUICK_PICK_WEIGHT_ISO = [5, 10, 15, 20, 25, 30, 40, 50, 60, 75, "Custom"];
-    const SLL_QUICK_PICK_WEIGHT_HEAVY = [45, 90, 135, 180, 225, 270, 315, 365, "Custom"];
-    const SLL_QUICK_PICK_WEIGHT_CABLE = [20, 30, 40, 50, 60, 70, 80, 90, 110, 130, "Custom"];
     const SLL_QUICK_PICK_REPS = [5, 6, 8, 10, 12, 15, 20, "Custom"];
 
-    const SLL_QUICK_PICK_WEIGHT_CATEGORY = {
-      iso: new Set([
-        "BCPN", "BCPL", "BICEPCURL", "TRIEX", "TRICEPPRESS", "TRICEXT",
-        "LATR", "LATRAISE", "RDPEC", "REARDELT", "RDFLY", "PECFLY",
-        "CALF", "CALFRAISE", "CONCU", "PREA", "GLUTEKICK"
-      ]),
-      heavy: new Set([
-        "LEGPR", "LEGPRESS", "AGLP", "HACK", "HACKSQ", "SQMT",
-        "SMTH", "SMITH", "DLAC", "PWRSQ"
-      ]),
-      cable: new Set([
-        "DUALPULL", "PULLDN", "LATPD", "DIVLATPD", "CABLEROW",
-        "SETRW", "LTRW", "DIVLROW", "TBRW", "ASSTPD", "MULTIPP",
-        "CABLE", "CBLY", "FUNCTR"
-      ])
+    const WEIGHT_CHIP_PROFILES = {
+      light:    [10, 20, 30, 40, 50, 60, 70, "Custom"],
+      medium:   [20, 40, 60, 80, 100, 120, 140, "Custom"],
+      heavy:    [45, 90, 135, 180, 225, 270, 315, "Custom"],
+      cable:    [10, 20, 30, 40, 50, 60, 70, 80, "Custom"],
+      dumbbell: [10, 15, 20, 25, 30, 35, 40, 50, "Custom"]
     };
 
-    function getSuggestedWeightChips(mid) {
+    const MACHINE_CODE_TO_WEIGHT_PROFILE = {
+      RDPEC: "light",
+      TRICEPPRESS: "light",
+      TRIEX: "light",
+      BCPN: "light",
+      BCPL: "light",
+      LATRL: "light",
+      LEGEX: "light",
+      LEGCUR: "light",
+      SLCUR: "light",
+      SLGCUR: "light",
+      PRONECUR: "light",
+      HIPAB: "light",
+      GLUTEXT: "light",
+      CALFRAISE: "light",
+      ABDOM: "light",
+      ABCR: "light",
+      RTTOR: "light",
+      ASSTPD: "light",
+
+      CHPR: "medium",
+      INCHPR: "medium",
+      DECHPR: "medium",
+      CONVCHPR: "medium",
+      SEATDIPPLATE: "medium",
+      SEATDIPPIN: "medium",
+      LATPD: "medium",
+      PULLDN: "medium",
+      DIVLATPD: "medium",
+      SETRW: "medium",
+      LTRW: "medium",
+      DIVLROW: "medium",
+      TBRW: "medium",
+      SHPR: "medium",
+      CONVSHPR: "medium",
+      MULTIPP: "medium",
+      FBEN: "medium",
+      IBEN: "medium",
+      DBEN: "medium",
+
+      LEGPR: "heavy",
+      ANGLP: "heavy",
+      HKSQ: "heavy",
+      SQMT: "heavy",
+      HIPTH: "heavy",
+      DEADLUNGE: "heavy",
+      SMTH: "heavy",
+      SQRK: "heavy",
+      OHBP: "heavy",
+
+      DUALPULL: "cable",
+      CABLEROW: "cable",
+
+      DBRCK: "dumbbell"
+    };
+
+    function getWeightChipValuesForProfile(profile) {
+      const key = String(profile || "").toLowerCase();
+      const preset = WEIGHT_CHIP_PROFILES[key] || WEIGHT_CHIP_PROFILES.medium;
+      return preset.slice();
+    }
+
+    function inferWeightProfileFromLabel(label) {
+      const raw = String(label || "").toLowerCase();
+      if (!raw) return null;
+      if (/\b(dumbbell|db\s*rack|free\s*weights?)\b/.test(raw)) return "dumbbell";
+      if (/\b(cable|pulley|dual\s*adjustable)\b/.test(raw)) return "cable";
+      if (/\b(leg\s*press|hack\s*squat|squat\s*(machine|rack)|smith|hip\s*thrust|deadlift|power\s*rack|bulgarian|lunge)\b/.test(raw)) return "heavy";
+      if (/\b(curl|extension|raise|fly|pec\s*fly|rear\s*delt|abductor|adductor|calf|abdominal|ab\s*crunch|rotary|assisted)\b/.test(raw)) return "light";
+      if (/\b(press|row|pulldown|pull\s*down|dip|multi\s*pull)\b/.test(raw)) return "medium";
+      return null;
+    }
+
+    function getWeightChipProfileForMachine(mid, machineLabel) {
       const code = String(mid || "").toUpperCase();
-      if (SLL_QUICK_PICK_WEIGHT_CATEGORY.iso.has(code)) return SLL_QUICK_PICK_WEIGHT_ISO.slice();
-      if (SLL_QUICK_PICK_WEIGHT_CATEGORY.heavy.has(code)) return SLL_QUICK_PICK_WEIGHT_HEAVY.slice();
-      if (SLL_QUICK_PICK_WEIGHT_CATEGORY.cable.has(code)) return SLL_QUICK_PICK_WEIGHT_CABLE.slice();
-      return SLL_QUICK_PICK_WEIGHT_DEFAULT.slice();
+      if (code && MACHINE_CODE_TO_WEIGHT_PROFILE[code]) {
+        return MACHINE_CODE_TO_WEIGHT_PROFILE[code];
+      }
+      const inferred = inferWeightProfileFromLabel(machineLabel);
+      if (inferred) return inferred;
+      return "medium";
+    }
+
+    function getWeightChipProfileForCurrentMachine() {
+      let label = "";
+      try {
+        if (typeof getMachineDisplayName === "function" && machineId) {
+          label = getMachineDisplayName(machineId, gymId);
+        }
+      } catch (_e) {}
+      return getWeightChipProfileForMachine(machineId, label);
+    }
+
+    function getWeightChipValuesForMachine(mid, machineLabel) {
+      return getWeightChipValuesForProfile(getWeightChipProfileForMachine(mid, machineLabel));
+    }
+
+    function getSuggestedWeightChips(mid) {
+      let label = "";
+      try {
+        if (typeof getMachineDisplayName === "function" && mid) {
+          label = getMachineDisplayName(mid, gymId);
+        }
+      } catch (_e) {}
+      return getWeightChipValuesForMachine(mid, label);
     }
 
     function getSuggestedRepChips() {
@@ -6111,7 +6274,15 @@
       const idx = row && row.dataset && row.dataset.index != null
         ? Number(row.dataset.index) + 1
         : 1;
-      if (eyebrowEl) eyebrowEl.textContent = `Set ${idx}`;
+      if (eyebrowEl) {
+        if (mode === "weight") {
+          const profile = getWeightChipProfileForCurrentMachine();
+          const profLabel = profile ? (profile.charAt(0).toUpperCase() + profile.slice(1)) : "";
+          eyebrowEl.textContent = profLabel ? `Set ${idx} · ${profLabel}` : `Set ${idx}`;
+        } else {
+          eyebrowEl.textContent = `Set ${idx}`;
+        }
+      }
       titleEl.textContent = mode === "weight" ? "Quick pick weight" : "Quick pick reps";
 
       const chips = mode === "weight"
