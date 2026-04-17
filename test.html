@@ -950,19 +950,6 @@
       color:#fff;
     }
 
-    #setsContainer .setRow input[readonly] {
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-      cursor: pointer;
-      caret-color: transparent;
-    }
-
-    #setsContainer .setRow input[readonly]:focus {
-      outline: none;
-      border-color: rgba(239,68,68,.45);
-      box-shadow: 0 0 0 3px rgba(239,68,68,.16);
-    }
-
     .setFieldCueWrap {
       position: relative;
       display: flex;
@@ -972,46 +959,65 @@
 
     .setFieldCueWrap > input {
       width: 100%;
-      padding-right: 34px;
+      padding-right: 38px;
     }
 
     .setFieldCue {
       position: absolute;
-      right: 10px;
+      right: 6px;
       top: 50%;
       transform: translateY(-50%);
-      pointer-events: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 20px;
-      height: 20px;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      margin: 0;
       border-radius: 999px;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 900;
-      color: rgba(255,255,255,.48);
+      color: rgba(255,255,255,.58);
       background: rgba(255,255,255,.05);
       border: 1px solid rgba(255,255,255,.14);
       line-height: 1;
-      transition: color .15s ease, border-color .15s ease, background .15s ease;
+      cursor: pointer;
+      transition: color .15s ease, border-color .15s ease, background .15s ease, transform .08s ease;
     }
 
-    .setFieldCueWrap:focus-within .setFieldCue,
-    .setFieldCueWrap:hover .setFieldCue {
+    .setFieldCue::before {
+      content: "";
+      position: absolute;
+      inset: -8px -4px -8px -6px;
+    }
+
+    .setFieldCue:hover,
+    .setFieldCue:focus-visible {
       color: rgba(254,202,202,.95);
       border-color: rgba(239,68,68,.45);
       background: rgba(239,68,68,.14);
+      outline: none;
+    }
+
+    .setFieldCue:active {
+      transform: translateY(-50%) scale(0.94);
+    }
+
+    .setFieldCueWrap:focus-within .setFieldCue {
+      color: rgba(254,202,202,.85);
+      border-color: rgba(239,68,68,.35);
+      background: rgba(239,68,68,.10);
     }
 
     @media (max-width: 380px) {
       .setFieldCueWrap > input {
-        padding-right: 30px;
+        padding-right: 34px;
       }
       .setFieldCue {
-        right: 8px;
-        width: 18px;
-        height: 18px;
-        font-size: 12px;
+        right: 4px;
+        width: 26px;
+        height: 26px;
+        font-size: 14px;
       }
     }
 
@@ -1125,13 +1131,6 @@
       background: rgba(239,68,68,.22);
       border-color: rgba(239,68,68,.55);
       color: #fecaca;
-    }
-
-    .setQuickPickChip.setQuickPickChipCustom {
-      grid-column: span 2;
-      background: linear-gradient(180deg, rgba(71,85,105,.55), rgba(30,41,59,.85));
-      border-color: rgba(148,163,184,.35);
-      color: #f1f5f9;
     }
 
     .setQuickPickHint {
@@ -3602,7 +3601,7 @@
         <button id="setQuickPickCloseBtn" class="plannerCloseBtn" type="button" aria-label="Close">✕</button>
       </div>
       <div id="setQuickPickChips" class="setQuickPickChips" role="listbox" aria-label="Quick pick values"></div>
-      <div class="setQuickPickHint" id="setQuickPickHint">Tap a chip to fill. Use Custom to type a different value.</div>
+      <div class="setQuickPickHint" id="setQuickPickHint">Tap a preset to fill. Tap the field directly to type a custom value.</div>
     </div>
   </div>
 
@@ -5802,22 +5801,8 @@
       r.setAttribute("aria-label", `Set ${setIndex + 1} reps`);
 
       if (machineType === "strength") {
-        w.readOnly = true;
-        r.readOnly = true;
         w.dataset.sllQuickPick = "weight";
         r.dataset.sllQuickPick = "reps";
-
-        const openPickerFromInput = (inputEl, mode) => (e) => {
-          if (!inputEl.readOnly) return;
-          if (e && typeof e.preventDefault === "function") e.preventDefault();
-          inputEl.blur();
-          openSetQuickPick(inputEl, mode);
-        };
-        w.addEventListener("click", openPickerFromInput(w, "weight"));
-        r.addEventListener("click", openPickerFromInput(r, "reps"));
-
-        w.addEventListener("blur", () => { w.readOnly = true; });
-        r.addEventListener("blur", () => { r.readOnly = true; });
       }
 
       function maybeTriggerRestOnReps() {
@@ -5842,26 +5827,29 @@
       row.appendChild(badge);
 
       if (machineType === "strength") {
-        const wWrap = document.createElement("div");
-        wWrap.className = "setFieldCueWrap";
-        const wCue = document.createElement("span");
-        wCue.className = "setFieldCue";
-        wCue.setAttribute("aria-hidden", "true");
-        wCue.textContent = "+";
-        wWrap.appendChild(w);
-        wWrap.appendChild(wCue);
+        const makeCueWrap = (inputEl, mode, setNum) => {
+          const wrap = document.createElement("div");
+          wrap.className = "setFieldCueWrap";
+          const cue = document.createElement("button");
+          cue.type = "button";
+          cue.className = "setFieldCue";
+          cue.textContent = "+";
+          cue.setAttribute(
+            "aria-label",
+            `Quick pick ${mode === "weight" ? "weight" : "reps"} for set ${setNum}`
+          );
+          cue.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openSetQuickPick(inputEl, mode);
+          });
+          wrap.appendChild(inputEl);
+          wrap.appendChild(cue);
+          return wrap;
+        };
 
-        const rWrap = document.createElement("div");
-        rWrap.className = "setFieldCueWrap";
-        const rCue = document.createElement("span");
-        rCue.className = "setFieldCue";
-        rCue.setAttribute("aria-hidden", "true");
-        rCue.textContent = "+";
-        rWrap.appendChild(r);
-        rWrap.appendChild(rCue);
-
-        row.appendChild(wWrap);
-        row.appendChild(rWrap);
+        row.appendChild(makeCueWrap(w, "weight", setIndex + 1));
+        row.appendChild(makeCueWrap(r, "reps", setIndex + 1));
       } else {
         row.appendChild(w);
         row.appendChild(r);
@@ -6133,14 +6121,14 @@
       }
     }
 
-    const SLL_QUICK_PICK_REPS = [5, 6, 8, 10, 12, 15, 20, "Custom"];
+    const SLL_QUICK_PICK_REPS = [5, 6, 8, 10, 12, 15, 20];
 
     const WEIGHT_CHIP_PROFILES = {
-      light:    [10, 20, 30, 40, 50, 60, 70, "Custom"],
-      medium:   [20, 40, 60, 80, 100, 120, 140, "Custom"],
-      heavy:    [45, 90, 135, 180, 225, 270, 315, "Custom"],
-      cable:    [10, 20, 30, 40, 50, 60, 70, 80, "Custom"],
-      dumbbell: [10, 15, 20, 25, 30, 35, 40, 50, "Custom"]
+      light:    [10, 20, 30, 40, 50, 60, 70],
+      medium:   [20, 40, 60, 80, 100, 120, 140],
+      heavy:    [45, 90, 135, 180, 225, 270, 315],
+      cable:    [10, 20, 30, 40, 50, 60, 70, 80],
+      dumbbell: [10, 15, 20, 25, 30, 35, 40, 50]
     };
 
     const MACHINE_CODE_TO_WEIGHT_PROFILE = {
@@ -6298,31 +6286,15 @@
         b.className = "setQuickPickChip";
         b.textContent = label;
         b.setAttribute("role", "option");
-        if (label === "Custom") {
-          b.classList.add("setQuickPickChipCustom");
-          b.addEventListener("click", () => {
-            const target = sllQuickPickState.input;
-            closeSetQuickPick();
-            if (!target) return;
-            setTimeout(() => {
-              try {
-                target.readOnly = false;
-                target.focus();
-                if (typeof target.select === "function") target.select();
-              } catch (_e) {}
-            }, 20);
-          });
-        } else {
-          if (label === currentValue) b.classList.add("active");
-          b.addEventListener("click", () => {
-            inputEl.value = label;
-            try {
-              inputEl.dispatchEvent(new Event("input", { bubbles: true }));
-              inputEl.dispatchEvent(new Event("change", { bubbles: true }));
-            } catch (_e) {}
-            closeSetQuickPick();
-          });
-        }
+        if (label === currentValue) b.classList.add("active");
+        b.addEventListener("click", () => {
+          inputEl.value = label;
+          try {
+            inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+            inputEl.dispatchEvent(new Event("change", { bubbles: true }));
+          } catch (_e) {}
+          closeSetQuickPick();
+        });
         chipsWrap.appendChild(b);
       });
 
@@ -6347,42 +6319,72 @@
       sllQuickPickState.mode = null;
     }
 
-    function repeatLastSetIntoNextRow() {
+    function getSetRowValues(row) {
+      const inputs = row ? row.querySelectorAll("input") : [];
+      return {
+        weight: (inputs[0] && inputs[0].value || "").trim(),
+        reps: (inputs[1] && inputs[1].value || "").trim(),
+        wInput: inputs[0] || null,
+        rInput: inputs[1] || null
+      };
+    }
+
+    function findLastCompletedSetRow(rows) {
+      for (let i = rows.length - 1; i >= 0; i--) {
+        const v = getSetRowValues(rows[i]);
+        if (v.weight && v.reps) return { row: rows[i], index: i, weight: v.weight, reps: v.reps };
+      }
+      return null;
+    }
+
+    function findLastPartiallyFilledSetRow(rows) {
+      for (let i = rows.length - 1; i >= 0; i--) {
+        const v = getSetRowValues(rows[i]);
+        if (v.weight || v.reps) return { row: rows[i], index: i, weight: v.weight, reps: v.reps };
+      }
+      return null;
+    }
+
+    function findFirstIncompleteVisibleSetRow(startAfterIdx) {
+      if (!setsContainer) return null;
+      const rows = Array.from(setsContainer.querySelectorAll(".setRow"));
+      for (let i = Math.max(0, startAfterIdx + 1); i < rows.length; i++) {
+        const v = getSetRowValues(rows[i]);
+        if (!v.weight || !v.reps) {
+          return { row: rows[i], index: i, weightEmpty: !v.weight, repsEmpty: !v.reps };
+        }
+      }
+      return null;
+    }
+
+    function repeatLastSetIntoExistingOrNewRow() {
       if (!setsContainer || machineType !== "strength") return;
       const rows = Array.from(setsContainer.querySelectorAll(".setRow"));
       if (!rows.length) return;
 
-      let srcIdx = -1;
-      let srcWeight = "";
-      let srcReps = "";
-      for (let i = rows.length - 1; i >= 0; i--) {
-        const inputs = rows[i].querySelectorAll("input");
-        const wv = (inputs[0] && inputs[0].value || "").trim();
-        const rv = (inputs[1] && inputs[1].value || "").trim();
-        if (wv || rv) {
-          srcIdx = i;
-          srcWeight = wv;
-          srcReps = rv;
-          break;
-        }
-      }
-      if (srcIdx === -1) return;
+      const completed = findLastCompletedSetRow(rows);
+      const source = completed || findLastPartiallyFilledSetRow(rows);
+      if (!source || (!source.weight && !source.reps)) return;
 
-      let targetRow = null;
-      for (let i = srcIdx + 1; i < rows.length; i++) {
-        const inputs = rows[i].querySelectorAll("input");
-        const wv = (inputs[0] && inputs[0].value || "").trim();
-        const rv = (inputs[1] && inputs[1].value || "").trim();
-        if (!wv && !rv) { targetRow = rows[i]; break; }
-      }
-      if (targetRow) {
-        const inputs = targetRow.querySelectorAll("input");
-        if (inputs[0]) inputs[0].value = srcWeight;
-        if (inputs[1]) inputs[1].value = srcReps;
+      const target = findFirstIncompleteVisibleSetRow(source.index);
+      if (target) {
+        const inputs = target.row.querySelectorAll("input");
+        if (target.weightEmpty && inputs[0] && source.weight) {
+          inputs[0].value = source.weight;
+          try { inputs[0].dispatchEvent(new Event("input", { bubbles: true })); } catch (_e) {}
+        }
+        if (target.repsEmpty && inputs[1] && source.reps) {
+          inputs[1].value = source.reps;
+          try { inputs[1].dispatchEvent(new Event("input", { bubbles: true })); } catch (_e) {}
+        }
       } else {
-        addSet(srcWeight, srcReps);
+        addSet(source.weight, source.reps);
       }
       renumberSets();
+    }
+
+    function repeatLastSetIntoNextRow() {
+      repeatLastSetIntoExistingOrNewRow();
     }
 
     function buildCardioInputs() {
