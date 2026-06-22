@@ -4120,21 +4120,60 @@
         { machineCode:"MULTIPP", machineNumber:48, label:"Multi Pull Press", goalTags:["chest","back","shoulders"], type:"strength", markerLeft:66, markerTop:42 }
       ],
       "main": [
-        { machineCode:"DBRCK", machineNumber:1, label:"Dumbbell Rack", goalTags:["chest","arms","shoulders","legs"], type:"strength", markerLeft:12, markerTop:20 },
-        { machineCode:"SMTH", machineNumber:2, label:"Smith Machine", goalTags:["chest","legs","shoulders"], type:"strength", markerLeft:28, markerTop:20 },
-        { machineCode:"DUALPULL", machineNumber:3, label:"Dual Adjustable Pulley", goalTags:["back","chest","arms","shoulders"], type:"strength", markerLeft:44, markerTop:20 },
-        { machineCode:"CHPR", machineNumber:4, label:"Chest Press", goalTags:["chest","fullbody"], type:"strength", markerLeft:60, markerTop:20 },
-        { machineCode:"LEGPR", machineNumber:5, label:"Leg Press", goalTags:["legs","fullbody"], type:"strength", markerLeft:76, markerTop:20 },
-        { machineCode:"LATPD", machineNumber:6, label:"Lat Pulldown", goalTags:["back","fullbody"], type:"strength", markerLeft:12, markerTop:44 },
-        { machineCode:"SHPR", machineNumber:7, label:"Shoulder Press", goalTags:["shoulders","fullbody"], type:"strength", markerLeft:28, markerTop:44 },
-        { machineCode:"HIPAB", machineNumber:8, label:"Abductor/Adductor", goalTags:["legs"], type:"strength", markerLeft:44, markerTop:44 },
-        { machineCode:"ABCR", machineNumber:9, label:"Ab Crunch Machine", goalTags:["core","fullbody"], type:"strength", markerLeft:60, markerTop:44 },
-        { machineCode:"FBEN", machineNumber:10, label:"Flat Bench", goalTags:["chest","shoulders","arms"], type:"strength", markerLeft:76, markerTop:44 },
-        { machineCode:"TRED", machineNumber:11, label:"Treadmill", goalTags:[], type:"cardio", markerLeft:18, markerTop:68 },
-        { machineCode:"ELIP", machineNumber:12, label:"Elliptical", goalTags:[], type:"cardio", markerLeft:34, markerTop:68 },
-        { machineCode:"STAIR", machineNumber:13, label:"Stair Climber", goalTags:[], type:"cardio", markerLeft:50, markerTop:68 },
-        { machineCode:"BIKE", machineNumber:14, label:"Stationary Bike", goalTags:[], type:"cardio", markerLeft:66, markerTop:68 },
-        { machineCode:"ROW", machineNumber:15, label:"Rower", goalTags:[], type:"cardio", markerLeft:82, markerTop:68 }
+        { machineCode:"CHPR", machineNumber:1, label:"Chest Press", goalTags:["chest","fullbody"], type:"strength", markerLeft:18, markerTop:18 },
+        { machineCode:"INCHPR", machineNumber:2, label:"Incline Press", goalTags:["chest","shoulders"], type:"strength", markerLeft:24, markerTop:18 },
+        { machineCode:"DECHPR", machineNumber:3, label:"Decline Press", goalTags:["chest"], type:"strength", markerLeft:30, markerTop:18 },
+        { machineCode:"CONVCHPR", machineNumber:4, label:"Converging Chest Press", goalTags:["chest"], type:"strength", markerLeft:36, markerTop:18 },
+        { machineCode:"RDPEC", machineNumber:5, label:"Rear Delt / Pec Fly", goalTags:["chest","shoulders"], type:"strength", markerLeft:42, markerTop:18 },
+        { machineCode:"SEATDIPPLATE", machineNumber:6, label:"Seated Dip - Plate Loaded", goalTags:["chest","arms"], type:"strength", markerLeft:48, markerTop:18 },
+        { machineCode:"SEATDIPPIN", machineNumber:7, label:"Seated Dip - Pin Loaded", goalTags:["chest","arms"], type:"strength", markerLeft:54, markerTop:18 },
+        { machineCode:"TRICEPPRESS", machineNumber:8, label:"Tricep Press", goalTags:["arms","chest"], type:"strength", markerLeft:60, markerTop:18 },
+        { machineCode:"LATPD", machineNumber:9, label:"Lat Pulldown", goalTags:["back","fullbody"], type:"strength", markerLeft:18, markerTop:30 },
+        { machineCode:"PULLDN", machineNumber:10, label:"Pulldown", goalTags:["back"], type:"strength", markerLeft:24, markerTop:30 },
+        { machineCode:"DIVLATPD", machineNumber:11, label:"Diverging Lat Pulldown", goalTags:["back"], type:"strength", markerLeft:30, markerTop:30 },
+        { machineCode:"CABLEROW", machineNumber:12, label:"Cable Row", goalTags:["back"], type:"strength", markerLeft:36, markerTop:30 },
+        { machineCode:"SETRW", machineNumber:13, label:"Seated Row", goalTags:["back","fullbody"], type:"strength", markerLeft:42, markerTop:30 },
+        { machineCode:"LTRW", machineNumber:14, label:"Low Row Machine", goalTags:["back"], type:"strength", markerLeft:48, markerTop:30 },
+        { machineCode:"DIVLROW", machineNumber:15, label:"Diverging Low Row", goalTags:["back"], type:"strength", markerLeft:54, markerTop:30 },
+        { machineCode:"TBRW", machineNumber:16, label:"T-Bar Row Station", goalTags:["back"], type:"strength", markerLeft:60, markerTop:30 },
+        { machineCode:"ASSTPD", machineNumber:17, label:"Assisted Pull-Up / Dip", goalTags:["back","arms"], type:"strength", markerLeft:66, markerTop:30 },
+        { machineCode:"DUALPULL", machineNumber:18, label:"Dual Adjustable Pulley", goalTags:["back","chest","arms","shoulders"], type:"strength", markerLeft:72, markerTop:30 },
+        { machineCode:"SHPR", machineNumber:19, label:"Shoulder Press", goalTags:["shoulders","fullbody"], type:"strength", markerLeft:18, markerTop:42 },
+        { machineCode:"CONVSHPR", machineNumber:20, label:"Converging Shoulder Press", goalTags:["shoulders"], type:"strength", markerLeft:24, markerTop:42 },
+        { machineCode:"LATRL", machineNumber:21, label:"Lateral Raise", goalTags:["shoulders"], type:"strength", markerLeft:30, markerTop:42 },
+        { machineCode:"BCPN", machineNumber:22, label:"Biceps Curl - Pin Loaded", goalTags:["arms"], type:"strength", markerLeft:36, markerTop:42 },
+        { machineCode:"BCPL", machineNumber:23, label:"Biceps Curl - Plate Loaded", goalTags:["arms"], type:"strength", markerLeft:42, markerTop:42 },
+        { machineCode:"TRIEX", machineNumber:24, label:"Triceps Extension Machine", goalTags:["arms"], type:"strength", markerLeft:48, markerTop:42 },
+        { machineCode:"OHBP", machineNumber:25, label:"Overhead Barbell Press", goalTags:["shoulders"], type:"strength", markerLeft:54, markerTop:42 },
+        { machineCode:"LEGPR", machineNumber:26, label:"Leg Press", goalTags:["legs","fullbody"], type:"strength", markerLeft:18, markerTop:58 },
+        { machineCode:"ANGLP", machineNumber:27, label:"Angled Leg Press", goalTags:["legs"], type:"strength", markerLeft:24, markerTop:58 },
+        { machineCode:"HKSQ", machineNumber:28, label:"Hack Squat", goalTags:["legs"], type:"strength", markerLeft:30, markerTop:58 },
+        { machineCode:"SQMT", machineNumber:29, label:"Squat Machine", goalTags:["legs"], type:"strength", markerLeft:36, markerTop:58 },
+        { machineCode:"LEGEX", machineNumber:30, label:"Leg Extension", goalTags:["legs"], type:"strength", markerLeft:42, markerTop:58 },
+        { machineCode:"LEGCUR", machineNumber:31, label:"Leg Curl", goalTags:["legs"], type:"strength", markerLeft:48, markerTop:58 },
+        { machineCode:"SLCUR", machineNumber:32, label:"Seated Leg Curl", goalTags:["legs"], type:"strength", markerLeft:54, markerTop:58 },
+        { machineCode:"SLGCUR", machineNumber:33, label:"Single Leg Curl", goalTags:["legs"], type:"strength", markerLeft:60, markerTop:58 },
+        { machineCode:"PRONECUR", machineNumber:34, label:"Prone Leg Curl", goalTags:["legs"], type:"strength", markerLeft:66, markerTop:58 },
+        { machineCode:"HIPAB", machineNumber:35, label:"Hip Abductor", goalTags:["legs"], type:"strength", markerLeft:72, markerTop:58 },
+        { machineCode:"GLUTEXT", machineNumber:36, label:"Glute Extension", goalTags:["legs"], type:"strength", markerLeft:18, markerTop:70 },
+        { machineCode:"HIPTH", machineNumber:37, label:"Hip Thrust Machine", goalTags:["legs"], type:"strength", markerLeft:24, markerTop:70 },
+        { machineCode:"CALFRAISE", machineNumber:38, label:"Calf Raise", goalTags:["legs"], type:"strength", markerLeft:30, markerTop:70 },
+        { machineCode:"DEADLUNGE", machineNumber:39, label:"Deadlift Lunge", goalTags:["legs"], type:"strength", markerLeft:36, markerTop:70 },
+        { machineCode:"ABDOM", machineNumber:40, label:"Abdominal", goalTags:["core","fullbody"], type:"strength", markerLeft:48, markerTop:70 },
+        { machineCode:"RTTOR", machineNumber:41, label:"Rotary Torso", goalTags:["core"], type:"strength", markerLeft:54, markerTop:70 },
+        { machineCode:"FBEN", machineNumber:42, label:"Flat Bench", goalTags:["chest","shoulders","arms"], type:"strength", markerLeft:64, markerTop:18 },
+        { machineCode:"IBEN", machineNumber:43, label:"Incline Bench", goalTags:["chest","shoulders"], type:"strength", markerLeft:70, markerTop:18 },
+        { machineCode:"DBEN", machineNumber:44, label:"Decline Bench", goalTags:["chest"], type:"strength", markerLeft:76, markerTop:18 },
+        { machineCode:"SMTH", machineNumber:45, label:"Smith Machine", goalTags:["chest","legs","shoulders"], type:"strength", markerLeft:64, markerTop:58 },
+        { machineCode:"SQRK", machineNumber:46, label:"Squat Rack", goalTags:["legs","shoulders"], type:"strength", markerLeft:70, markerTop:58 },
+        { machineCode:"DBRCK", machineNumber:47, label:"Dumbbell Rack", goalTags:["chest","arms","shoulders","legs"], type:"strength", markerLeft:76, markerTop:58 },
+        { machineCode:"MULTIPP", machineNumber:48, label:"Multi Pull Press", goalTags:["chest","back","shoulders"], type:"strength", markerLeft:66, markerTop:42 },
+        { machineCode:"ABCR", machineNumber:49, label:"Ab Crunch Machine", goalTags:["core","fullbody"], type:"strength", markerLeft:60, markerTop:44 },
+        { machineCode:"TRED", machineNumber:50, label:"Treadmill", goalTags:[], type:"cardio", markerLeft:18, markerTop:68 },
+        { machineCode:"ELIP", machineNumber:51, label:"Elliptical", goalTags:[], type:"cardio", markerLeft:34, markerTop:68 },
+        { machineCode:"STAIR", machineNumber:52, label:"Stair Climber", goalTags:[], type:"cardio", markerLeft:50, markerTop:68 },
+        { machineCode:"BIKE", machineNumber:53, label:"Stationary Bike", goalTags:[], type:"cardio", markerLeft:66, markerTop:68 },
+        { machineCode:"ROW", machineNumber:54, label:"Rower", goalTags:[], type:"cardio", markerLeft:82, markerTop:68 }
       ],
       "peters-gym": [
         { machineCode:"DBRCK", machineNumber:1, label:"Dumbbell Rack", goalTags:["chest","arms","shoulders","legs"], type:"strength", markerLeft:22, markerTop:32 },
@@ -4146,6 +4185,105 @@
     function getGymCatalogMachines(gid) {
       return (GYM_MACHINE_CATALOG[gid] || []).slice();
     }
+
+    function hydrateMainGymCatalogFromMachineMap() {
+      const mainList = GYM_MACHINE_CATALOG.main;
+      if (!Array.isArray(mainList)) return;
+
+      const map = window.MACHINE_MAP || {};
+      const mapEntries = Object.keys(map)
+        .map((originalKey) => {
+          const code = normalizeMachineId(originalKey);
+          return {
+            originalKey,
+            code,
+            label: readMachineMapLabel(map[originalKey], code)
+          };
+        })
+        .filter((row) => row.code);
+
+      if (!mapEntries.length) return;
+
+      const existingCodes = new Set(
+        mainList.map((m) => String((m && m.machineCode) || "").trim().toUpperCase()).filter(Boolean)
+      );
+
+      const templateByCode = new Map();
+      Object.keys(GYM_MACHINE_CATALOG).forEach((catalogGymId) => {
+        (GYM_MACHINE_CATALOG[catalogGymId] || []).forEach((m) => {
+          const code = String((m && m.machineCode) || "").trim().toUpperCase();
+          if (code && !templateByCode.has(code)) templateByCode.set(code, m);
+        });
+      });
+
+      const cardioCodes = new Set([
+        "TRED", "ELIP", "STAIR", "BIKE", "ROW", "SKIER", "CURVE", "STEP", "SPIN", "ARC", "ASSLT",
+        "RECBK", "UPRBK", "ICLMB", "JACOB", "VCLMB", "XTRNR", "SPRBK", "STRDR", "ADSKI", "SLDM"
+      ]);
+
+      function readMachineMapLabel(rawValue, code) {
+        if (rawValue && typeof rawValue === "object") {
+          return String(rawValue.label || rawValue.name || rawValue.displayName || code);
+        }
+        return String(rawValue || code);
+      }
+
+      function inferMachineType(code, label) {
+        const cleanCode = String(code || "").toUpperCase();
+        const cleanLabel = String(label || "").toLowerCase();
+        if (cardioCodes.has(cleanCode)) return "cardio";
+        if (/tread|elliptical|stair|bike|rower|row machine|skier|curve|spin|climber|arc trainer|assault/.test(cleanLabel)) return "cardio";
+        return "strength";
+      }
+
+      function inferGoalTags(label, type) {
+        if (type === "cardio") return [];
+        const s = String(label || "").toLowerCase();
+        const tags = new Set();
+        if (/chest|pec|bench|fly|press|dip/.test(s)) tags.add("chest");
+        if (/back|row|lat|pulldown|pull-up|pull up|t-bar/.test(s)) tags.add("back");
+        if (/shoulder|delt|lateral|overhead/.test(s)) tags.add("shoulders");
+        if (/bicep|tricep|curl|arm/.test(s)) tags.add("arms");
+        if (/leg|squat|glute|hip|calf|lunge|curl|extension|thrust/.test(s)) tags.add("legs");
+        if (/ab|core|torso|crunch/.test(s)) tags.add("core");
+        if (!tags.size) tags.add("fullbody");
+        return Array.from(tags);
+      }
+
+      function autoMarkerForIndex(index) {
+        const cols = [12, 28, 44, 60, 76];
+        const rows = [18, 30, 42, 54, 66, 78, 88];
+        return {
+          markerLeft: cols[index % cols.length],
+          markerTop: rows[Math.floor(index / cols.length) % rows.length]
+        };
+      }
+
+      mapEntries.sort((a, b) => a.label.localeCompare(b.label));
+
+      mapEntries.forEach((entry) => {
+        const code = entry.code;
+        if (existingCodes.has(code)) return;
+
+        const template = templateByCode.get(code);
+        const label = entry.label;
+        const type = template && template.type ? template.type : inferMachineType(code, label);
+        const marker = autoMarkerForIndex(mainList.length);
+
+        mainList.push({
+          machineCode: code,
+          machineNumber: mainList.length + 1,
+          label: label,
+          goalTags: template && Array.isArray(template.goalTags) ? template.goalTags.slice() : inferGoalTags(label, type),
+          type: type,
+          markerLeft: template && Number.isFinite(template.markerLeft) ? template.markerLeft : marker.markerLeft,
+          markerTop: template && Number.isFinite(template.markerTop) ? template.markerTop : marker.markerTop
+        });
+        existingCodes.add(code);
+      });
+    }
+
+    hydrateMainGymCatalogFromMachineMap();
 
     const CABLE_MACHINE_UI_LABEL = "Cable Machine";
 
